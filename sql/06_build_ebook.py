@@ -12,7 +12,8 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHARTS = os.path.join(BASE, "data", "charts")
 ANA = os.path.join(BASE, "data", "analysis")
 OUT = os.path.join(BASE, "index.html")
-REPO = "https://github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik"
+REPO = "https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik"
+COMPANY = "Kalahari Petroleum"
 
 def img(name):
     with open(os.path.join(CHARTS, name), "rb") as f:
@@ -46,7 +47,7 @@ html = f"""<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Anglo Mining Fuel — A Diesel &amp; Refund Data Story</title>
+<title>{COMPANY} — A Diesel &amp; Refund Data Story</title>
 <style>
 :root {{ --navy:#002F6C; --blue:#0072CE; --red:#E4002B; --gold:#FFB81C; --teal:#00A3A1; --grey:#63666A; }}
 * {{ box-sizing:border-box; margin:0; padding:0; }}
@@ -90,7 +91,7 @@ section {{ scroll-margin-top:60px; }}
 <body>
 
 <div class="topnav">
-  <span class="home">Anglo Mining Fuel</span>
+  <span class="home">{COMPANY}</span>
   <a href="#story">Story</a>
   <a href="#fuel">Fuel</a>
   <a href="#fleet">Fleet &amp; haulage</a>
@@ -101,16 +102,23 @@ section {{ scroll-margin-top:60px; }}
   <a href="azure/AZURE_ARCHITECTURE.md">Azure architecture</a>
   <div class="ext">
     <a href="{REPO}" target="_blank" rel="noopener">GitHub repo</a>
-    <a href="reports/Anglo_Mining_Fuel_Data_Story.xlsx" download>Excel</a>
-    <a class="pdf" href="reports/Anglo_Mining_Fuel_Data_Story.pdf" download>PDF report</a>
+    <a href="reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx" download>Excel</a>
+    <a class="pdf" href="reports/Kalahari_Petroleum_Fuel_Data_Story.pdf" download>PDF report</a>
   </div>
 </div>
 
 <div class="hero">
-  <h1>Fuelling a Mining Giant</h1>
-  <p>A diesel, haulage and SARS-refund data story — 23.7 million rows from a mining fleet-operations ERP,
-     modelled as a SQL Server star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
+  <h1>Fuelling an Oil &amp; Gas Giant</h1>
+  <p>A diesel, haulage and SARS-refund data story — 23.7 million rows from {COMPANY}'s upstream fleet-operations
+     ERP, modelled as a SQL Server star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
   <p style="margin-top:14px;font-size:.85rem;"><a href="{REPO}" target="_blank" rel="noopener" style="color:#FFB81C;">View source on GitHub →</a></p>
+</div>
+
+<div class="note" style="max-width:952px; margin:16px auto 0;">
+  <strong>Case-study note:</strong> {COMPANY} is a fictional company invented for this portfolio piece. The
+  underlying operational data is real (anonymised) mining/haulage fleet-fuel ERP data, presented here under a
+  fictional oil &amp; gas identity to demonstrate the data model and analytics pipeline without naming the
+  source organisation.
 </div>
 
 <div class="kpis">
@@ -125,11 +133,13 @@ section {{ scroll-margin-top:60px; }}
 
 <section id="story">
   <h2>1 · More than fuel records</h2>
-  <p>The source system is an operational ERP for a mining fleet: an Automated Fuel System (AFS) issuing diesel
-     to trucks and drill rigs, tank deliveries, odometer and hour-meter readings, haulage trips with material
-     types, GPS trip traces over a 21.9-million-point coordinate grid, geofences, SAP integration staging and
-     cost-centre accounting. Fuel is the connective tissue — every litre issued ties equipment, location,
-     activity and money together — but the dataset describes how a mine <em>moves</em>.</p>
+  <p>The source system is an operational ERP for {COMPANY}'s upstream fleet: an Automated Fuel System (AFS)
+     issuing diesel to haul trucks and drill rigs, tank deliveries, odometer and hour-meter readings, haulage
+     trips with material types, GPS trip traces over a 21.9-million-point coordinate grid, geofences, SAP
+     integration staging and cost-centre accounting. Fuel is the connective tissue — every litre issued ties
+     equipment, location, activity and money together. {COMPANY}'s fleet-management system classifies vehicles
+     the way a mine would — drill rigs, haul trucks, waste removal — because well-pad construction and haulage
+     logistics on an oil &amp; gas site mirror mining operations almost exactly.</p>
   <p>This project models that data as a Kimball star schema (8 dimensions, 8 facts) with one high-stakes
      business calculation at its centre: the <strong>SARS diesel refund</strong> under Rebate Item 670.04 of
      the Customs &amp; Excise Act, where classifying litres as eligible or non-eligible is worth millions of
@@ -153,9 +163,9 @@ section {{ scroll-margin-top:60px; }}
   {img('05_top_equipment.png')}
   {img('06_vehicle_type_fuel.png')}
   {img('07_material_movement.png')}
-  <p>Trip records carry the material being moved — ore grades, waste, consumables — which is exactly the
-     evidence SARS eligibility classification leans on: transport of ore on a mining site is claimable,
-     general road use is not.</p>
+  <p>Trip records carry the material being moved — extracted product, waste, consumables — which is exactly the
+     evidence SARS eligibility classification leans on: transport of extracted material on the production site
+     is claimable, general road use is not.</p>
   {img('08_trips_by_month.png')}
 </section>
 
@@ -192,7 +202,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
 
 <section id="build">
   <h2>6 · How it's built</h2>
-  <div class="flow">SQL Server (AngloData QA)                    ── local, always works offline
+  <div class="flow">SQL Server (source ERP, QA copy)             ── local, always works offline
   └─ dw star schema  · 8 dims, 8 facts, 5 views   (01_create_load_dw_full.sql)
        └─ TSV export (bcp, UTF-8)                 (02_export_dw_to_tsv.ps1)
             ├─ curated_local/ Parquet             (03_build_local_parquet.py)
@@ -213,7 +223,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
 </div>
 <footer>
   Anthony Apollis · 2026 · Built with SQL Server, Azure Data Factory, ADLS Gen2, Python &amp; Qlik Sense.<br>
-  QA data, anonymised context; SARS figures are modelled examples, not tax advice.<br>
+  QA data, anonymised context, presented under a fictional company; SARS figures are modelled examples, not tax advice.<br>
   <a href="{REPO}" target="_blank" rel="noopener" style="color:var(--teal);">{REPO.replace('https://', '')}</a>
 </footer>
 </body>

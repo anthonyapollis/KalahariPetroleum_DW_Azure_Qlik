@@ -1,6 +1,11 @@
-# Azure Architecture — Anglo Mining Fuel DW
+# Azure Architecture — Kalahari Petroleum Fleet Fuel DW
 
 [← Back to project overview](../README.md) · [Data story](../index.html) · [Qlik app guide](../qlik/QLIK_APP_GUIDE.md)
+
+*Kalahari Petroleum is a fictional company invented for this portfolio piece — see the
+[README case-study note](../README.md). Resource and database names below (`rg-anglo-mining-dw`,
+`AngloData_QA_20220825_1820`, etc.) are real, unchanged infrastructure identifiers created before
+the rebrand; Azure resource groups can't be renamed in place.*
 
 ## Deployed resources (subscription "Azure subscription 1", tenant the-spot.tech)
 

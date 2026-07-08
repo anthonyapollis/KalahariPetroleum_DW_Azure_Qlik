@@ -1,6 +1,10 @@
-# Qlik Sense App Guide — Anglo Mining Fuel / SARS Diesel Refund
+# Qlik Sense App Guide — Kalahari Petroleum Fleet Fuel / SARS Diesel Refund
 
 [← Back to project overview](../README.md) · [Data story](../index.html) · [Azure architecture](../azure/AZURE_ARCHITECTURE.md)
+
+*Kalahari Petroleum is a fictional company invented for this portfolio piece; see the
+[README case-study note](../README.md) for context. The Azure account name below
+(`stanglominingdw01`) is a real, unchanged infrastructure identifier.*
 
 Tenant: `https://go10njvx344b4j2.eu.qlikcloud.com`
 
@@ -12,7 +16,7 @@ Tenant: `https://go10njvx344b4j2.eu.qlikcloud.com`
    az storage container generate-sas --account-name stanglominingdw01 --name raw --permissions rl --expiry 2026-10-05 --auth-mode key --account-key <key> -o tsv
    ```
 2. In the tenant: Create → New analytics app → open **Data load editor**.
-3. Paste `anglo_mining_fuel_load_script.qvs`, set `vSAS` to the token, reload.
+3. Paste `kalahari_petroleum_fuel_load_script.qvs`, set `vSAS` to the token, reload.
 
 **Option B — Azure Storage connector (governed)**
 1. Data load editor → Create new connection → **Azure Storage**.

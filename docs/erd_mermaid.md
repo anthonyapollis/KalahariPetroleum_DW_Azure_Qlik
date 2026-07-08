@@ -1,6 +1,9 @@
-# ERD — Anglo Mining Fuel DW (schema `dw`, AngloData_QA_20220825_1820)
+# ERD — Kalahari Petroleum Fleet Fuel DW (schema `dw`, source DB AngloData_QA_20220825_1820)
 
 [← Back to project overview](../README.md) · [Data story](../index.html)
+
+*Kalahari Petroleum is a fictional company invented for this portfolio piece — see the
+[README case-study note](../README.md). The source database name is unchanged.*
 
 ```mermaid
 erDiagram

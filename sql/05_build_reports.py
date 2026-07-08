@@ -1,7 +1,7 @@
 """
 Build the publication layer from data/analysis/*.csv:
   - data/charts/*.png          (matplotlib, report-styled)
-  - reports/Anglo_Mining_Fuel_Data_Story.xlsx  (all aggregates + native charts)
+  - reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx  (all aggregates + native charts)
 
 Usage: python 05_build_reports.py
 Requires: pandas, matplotlib, xlsxwriter
@@ -153,7 +153,7 @@ for i, (n, v) in enumerate(zip(dq.issue, dq.row_count)):
 save(fig, "10_data_quality")
 
 # ================================================================ Excel
-xlsx = os.path.join(REPORTS, "Anglo_Mining_Fuel_Data_Story.xlsx")
+xlsx = os.path.join(REPORTS, "Kalahari_Petroleum_Fuel_Data_Story.xlsx")
 sheets = [
     ("Refund Claims", "refund_by_month"),
     ("Yearly Fuel", "yearly_fuel"),
@@ -180,8 +180,8 @@ with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
     ws = wb.add_worksheet("ReadMe")
     ws.hide_gridlines(2)
     ws.set_column("B:B", 60)
-    ws.write("B2", "Anglo Mining Fuel — Data Story", title_fmt)
-    ws.write("B3", "SQL Server star schema → Azure Data Factory → Qlik Sense | built 2026-07", sub_fmt)
+    ws.write("B2", "Kalahari Petroleum — Fuel & Diesel Refund Data Story", title_fmt)
+    ws.write("B3", "SQL Server star schema → Azure Data Factory → Qlik Sense | built 2026-07 | fictional company, real (anonymised) fleet-fuel data", sub_fmt)
     kpis = [
         ("Fuel issued (2009–2022)", "290.6 million litres, 325,504 AFS transactions"),
         ("Haulage", "778,254 equipment trips"),

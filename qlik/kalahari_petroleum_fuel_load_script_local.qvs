@@ -1,13 +1,15 @@
 // ============================================================================
-// ANGLO MINING FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// KALAHARI PETROLEUM FLEET FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// Case-study note: "Kalahari Petroleum" is a fictional company invented for
+// this portfolio piece; underlying data is a real (anonymised) fleet-fuel ERP.
 // Tenant : https://go10njvx344b4j2.eu.qlikcloud.com
-// Source : LOCAL folder connection 'AngloDW' -> data_export\ (TSV, tab)
+// Source : LOCAL folder connection 'KalahariDW' -> data_export\ (TSV, tab)
 // Model  : Single concatenated fact + conformed dimensions (avoids Qlik
 //          circular references between the multiple DW fact tables).
 // ============================================================================
 // SETUP (local / Qlik Sense Desktop or on-prem):
 //  1. Data load editor -> Create new connection -> Folder
-//  2. Point it at ...\AngloMiningFuel_DW_Azure_Qlik\data_export and name it AngloDW
+//  2. Point it at ...\KalahariPetroleum_DW_Azure_Qlik\data_export and name it KalahariDW
 //  3. Paste this script, reload. No Azure or SAS needed.
 // ============================================================================
 
@@ -25,7 +27,7 @@ LOAD
     Year, Quarter, MonthNumber, MonthName,
     YearMonth, DayOfMonth, DayName,
     IsWeekend, FiscalYearSA, SeasonSouthernAfrica
-FROM [lib://AngloDW/DimDate.tsv]
+FROM [lib://KalahariDW/DimDate.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 DimEquipment:
@@ -35,34 +37,34 @@ LOAD
     MakeName, ModelName, VehicleTypeName,
     IsEligibleVehicleType, ConsumptionTypeName,
     TankSize, EligibilityClass
-FROM [lib://AngloDW/DimEquipment.tsv]
+FROM [lib://KalahariDW/DimEquipment.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 DimLocation:
 LOAD
     LocationKey,
     LocationDescription, IsFixed, IsMobile, Capacity
-FROM [lib://AngloDW/DimLocation.tsv]
+FROM [lib://KalahariDW/DimLocation.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 DimProduct:
 LOAD
     ProductKey, ProductName, IsFuel
-FROM [lib://AngloDW/DimProduct.tsv]
+FROM [lib://KalahariDW/DimProduct.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 DimCostCentre:
 LOAD
     CostCentreKey, CostCentreName, ResponsibilityCode,
     BusinessRevenueCode, TaxRebateCode, GlAccount
-FROM [lib://AngloDW/DimCostCentre.tsv]
+FROM [lib://KalahariDW/DimCostCentre.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 DimEligibleActivity:
 LOAD
     EligibleActivityKey, ActivityCodePattern,
     ActivityDescription, EligibilityStatus
-FROM [lib://AngloDW/DimEligibleActivity.tsv]
+FROM [lib://KalahariDW/DimEligibleActivity.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 // ------------------------------------------------- concatenated fact table
@@ -77,7 +79,7 @@ LOAD
     Num#(HoursOdoReading)                    AS HoursOdoReading,
     FuelEventId, VoucherNumber, Pump, DeviceId,
     VehicleCategoryDescription
-FROM [lib://AngloDW/FactFuelTransaction.tsv]
+FROM [lib://KalahariDW/FactFuelTransaction.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 CONCATENATE (Fuel)
@@ -86,7 +88,7 @@ LOAD
     DateKey, LocationKey, ProductKey,
     Num#(VolumeLitres)                       AS DeliveredLitres,
     DocumentNumber
-FROM [lib://AngloDW/FactFuelDelivery.tsv]
+FROM [lib://KalahariDW/FactFuelDelivery.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 CONCATENATE (Fuel)
@@ -98,7 +100,7 @@ LOAD
     Num#(EligibleUsageLitres)                AS EligibleLitres,
     Num#(EligiblePurchasesLitres)            AS EligiblePurchasesLitres,
     TypeOfVehicle, SpecificActivityPerformed, WhereActivityPerformed
-FROM [lib://AngloDW/FactFuelUsageClassification.tsv]
+FROM [lib://KalahariDW/FactFuelUsageClassification.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 CONCATENATE (Fuel)
@@ -106,7 +108,7 @@ LOAD
     'Meter Reading'                          AS FactType,
     DateKey, EquipmentKey,
     Num#(ReadingDiff)                        AS UnitsWorked
-FROM [lib://AngloDW/FactMeterReading.tsv]
+FROM [lib://KalahariDW/FactMeterReading.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 CONCATENATE (Fuel)
@@ -117,7 +119,7 @@ LOAD
     Num#(TripDurationInMinutes)              AS TripMinutes,
     1                                        AS TripCount,
     MaterialType, DestinationLocation
-FROM [lib://AngloDW/FactEquipmentTrip.tsv]
+FROM [lib://KalahariDW/FactEquipmentTrip.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 // --------------------------------------- SARS refund claims (data island)
@@ -133,7 +135,7 @@ LOAD
     Num#(RefundRateCentsPerLitre)            AS Claim.RateCentsPerLitre,
     Num#(RefundAmountRand)                   AS Claim.RefundRand,
     RateMissingFlag                          AS Claim.RateMissingFlag
-FROM [lib://AngloDW/FactDieselRefundClaim.tsv]
+FROM [lib://KalahariDW/FactDieselRefundClaim.tsv]
 (txt, utf8, embedded labels, delimiter is '\t');
 
 // ============================================================================

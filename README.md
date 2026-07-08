@@ -1,12 +1,18 @@
-# Anglo Mining Fuel — SQL DW → Azure Data Factory → Qlik Sense
+# Kalahari Petroleum — SQL DW → Azure Data Factory → Qlik Sense
 
-**[Open `index.html`](index.html) for the interactive data story** — "Fuelling a Mining Giant."
-Repo: [github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik](https://github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik) (private) ·
-[PDF report](reports/Anglo_Mining_Fuel_Data_Story.pdf) · [Excel workbook](reports/Anglo_Mining_Fuel_Data_Story.xlsx)
+**[Open `index.html`](index.html) for the interactive data story** — "Fuelling an Oil & Gas Giant."
+Repo: [github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik](https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik) (private) ·
+[PDF report](reports/Kalahari_Petroleum_Fuel_Data_Story.pdf) · [Excel workbook](reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx)
 
-End-to-end analytics build over the Anglo mining fuel / petroleum-logbook ERP
-(`AngloData_QA_20220825_1820`, local SQL Server) with SARS diesel-refund
-(Rebate Item 670.04) business logic from the Gmail evidence pack.
+> **Case-study note:** Kalahari Petroleum is a fictional oil & gas company invented for this
+> portfolio piece. The underlying operational data is a real (anonymised) mining/haulage
+> fleet-fuel ERP database, presented here under a fictional identity to demonstrate the data
+> model and analytics pipeline without naming the source organisation.
+
+End-to-end analytics build over an upstream fleet-fuel / petroleum-logbook ERP
+(source database `AngloData_QA_20220825_1820`, local SQL Server, retained
+under its original technical name — see note above) with SARS diesel-refund
+(Rebate Item 670.04) business logic from the evidence pack.
 
 Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 1.85M DW fact rows + the 21.9M-row dbo.CoordRef geo reference
@@ -17,9 +23,9 @@ Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 
 | Path | What |
 |---|---|
-| [`index.html`](index.html) | **The data-story ebook** — "Fuelling a Mining Giant" (open directly in a browser) |
-| [`reports/Anglo_Mining_Fuel_Data_Story.pdf`](reports/Anglo_Mining_Fuel_Data_Story.pdf) | Print render of the ebook |
-| [`reports/Anglo_Mining_Fuel_Data_Story.xlsx`](reports/Anglo_Mining_Fuel_Data_Story.xlsx) | 13-sheet workbook: KPIs, refund claims, fleet/haulage aggregates, data quality, native charts |
+| [`index.html`](index.html) | **The data-story ebook** — "Fuelling an Oil & Gas Giant" (open directly in a browser) |
+| [`reports/Kalahari_Petroleum_Fuel_Data_Story.pdf`](reports/Kalahari_Petroleum_Fuel_Data_Story.pdf) | Print render of the ebook |
+| [`reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx`](reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx) | 13-sheet workbook: KPIs, refund claims, fleet/haulage aggregates, data quality, native charts |
 | [`sql/01_create_load_dw_full.sql`](sql/01_create_load_dw_full.sql) | Complete re-runnable star-schema build: 8 dimensions, 8 facts, 5 analysis views, FKs + indexes, in schema `dw` |
 | [`sql/02_export_dw_to_tsv.ps1`](sql/02_export_dw_to_tsv.ps1) | bcp export of all DW tables + CoordRef to headered TSV |
 | [`sql/03_build_local_parquet.py`](sql/03_build_local_parquet.py) | Local curated Parquet build (incremental; pandas QUOTE_NONE parser) |
@@ -31,8 +37,8 @@ Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 | [`azure/AZURE_ARCHITECTURE.md`](azure/AZURE_ARCHITECTURE.md) | Deployed resources, data flow, SHIR production pattern, cost + kill switch |
 | [`azure/deploy_adf.ps1`](azure/deploy_adf.ps1), [`azure/run_pipeline.ps1`](azure/run_pipeline.ps1) | Re-deploy ADF artifacts / trigger + poll the pipeline |
 | [`azure/adf/`](azure/adf/) | ADF dataset & pipeline definitions (TSV → Parquet ForEach copy) |
-| [`qlik/anglo_mining_fuel_load_script.qvs`](qlik/anglo_mining_fuel_load_script.qvs) | Qlik Sense load script — cloud variant (ADLS via SAS) |
-| [`qlik/anglo_mining_fuel_load_script_local.qvs`](qlik/anglo_mining_fuel_load_script_local.qvs) | Qlik load script — **local variant** (folder connection `AngloDW` → `data_export\`), same model |
+| [`qlik/kalahari_petroleum_fuel_load_script.qvs`](qlik/kalahari_petroleum_fuel_load_script.qvs) | Qlik Sense load script — cloud variant (ADLS via SAS) |
+| [`qlik/kalahari_petroleum_fuel_load_script_local.qvs`](qlik/kalahari_petroleum_fuel_load_script_local.qvs) | Qlik load script — **local variant** (folder connection `KalahariDW` → `data_export\`), same model |
 | [`qlik/QLIK_APP_GUIDE.md`](qlik/QLIK_APP_GUIDE.md) | App setup on go10njvx344b4j2.eu.qlikcloud.com + 6 sheet designs |
 | [`docs/erd_mermaid.md`](docs/erd_mermaid.md) | ERD + reconciled row counts |
 
@@ -66,8 +72,10 @@ at 349c/L. **Rates are the 2020 policy examples from the evidence PDF — update
 Resource group `rg-anglo-mining-dw` (southafricanorth): ADLS Gen2
 `stanglominingdw01` (`raw` TSV / `curated` Parquet), Data Factory
 `adf-anglo-mining-dw` with pipeline `pl_raw_to_curated` (parameterised ForEach
-copy, TSV → snappy Parquet). See `azure/AZURE_ARCHITECTURE.md`; kill switch:
-`az group delete --name rg-anglo-mining-dw --yes`.
+copy, TSV → snappy Parquet). Resource names are unchanged internal
+infrastructure identifiers — created before the Kalahari Petroleum rebrand and
+kept as-is since Azure resource groups can't be renamed in place. See
+`azure/AZURE_ARCHITECTURE.md`; kill switch: `az group delete --name rg-anglo-mining-dw --yes`.
 
 ## Local-first
 
@@ -76,11 +84,11 @@ Everything runs without Azure: SQL Server DW (localhost) → `data_export\` TSVs
 incremental) → local Qlik script variant. Azure is a mirror of the same
 layout, not a dependency.
 
-**Scope note:** the source DB is a full mining fleet-operations ERP, not just
-fuel — haulage/material movement (datTripRecord.MaterialType), geospatial
-telemetry (CoordRef, EquipmentTripTrace, Geofence), SAP integration staging,
-machine activity, and fuel-price/levy audits. This DW models the fuel + SARS
-refund lens; haulage/geofence/SAP facts are natural extensions.
+**Scope note:** the source DB is a full fleet-operations ERP, not just fuel —
+haulage/material movement (datTripRecord.MaterialType), geospatial telemetry
+(CoordRef, EquipmentTripTrace, Geofence), SAP integration staging, machine
+activity, and fuel-price/levy audits. This DW models the fuel + SARS refund
+lens; haulage/geofence/SAP facts are natural extensions.
 
 **Known source-data quirk:** one lstEquipment row had a tab embedded in
 RegNumber (cleaned in dw and stripped defensively in the build script);
@@ -89,18 +97,19 @@ configured with quoting disabled (ADF `quoteChar:""`, pandas `QUOTE_NONE`).
 
 ## Qlik Sense
 
-Paste `qlik/anglo_mining_fuel_load_script.qvs` into a new app on the tenant,
-add a container SAS (regenerate — the shipped placeholder is blank; see
-`qlik/QLIK_APP_GUIDE.md`), reload. Model avoids Qlik circular references by
-concatenating the five transactional facts into one table with `FactType`,
+Paste `qlik/kalahari_petroleum_fuel_load_script.qvs` into a new app on the
+tenant, add a container SAS (regenerate — the shipped placeholder is blank;
+see `qlik/QLIK_APP_GUIDE.md`), reload. Model avoids Qlik circular references
+by concatenating the five transactional facts into one table with `FactType`,
 keeping the month-grain refund claims as a labelled data island.
 
 ## Repository / Git LFS
 
-Pushed to `github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik` (private).
-`dbo.CoordRef`'s TSV and Parquet exports (1 GB / 331 MB) are tracked via
-[Git LFS](https://git-lfs.com) — everything else is plain git. Clone with
-`git lfs install` done once, then a normal `git clone` pulls LFS content
-automatically. No Azure secrets are committed: the Qlik cloud script ships
-with a blank SAS placeholder (see `qlik/QLIK_APP_GUIDE.md` to regenerate one),
-and `azure/*.key` / `qlik/raw_container_sas_*.txt` are gitignored.
+Pushed to `github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik` (private).
+`dbo.CoordRef`'s TSV and Parquet exports (1 GB / 331 MB) plus the 174 MB
+`FactEquipmentTrip.tsv` are tracked via [Git LFS](https://git-lfs.com) —
+everything else is plain git. Clone with `git lfs install` done once, then a
+normal `git clone` pulls LFS content automatically. No Azure secrets are
+committed: the Qlik cloud script ships with a blank SAS placeholder (see
+`qlik/QLIK_APP_GUIDE.md` to regenerate one), and `azure/*.key` /
+`qlik/raw_container_sas_*.txt` are gitignored.

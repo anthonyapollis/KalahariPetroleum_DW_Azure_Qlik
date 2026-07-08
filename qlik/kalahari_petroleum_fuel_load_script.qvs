@@ -1,5 +1,8 @@
 // ============================================================================
-// ANGLO MINING FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// KALAHARI PETROLEUM FLEET FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// Case-study note: "Kalahari Petroleum" is a fictional company; underlying
+// data is a real (anonymised) fleet-fuel ERP, source Azure account names
+// below are unchanged technical infrastructure identifiers.
 // Tenant : https://go10njvx344b4j2.eu.qlikcloud.com
 // Source : ADLS Gen2 account stanglominingdw01, container raw/dw (TSV, tab)
 // Model  : Single concatenated fact + conformed dimensions (avoids Qlik

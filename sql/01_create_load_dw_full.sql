@@ -1,8 +1,14 @@
 /*
 ================================================================================
-ANGLO MINING FUEL / SARS DIESEL REFUND - COMPLETE SQL SERVER DATA WAREHOUSE
+KALAHARI PETROLEUM FLEET FUEL / SARS DIESEL REFUND - SQL SERVER DATA WAREHOUSE
 ================================================================================
-Database : AngloData_QA_20220825_1820 (QA copy - safe to build dw schema in)
+Case-study note: "Kalahari Petroleum" is a fictional oil & gas company invented
+for this portfolio piece. The underlying data is a real (anonymised) mining/
+haulage fleet-fuel ERP database, retained here under its original technical
+name for reproducibility - only the presentation layer (README, ebook, reports)
+uses the fictional company identity.
+
+Database : AngloData_QA_20220825_1820 (source ERP, QA copy - safe to build dw schema in)
 Style    : Kimball star schema in schema [dw]
 Sources  : dbo.datAFSRecord, dbo.datFuelDelivery, dbo.datMeterReading,
            dbo.datTripRecord, dbo.datLocationVolumeReading,
