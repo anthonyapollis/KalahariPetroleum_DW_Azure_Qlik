@@ -21,6 +21,11 @@ os.makedirs(CHARTS, exist_ok=True)
 os.makedirs(REPORTS, exist_ok=True)
 
 NAVY, BLUE, RED, GOLD, TEAL, GREY = "#002F6C", "#0072CE", "#E4002B", "#FFB81C", "#00A3A1", "#63666A"
+# Qualitative palette for categorical bar charts (one distinct colour per bar/category,
+# rather than a single flat colour) - cycles if there are more categories than colours.
+PALETTE = [NAVY, TEAL, GOLD, RED, BLUE, "#6A3FA0", "#FF8C00", "#2E7D32", "#8B5A2B", "#C2185B"]
+def palette(n):
+    return [PALETTE[i % len(PALETTE)] for i in range(n)]
 
 plt.rcParams.update({
     "figure.facecolor": "white", "axes.facecolor": "white",
@@ -66,7 +71,7 @@ save(fig, "01_refund_by_month")
 # ---------------------------------------------------------------- 2. yearly
 yf = read("yearly_fuel")
 fig, ax = plt.subplots(figsize=(8, 4))
-ax.bar(yf.Year.astype(str), yf.LitresIssued, color=NAVY)
+ax.bar(yf.Year.astype(str), yf.LitresIssued, color=palette(len(yf)))
 ax.yaxis.set_major_formatter(mtick.FuncFormatter(millions))
 ax.set_title("Fuel issued per year (litres)")
 for i, v in enumerate(yf.LitresIssued):
@@ -89,7 +94,7 @@ save(fig, "03_monthly_fuel_trend")
 # ---------------------------------------------------------------- 4. locations
 loc = read("fuel_by_location").head(12).iloc[::-1]
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.barh(loc.LocationDescription, loc.LitresIssued, color=TEAL)
+ax.barh(loc.LocationDescription, loc.LitresIssued, color=palette(len(loc)))
 ax.xaxis.set_major_formatter(mtick.FuncFormatter(millions))
 ax.set_title("Fuel issued by depot / location (top 12)")
 save(fig, "04_fuel_by_location")
@@ -107,15 +112,17 @@ save(fig, "05_top_equipment")
 # ---------------------------------------------------------------- 6. vehicle types
 vt = read("vehicle_type_fuel").head(12).iloc[::-1]
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.barh(vt.VehicleTypeName, vt.LitresIssued, color=BLUE)
+ax.barh(vt.VehicleTypeName, vt.LitresIssued, color=palette(len(vt)))
 ax.xaxis.set_major_formatter(mtick.FuncFormatter(millions))
 ax.set_title("Fuel issued by vehicle type (top 12)")
 save(fig, "06_vehicle_type_fuel")
 
 # ---------------------------------------------------------------- 7. material movement
+# NOTE: MaterialType codes (HGO/MGO/LGO/VLGO/G1/HLG/LLG/OG1) are raw source values -
+# no lookup table defines them in the source database, shown as-is (not guessed at).
 mm = read("material_movement").head(10).iloc[::-1]
 fig, ax = plt.subplots(figsize=(8, 4.5))
-ax.barh(mm.MaterialType, mm.Trips, color=GOLD, edgecolor=NAVY, linewidth=0.4)
+ax.barh(mm.MaterialType, mm.Trips, color=palette(len(mm)), edgecolor=NAVY, linewidth=0.4)
 ax.xaxis.set_major_formatter(mtick.FuncFormatter(lambda x, _: f"{x/1e3:.0f}k"))
 ax.set_title("Haulage: trips by material type (778k trips)")
 save(fig, "07_material_movement")
@@ -177,22 +184,33 @@ with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
     sub_fmt = wb.add_format({"font_color": GREY})
     kpi_fmt = wb.add_format({"bold": True, "font_size": 14, "font_color": TEAL})
     num_fmt = wb.add_format({"num_format": "#,##0"})
+    case_note_fmt = wb.add_format({
+        "bg_color": GOLD, "font_color": NAVY, "border": 2, "border_color": "#B8860B",
+        "left": 6, "left_color": NAVY, "text_wrap": True, "valign": "top", "bold": False,
+    })
 
     # ReadMe sheet
     ws = wb.add_worksheet("ReadMe")
     ws.hide_gridlines(2)
     ws.set_column("B:B", 60)
     ws.write("B2", "Kalahari Petroleum — Fuel & Diesel Refund Data Story", title_fmt)
-    ws.write("B3", "SQL Server star schema → Azure Data Factory → Qlik Sense | built 2026-07 | fictional company, real (anonymised) fleet-fuel data", sub_fmt)
+    ws.write("B3", "Tech stack: SQL Server → Azure Data Factory (ADF) → Azure Data Lake Storage (ADLS) Gen2 → Python/scikit-learn → Qlik Sense | built 2026-07", sub_fmt)
+    ws.merge_range("B5:E8",
+        "Case-study note: Kalahari Petroleum is a fictional oil & gas company invented for this "
+        "portfolio piece. The underlying operational data is real (anonymised) mining/haulage "
+        "fleet-fuel ERP (Enterprise Resource Planning) data, presented under a fictional identity "
+        "to demonstrate the data model and analytics pipeline without naming the source organisation.",
+        case_note_fmt)
+    ws.set_row(4, 18); ws.set_row(5, 18); ws.set_row(6, 18); ws.set_row(7, 18)
     kpis = [
-        ("Fuel issued (2009–2022)", "290.6 million litres, 325,504 AFS transactions"),
+        ("Fuel issued (2009–2022)", "290.6 million litres, 325,504 AFS (Automated Fuel System) transactions"),
         ("Haulage", "778,254 equipment trips"),
-        ("Usage classified for SARS", "231.7M litres; 92.3M non-eligible"),
+        ("Usage classified for SARS", "231.7M litres; 92.3M non-eligible (SARS = South African Revenue Service)"),
         ("Diesel refund modelled", "44 claim months (Rebate Item 670.04, 80% qualifying rule)"),
-        ("ML anomaly detection", "Isolation Forest, 325,504 transactions scored, 6,511 flagged (2.0%)"),
+        ("ML anomaly detection", "Isolation Forest, 325,504 transactions scored, 6,511 flagged (2.0%) — see ML Anomaly Review Queue sheet"),
         ("Rows through the pipeline", "~23.7 million (incl. 21.9M-row CoordRef geo grid)"),
     ]
-    r = 5
+    r = 10
     for k, v in kpis:
         ws.write(r, 1, k, kpi_fmt); ws.write(r + 1, 1, v); r += 3
     ws.write(r, 1, "Rates are 2020 SARS policy examples from the evidence pack — not tax advice.", sub_fmt)
@@ -209,17 +227,22 @@ with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
         ws.autofilter(0, 0, len(df), len(df.columns) - 1)
 
     # native charts on key sheets
-    def add_chart(sheet, ctype, cat_col, val_cols, colors, title, pos="H2", rows=None):
+    def add_chart(sheet, ctype, cat_col, val_cols, colors, title, pos="H2", rows=None, per_point=False):
         df = read(dict(sheets)[sheet])
         n = rows or len(df)
         ch = wb.add_chart({"type": ctype})
         for vc, colr in zip(val_cols, colors):
-            ch.add_series({
+            series = {
                 "name": vc,
                 "categories": [sheet, 1, df.columns.get_loc(cat_col), n, df.columns.get_loc(cat_col)],
                 "values": [sheet, 1, df.columns.get_loc(vc), n, df.columns.get_loc(vc)],
-                "fill": {"color": colr},
-            })
+            }
+            if per_point:
+                # one distinct colour per bar/category instead of one flat colour for the series
+                series["points"] = [{"fill": {"color": c}} for c in palette(n)]
+            else:
+                series["fill"] = {"color": colr}
+            ch.add_series(series)
         ch.set_title({"name": title, "name_font": {"size": 12, "color": NAVY}})
         ch.set_legend({"position": "bottom"})
         ch.set_size({"width": 640, "height": 360})
@@ -227,10 +250,10 @@ with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
 
     add_chart("Refund Claims", "column", "ClaimYearMonth", ["EligibleLitres", "NonEligibleLitres"],
               [TEAL, GREY], "Eligible vs non-eligible litres", pos="K2")
-    add_chart("Yearly Fuel", "column", "Year", ["LitresIssued"], [NAVY], "Fuel issued per year", pos="F2")
+    add_chart("Yearly Fuel", "column", "Year", ["LitresIssued"], [NAVY], "Fuel issued per year", pos="F2", per_point=True)
     add_chart("Fuel by Location", "bar", "LocationDescription", ["LitresIssued"], [TEAL],
-              "Fuel by location", pos="F2", rows=12)
-    add_chart("Material Movement", "bar", "MaterialType", ["Trips"], [GOLD], "Trips by material", pos="F2")
+              "Fuel by location", pos="F2", rows=12, per_point=True)
+    add_chart("Material Movement", "bar", "MaterialType", ["Trips"], [GOLD], "Trips by material", pos="F2", per_point=True)
 
 print(f"excel: {xlsx}")
 print("Publication data layer complete.")

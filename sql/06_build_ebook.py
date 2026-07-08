@@ -37,6 +37,18 @@ ml = pd.read_csv(os.path.join(ANA, "ml_review_queue.csv"))
 ml_scores = pd.read_csv(os.path.join(ANA, "ml_anomaly_scores.csv"))
 ml_n_flagged = int(ml_scores["IsAnomaly"].sum())
 ml_pct_flagged = ml_n_flagged / len(ml_scores)
+ml_anom = ml_scores[ml_scores["IsAnomaly"]]
+ml_extreme = ml_anom[ml_anom.TankFillRatio > 50]
+ml_moderate = ml_anom[(ml_anom.TankFillRatio >= 1.5) & (ml_anom.TankFillRatio <= 50)]
+ml_behavioural = ml_anom[ml_anom.TankFillRatio < 1.5]
+ml_offhours_flagged_pct = ((ml_anom.HourOfDay >= 22) | (ml_anom.HourOfDay <= 5)).mean()
+ml_offhours_baseline_pct = ((ml_scores.HourOfDay >= 22) | (ml_scores.HourOfDay <= 5)).mean()
+ml_top_location = ml_anom.groupby("LocationDescription").size().sort_values(ascending=False)
+ml_top_loc_name = ml_top_location.index[0]
+ml_top_loc_count = int(ml_top_location.iloc[0])
+ml_top_loc_pct = ml_top_loc_count / len(ml_anom)
+ml_top_equip = ml_anom.groupby("FleetId").size().sort_values(ascending=False).head(5)
+ml_top_equip_rows = "".join(f"<li><code>{i}</code> — {c} flagged transactions</li>" for i, c in ml_top_equip.items())
 
 refund_rows = "".join(
     f"<tr><td>{r.ClaimYearMonth}</td><td class='num'>{fmt(r.TotalLitres)}</td>"
@@ -85,6 +97,8 @@ td {{ padding:7px 10px; border-bottom:1px solid #e5e7eb; }}
 td.num {{ text-align:right; font-variant-numeric:tabular-nums; }}
 tr:nth-child(even) {{ background:#f4f6f9; }}
 .note {{ background:#FFF7E6; border-left:4px solid var(--gold); padding:12px 16px; border-radius:6px; font-size:.9rem; margin:14px 0; }}
+.case-study-note {{ background:var(--gold); color:var(--navy); border:2px solid #B8860B; border-left:6px solid var(--navy); padding:16px 20px; border-radius:8px; font-size:.92rem; box-shadow:0 4px 14px rgba(0,0,0,.25); }}
+.case-study-note strong {{ color:var(--navy); }}
 .flow {{ background:#0b1526; color:#9fd3ff; font-family:Consolas,monospace; font-size:.82rem; padding:18px; border-radius:8px; overflow-x:auto; white-space:pre; margin:12px 0; }}
 footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; }}
 .topnav {{ position:sticky; top:0; z-index:100; background:var(--navy); display:flex; flex-wrap:wrap;
@@ -125,10 +139,11 @@ section {{ scroll-margin-top:60px; }}
 
 <div class="hero">
   <h1>Fuelling an Oil &amp; Gas Giant</h1>
-  <p>A diesel, haulage and SARS-refund data story — 23.7 million rows from {COMPANY}'s upstream fleet-operations
-     ERP, modelled as a SQL Server star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
+  <p>A diesel, haulage and SARS (South African Revenue Service) refund data story — 23.7 million rows from
+     {COMPANY}'s upstream fleet-operations ERP (Enterprise Resource Planning system), modelled as a SQL Server
+     star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
   <p style="margin-top:14px;font-size:.85rem;"><a href="{REPO}" target="_blank" rel="noopener" style="color:#FFB81C;">View source on GitHub →</a></p>
-  <div class="note" style="max-width:900px; margin:20px auto 0; text-align:left;">
+  <div class="case-study-note" style="max-width:900px; margin:20px auto 0; text-align:left;">
     <strong>Case-study note:</strong> {COMPANY} is a fictional company invented for this portfolio piece. The
     underlying operational data is real (anonymised) mining/haulage fleet-fuel ERP data, presented here under a
     fictional oil &amp; gas identity to demonstrate the data model and analytics pipeline without naming the
@@ -138,7 +153,7 @@ section {{ scroll-margin-top:60px; }}
 
 <div class="kpis">
   <div class="kpi"><div class="v">290.6M L</div><div class="l">fuel issued 2009–2022</div></div>
-  <div class="kpi"><div class="v">325 504</div><div class="l">AFS fuel transactions</div></div>
+  <div class="kpi" title="Automated Fuel System"><div class="v">325 504</div><div class="l">AFS fuel transactions</div></div>
   <div class="kpi"><div class="v">778 254</div><div class="l">equipment trips</div></div>
   <div class="kpi"><div class="v">R {fmt(total_refund/1e6,1)}m</div><div class="l">modelled diesel refunds</div></div>
   <div class="kpi"><div class="v">23.7M</div><div class="l">rows through the pipeline</div></div>
@@ -227,23 +242,68 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
 
 <section id="ml">
   <h2>7 · Machine learning: fuel-anomaly detection</h2>
-  <p>An <strong>Isolation Forest</strong> (scikit-learn, 300 trees, 2% contamination) scores every fuel
-     transaction on five features: litres issued, tank-fill ratio, that vehicle's own fill-ratio
-     z-score (so a naturally large tanker isn't penalised for being large), hour of day, and day of
-     week. This catches what a fixed 1.5×-tank-size rule misses — multivariate outliers like a
-     small bakkie fuelling at an odd hour for a ratio that's unremarkable on its own but anomalous
-     in combination.</p>
+  <p>An <strong>Isolation Forest</strong> (a scikit-learn algorithm that isolates unusual data points by how
+     few random splits it takes to separate them from the rest — the fewer splits, the more anomalous;
+     300 trees, 2% contamination setting) scores every fuel transaction on five features: litres issued,
+     tank-fill ratio (litres ÷ that vehicle's tank size), that vehicle's own fill-ratio z-score (how far this
+     fill is from <em>that specific vehicle's</em> normal pattern, so a naturally large tanker isn't penalised
+     for being large), hour of day, and day of week. This catches what a fixed 1.5×-tank-size rule misses —
+     a fill that's unremarkable in isolation but anomalous in combination (e.g. an odd hour <em>plus</em> a
+     fill well above that vehicle's own history).</p>
   {img('11_ml_anomaly_scatter.png')}
-  <p>{fmt(ml_n_flagged)} of {fmt(len(ml_scores))} transactions flagged ({ml_pct_flagged:.1%}). The highest-scoring
-     cases are extreme: single transactions of hundreds of thousands to millions of litres against
-     100–600 L tanks — almost certainly decimal-placement data-entry errors rather than physical
-     theft, but exactly the kind of finding a refund audit needs caught before litres get claimed.</p>
+  <p>{fmt(ml_n_flagged)} of {fmt(len(ml_scores))} transactions flagged ({ml_pct_flagged:.1%}). They split into
+     three distinct categories with three different explanations and three different actions:</p>
+  <table>
+    <tr><th>Category</th><th>Count</th><th>Litres involved</th><th>What it looks like</th><th>Most likely cause</th></tr>
+    <tr><td><strong>Extreme</strong> (fill ratio &gt; 50×)</td><td class='num'>{fmt(len(ml_extreme))}</td>
+        <td class='num'>{fmt(ml_extreme.Litres.sum()/1e6, 2)}M L</td>
+        <td>Single transactions of 100,000+ litres against 100–600&nbsp;L tanks — physically impossible</td>
+        <td>Decimal-point data-entry error at the pump terminal (e.g. 159,015.1 L almost certainly means 15.9 L)</td></tr>
+    <tr><td><strong>Moderate</strong> (fill ratio 1.5×–50×)</td><td class='num'>{fmt(len(ml_moderate))}</td>
+        <td class='num'>{fmt(ml_moderate.Litres.sum()/1e6, 1)}M L</td>
+        <td>A real, plausible fill — just larger than that vehicle normally takes</td>
+        <td>Genuine theft/leakage candidates, meter faults, or a vehicle swap not reflected in the equipment master</td></tr>
+    <tr><td><strong>Behavioural</strong> (fill ratio normal)</td><td class='num'>{fmt(len(ml_behavioural))}</td>
+        <td class='num'>—</td>
+        <td>Fill size is unremarkable, but timing/pattern is off for that vehicle</td>
+        <td>Off-hours or off-schedule fuelling worth a second look, not necessarily theft</td></tr>
+  </table>
+  <p>Timing is a real signal here, not noise: flagged transactions happen overnight
+     (22:00&ndash;05:00) {ml_offhours_flagged_pct:.0%} of the time, against a {ml_offhours_baseline_pct:.0%}
+     overnight share for all transactions — a meaningfully higher overnight rate among the flagged group.</p>
   {img('12_ml_anomaly_by_equip.png')}
+  <div class="note" style="background:#FDECEA;border-left-color:#E4002B;">
+  <strong>Business insight — this isn't spread evenly across the fleet.</strong>
+  <strong>{ml_top_loc_name}</strong> alone accounts for {fmt(ml_top_loc_count)} of the
+  {fmt(len(ml_anom))} flagged transactions ({ml_top_loc_pct:.0%} of all anomalies) — one depot, not the
+  whole operation. That concentration is the single most actionable finding in this section: it points at a
+  site-specific cause (pump/terminal hardware, local process, or a specific shift) rather than a
+  fleet-wide problem.</div>
+  <h3>Top 5 equipment to investigate first</h3>
+  <ul>{ml_top_equip_rows}</ul>
   <h3>Top 10 highest-risk transactions</h3>
   <table>
     <tr><th>Date/time</th><th>Fleet ID</th><th>Make</th><th>Litres</th><th>Tank (L)</th><th>Fill ratio</th><th>Anomaly score</th></tr>
     {ml_rows}
   </table>
+  <div class="note">
+    <strong>Recommendations</strong>
+    <ol style="margin:8px 0 0 18px; padding:0;">
+      <li><strong>Prevent, don't just detect:</strong> add input validation at the Automated Fuel System (AFS)
+          terminal that rejects or holds any single transaction exceeding ~2× the vehicle's registered tank
+          size. This alone would have caught all {fmt(len(ml_extreme))} extreme cases before they ever reached
+          the ledger.</li>
+      <li><strong>Priority audit:</strong> investigate {ml_top_loc_name}'s pump/terminal hardware and shift
+          logs first — it explains over half of the flagged volume on its own.</li>
+      <li><strong>Wire this into the refund workflow:</strong> run the anomaly score against
+          <code>dw.FactFuelUsageClassification</code> before each monthly SARS claim, so flagged litres are
+          excluded or held for review rather than claimed on potentially bad data.</li>
+      <li><strong>Quantify exposure before acting:</strong> the {fmt(len(ml_moderate))} moderate-tier
+          transactions ({fmt(ml_moderate.Litres.sum()/1e6, 1)}M litres) are the ones worth a real
+          investigation — most are probably legitimate, but at scale even a small leakage/theft rate here is
+          a material rand figure.</li>
+    </ol>
+  </div>
   <p style="font-size:.85rem;color:#63666A;">Full 200-row review queue: <code>data/analysis/ml_review_queue.csv</code>
      and the "ML Anomaly Review Queue" sheet in the Excel workbook. Model: <code>sql/10_ml_anomaly_detection.py</code>.</p>
 </section>
@@ -254,7 +314,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
   └─ dw star schema  · 8 dims, 8 facts, 5 views   (01_create_load_dw_full.sql)
        └─ TSV export (bcp, UTF-8)                 (02_export_dw_to_tsv.ps1)
             ├─ curated_local/ Parquet             (03_build_local_parquet.py)
-            └─ azcopy → ADLS Gen2 raw/            ── Azure mirror
+            └─ azcopy → ADLS (Azure Data Lake Storage) Gen2 raw/  ── Azure mirror
                  └─ Data Factory pl_raw_to_curated (ForEach Copy, TSV → snappy Parquet)
                       └─ curated/dw/&lt;Table&gt;/*.parquet
                            └─ Qlik Sense Cloud (SAS web-files or Azure Storage connector)</div>

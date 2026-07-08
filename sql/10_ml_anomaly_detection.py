@@ -26,6 +26,9 @@ ANA = os.path.join(BASE, "data", "analysis")
 CHARTS = os.path.join(BASE, "data", "charts")
 
 NAVY, RED, TEAL, GREY = "#002F6C", "#E4002B", "#00A3A1", "#63666A"
+PALETTE = [NAVY, TEAL, "#FFB81C", RED, "#0072CE", "#6A3FA0", "#FF8C00", "#2E7D32", "#8B5A2B", "#C2185B"]
+def palette(n):
+    return [PALETTE[i % len(PALETTE)] for i in range(n)]
 plt.rcParams.update({
     "figure.facecolor": "white", "axes.facecolor": "white",
     "axes.edgecolor": GREY, "axes.grid": True, "grid.color": "#E5E7EB",
@@ -90,7 +93,7 @@ top_equip = (anom.groupby(["FleetId", "MakeName"]).size()
              .sort_values("AnomalyCount", ascending=False).head(15).iloc[::-1])
 top_equip["label"] = top_equip["FleetId"].astype(str) + "  (" + top_equip["MakeName"].fillna("?") + ")"
 fig, ax = plt.subplots(figsize=(8.5, 5.5))
-ax.barh(top_equip["label"], top_equip["AnomalyCount"], color=RED, alpha=0.85)
+ax.barh(top_equip["label"], top_equip["AnomalyCount"], color=palette(len(top_equip)), alpha=0.9)
 ax.set_title("Top 15 equipment by flagged fuel-anomaly count")
 fig.savefig(os.path.join(CHARTS, "12_ml_anomaly_by_equip.png"), dpi=150, bbox_inches="tight")
 plt.close(fig)

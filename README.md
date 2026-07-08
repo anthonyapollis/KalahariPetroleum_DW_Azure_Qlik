@@ -1,4 +1,4 @@
-# Kalahari Petroleum — SQL DW → Azure Data Factory → Qlik Sense
+# Kalahari Petroleum — SQL Data Warehouse (DW) → Azure Data Factory → Qlik Sense
 
 **[Open `index.html`](index.html) for the interactive data story** — "Fuelling an Oil & Gas Giant."
 Repo: [github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik](https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik) (private) ·
@@ -6,18 +6,75 @@ Repo: [github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik](https://github
 
 > **Case-study note:** Kalahari Petroleum is a fictional oil & gas company invented for this
 > portfolio piece. The underlying operational data is a real (anonymised) mining/haulage
-> fleet-fuel ERP database, presented here under a fictional identity to demonstrate the data
-> model and analytics pipeline without naming the source organisation.
+> fleet-fuel ERP (Enterprise Resource Planning system) database, presented here under a
+> fictional identity to demonstrate the data model and analytics pipeline without naming the
+> source organisation.
+
+## The business problem, in one paragraph
+
+A heavy-vehicle fleet burns diesel it can partially reclaim from SARS (the South African
+Revenue Service) under a diesel-refund scheme for on-land primary-sector activity — but only
+for litres correctly classified as "eligible," and only if the underlying transaction data is
+trustworthy. Get the classification wrong and you either under-claim (losing real money) or
+over-claim on bad data (a compliance risk). This project builds the data platform that answers
+three questions with evidence, not guesswork: **how much fuel is actually being used and where,
+which litres genuinely qualify for refund, and which transactions in the ledger shouldn't be
+trusted at all** — then puts all three in front of finance, operations, and compliance
+stakeholders in the format each of them actually uses (a written report, a spreadsheet, a BI
+tool, a map).
 
 End-to-end analytics build over an upstream fleet-fuel / petroleum-logbook ERP
 (source database `AngloData_QA_20220825_1820`, local SQL Server, retained
 under its original technical name — see note above) with SARS diesel-refund
-(Rebate Item 670.04) business logic from the evidence pack.
+(Rebate Item 670.04 of Schedule 6 to the Customs & Excise Act) business logic
+from the evidence pack.
 
-Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
-1.85M DW fact rows + the 21.9M-row dbo.CoordRef geo reference
+Built 2026-07-06/08. ~23.7M rows shipped through the full pipeline:
+1.85M DW (data warehouse) fact rows + the 21.9M-row dbo.CoordRef geo reference
 (1 GB TSV → 346 MB snappy Parquet in curated). CoordRef re-export is opt-in
-(`02_export_dw_to_tsv.ps1 -IncludeCoordRef`, ~26 min of bcp on this machine).
+(`02_export_dw_to_tsv.ps1 -IncludeCoordRef`, ~26 min of bcp — SQL Server's
+bulk copy program — on this machine).
+
+## Tech stack
+
+| Layer | Tools |
+|---|---|
+| Source & warehouse | SQL Server (star schema, schema `dw`: 8 dimensions, 8 facts, 5 views) |
+| Orchestration / cloud | Azure Data Factory (ADF), Azure Data Lake Storage (ADLS) Gen2, Azure CLI |
+| Data engineering | Python (pandas, pyarrow), PowerShell, bcp, azcopy |
+| Machine learning | scikit-learn (Isolation Forest anomaly detection) |
+| Visualisation | matplotlib (static charts), Leaflet.js (interactive map), xlsxwriter (native Excel charts) |
+| BI / self-service | Qlik Sense Cloud — cloud (ADLS) and local (folder-connection) load-script variants |
+| Publishing | Self-contained HTML ebook, headless-Chrome PDF render, 13-sheet Excel workbook |
+| Version control | Git + Git LFS (Large File Storage, for files over GitHub's 100 MB limit) |
+
+## Data availability — how to verify every number in this report
+
+**Every chart, table, and figure in this report traces back to a file in this repository.**
+There is no step where you have to take a number on faith:
+
+1. `data_export/` — the raw TSV export of every warehouse table, straight off SQL Server (bcp,
+   UTF-8). This is the ground truth.
+2. `curated_local/dw/` — the same data as Parquet, partitioned exactly like the Azure `curated`
+   container, for fast local analysis (pandas/DuckDB/Spark all read Parquet natively).
+3. `data/analysis/` — the reporting aggregates (refunds by month, fuel by location, ML anomaly
+   scores, map site/route data) computed directly from the warehouse — the CSVs behind every
+   chart and Excel sheet.
+4. `sql/01`–`10` — the numbered build scripts that produce steps 1–3 and the final reports, in
+   order, so the whole pipeline (warehouse build → export → aggregates → charts/Excel/ebook/map/ML)
+   is re-runnable from source, not just described.
+
+**Clone with the data included:**
+```
+git lfs install        # once per machine
+git clone https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik.git
+```
+Three files exceed GitHub's 100 MB per-file limit (`data_export/CoordRef.tsv` 1 GB,
+`curated_local/dw/CoordRef/CoordRef.parquet` 331 MB, `data_export/FactEquipmentTrip.tsv` 174 MB)
+and are tracked via **Git LFS** — a standard git extension for exactly this situation. `git lfs
+install` (a one-time setup step) makes a normal `git clone` pull those files automatically,
+same as any other file in the repo. Nothing is held back or summarised-only; a reviewer can
+open any CSV/Parquet file and reconcile it against the report.
 
 ## What's here
 
@@ -26,7 +83,7 @@ Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 | [`index.html`](index.html) | **The data-story ebook** — "Fuelling an Oil & Gas Giant" (open directly in a browser) |
 | [`reports/Kalahari_Petroleum_Fuel_Data_Story.pdf`](reports/Kalahari_Petroleum_Fuel_Data_Story.pdf) | Print render of the ebook |
 | [`reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx`](reports/Kalahari_Petroleum_Fuel_Data_Story.xlsx) | 13-sheet workbook: KPIs, refund claims, fleet/haulage aggregates, data quality, native charts |
-| [`sql/01_create_load_dw_full.sql`](sql/01_create_load_dw_full.sql) | Complete re-runnable star-schema build: 8 dimensions, 8 facts, 5 analysis views, FKs + indexes, in schema `dw` |
+| [`sql/01_create_load_dw_full.sql`](sql/01_create_load_dw_full.sql) | Complete re-runnable star-schema build: 8 dimensions, 8 facts, 5 analysis views, foreign keys (FKs) + indexes, in schema `dw` |
 | [`sql/02_export_dw_to_tsv.ps1`](sql/02_export_dw_to_tsv.ps1) | bcp export of all DW tables + CoordRef to headered TSV |
 | [`sql/03_build_local_parquet.py`](sql/03_build_local_parquet.py) | Local curated Parquet build (incremental; pandas QUOTE_NONE parser) |
 | [`sql/04_export_analysis_csvs.ps1`](sql/04_export_analysis_csvs.ps1) | Reporting aggregates (refunds, fuel trends, fleet, haulage, DQ) → `data/analysis/*.csv` |
@@ -34,10 +91,10 @@ Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 | [`sql/06_build_ebook.py`](sql/06_build_ebook.py) | Builds `index.html` (charts embedded as base64) |
 | [`data_export/`](data_export/) | The exported TSVs (source for both Azure and local curated) |
 | [`curated_local/dw/`](curated_local/dw/) | **Local curated Parquet layer** — same layout as Azure `curated/dw/`; the project runs fully offline |
-| [`azure/AZURE_ARCHITECTURE.md`](azure/AZURE_ARCHITECTURE.md) | Deployed resources, data flow, SHIR production pattern, cost + kill switch |
+| [`azure/AZURE_ARCHITECTURE.md`](azure/AZURE_ARCHITECTURE.md) | Deployed resources, data flow, Self-Hosted Integration Runtime (SHIR) production pattern, cost + kill switch |
 | [`azure/deploy_adf.ps1`](azure/deploy_adf.ps1), [`azure/run_pipeline.ps1`](azure/run_pipeline.ps1) | Re-deploy ADF artifacts / trigger + poll the pipeline |
 | [`azure/adf/`](azure/adf/) | ADF dataset & pipeline definitions (TSV → Parquet ForEach copy) |
-| [`qlik/kalahari_petroleum_fuel_load_script.qvs`](qlik/kalahari_petroleum_fuel_load_script.qvs) | Qlik Sense load script — cloud variant (ADLS via SAS) |
+| [`qlik/kalahari_petroleum_fuel_load_script.qvs`](qlik/kalahari_petroleum_fuel_load_script.qvs) | Qlik Sense load script — cloud variant (ADLS via a SAS, Shared Access Signature — a time-limited Azure access token) |
 | [`qlik/kalahari_petroleum_fuel_load_script_local.qvs`](qlik/kalahari_petroleum_fuel_load_script_local.qvs) | Qlik load script — **local variant** (folder connection `KalahariDW` → `data_export\`), same model |
 | [`qlik/QLIK_APP_GUIDE.md`](qlik/QLIK_APP_GUIDE.md) | App setup on go10njvx344b4j2.eu.qlikcloud.com + 6 sheet designs |
 | [`docs/erd_mermaid.md`](docs/erd_mermaid.md) | ERD + reconciled row counts |

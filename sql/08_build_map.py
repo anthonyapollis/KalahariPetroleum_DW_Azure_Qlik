@@ -36,10 +36,16 @@ MATERIAL_COLORS = {
     "Waste": "#5B5F66", "Top Soil": "#8B5A2B", "HGO": "#E4002B",
     "MGO": "#FF8C00", "LGO": "#00A3A1", "VLGO": "#6A3FA0",
 }
+# NOTE: HGO/MGO/LGO/VLGO/G1/HLG/LLG/OG1 are the raw MaterialType codes from
+# the source system. There is no lookup/reference table defining them
+# anywhere in the source database - they are presented as-is rather than
+# guessed at, so the legend doesn't assert a definition nobody can verify.
 MATERIAL_LABELS = {
-    "Waste": "Waste (overburden/mullock)", "Top Soil": "Top soil",
-    "HGO": "HGO (high-grade ore)", "MGO": "MGO (medium-grade ore)",
-    "LGO": "LGO (low-grade ore)", "VLGO": "VLGO (very-low-grade ore)",
+    "Waste": "Waste (overburden)", "Top Soil": "Top soil",
+    "HGO": "HGO (undocumented site material code)",
+    "MGO": "MGO (undocumented site material code)",
+    "LGO": "LGO (undocumented site material code)",
+    "VLGO": "VLGO (undocumented site material code)",
 }
 DEFAULT_MATERIAL_COLOR = "#002F6C"
 
@@ -117,6 +123,8 @@ MAP_HTML = f"""
   ops/dispatch use). Hover a site for a quick summary, click for full detail.
   <strong>Data-quality note:</strong> the source system's Lat/Long columns are transposed
   (the "Lat" column holds longitude values and vice versa) — corrected here.
+  Material-type codes (HGO/MGO/LGO/VLGO) are the raw source values — no lookup table
+  defines them in the source database, so they're shown as-is rather than guessed at.
   Map requires an internet connection to load street tiles.
 </p>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
