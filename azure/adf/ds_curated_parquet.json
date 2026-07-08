@@ -1,0 +1,15 @@
+{
+    "type": "Parquet",
+    "linkedServiceName": { "referenceName": "ls_adls", "type": "LinkedServiceReference" },
+    "parameters": { "tableName": { "type": "string" } },
+    "typeProperties": {
+        "location": {
+            "type": "AzureBlobFSLocation",
+            "fileSystem": "curated",
+            "folderPath": { "value": "@concat('dw/', dataset().tableName)", "type": "Expression" },
+            "fileName": { "value": "@concat(dataset().tableName, '.parquet')", "type": "Expression" }
+        },
+        "compressionCodec": "snappy"
+    },
+    "schema": []
+}

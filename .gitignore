@@ -1,0 +1,8 @@
+# local scratch / secrets
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store
+qlik/raw_container_sas_*.txt
+azure/*.key
+

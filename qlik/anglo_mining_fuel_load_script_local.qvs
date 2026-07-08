@@ -1,0 +1,157 @@
+// ============================================================================
+// ANGLO MINING FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// Tenant : https://go10njvx344b4j2.eu.qlikcloud.com
+// Source : LOCAL folder connection 'AngloDW' -> data_export\ (TSV, tab)
+// Model  : Single concatenated fact + conformed dimensions (avoids Qlik
+//          circular references between the multiple DW fact tables).
+// ============================================================================
+// SETUP (local / Qlik Sense Desktop or on-prem):
+//  1. Data load editor -> Create new connection -> Folder
+//  2. Point it at ...\AngloMiningFuel_DW_Azure_Qlik\data_export and name it AngloDW
+//  3. Paste this script, reload. No Azure or SAS needed.
+// ============================================================================
+
+SET ThousandSep=' ';
+SET DecimalSep='.';
+SET DateFormat='YYYY-MM-DD';
+SET TimestampFormat='YYYY-MM-DD hh:mm:ss[.fff]';
+
+
+// ---------------------------------------------------------------- dimensions
+DimDate:
+LOAD
+    DateKey,
+    Date#(FullDate,'YYYY-MM-DD')            AS FullDate,
+    Year, Quarter, MonthNumber, MonthName,
+    YearMonth, DayOfMonth, DayName,
+    IsWeekend, FiscalYearSA, SeasonSouthernAfrica
+FROM [lib://AngloDW/DimDate.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimEquipment:
+LOAD
+    EquipmentKey,
+    FleetId, RegNumber, EquipmentDescription,
+    MakeName, ModelName, VehicleTypeName,
+    IsEligibleVehicleType, ConsumptionTypeName,
+    TankSize, EligibilityClass
+FROM [lib://AngloDW/DimEquipment.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimLocation:
+LOAD
+    LocationKey,
+    LocationDescription, IsFixed, IsMobile, Capacity
+FROM [lib://AngloDW/DimLocation.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimProduct:
+LOAD
+    ProductKey, ProductName, IsFuel
+FROM [lib://AngloDW/DimProduct.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimCostCentre:
+LOAD
+    CostCentreKey, CostCentreName, ResponsibilityCode,
+    BusinessRevenueCode, TaxRebateCode, GlAccount
+FROM [lib://AngloDW/DimCostCentre.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimEligibleActivity:
+LOAD
+    EligibleActivityKey, ActivityCodePattern,
+    ActivityDescription, EligibilityStatus
+FROM [lib://AngloDW/DimEligibleActivity.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// ------------------------------------------------- concatenated fact table
+// FactType distinguishes the grains; measures are FactType-specific and
+// aggregated with Set Analysis in the master measures.
+Fuel:
+LOAD
+    'Fuel Issue'                             AS FactType,
+    DateKey, EquipmentKey, LocationKey, ProductKey,
+    CostCentreKey, EligibleActivityKey,
+    Num#(Litres)                             AS IssuedLitres,
+    Num#(HoursOdoReading)                    AS HoursOdoReading,
+    FuelEventId, VoucherNumber, Pump, DeviceId,
+    VehicleCategoryDescription
+FROM [lib://AngloDW/FactFuelTransaction.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Fuel Delivery'                          AS FactType,
+    DateKey, LocationKey, ProductKey,
+    Num#(VolumeLitres)                       AS DeliveredLitres,
+    DocumentNumber
+FROM [lib://AngloDW/FactFuelDelivery.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Usage Classification'                   AS FactType,
+    DateKey, EquipmentKey,
+    Num#(TotalFuelUsedLitres)                AS UsageTotalLitres,
+    Num#(NonEligibleLitres)                  AS NonEligibleLitres,
+    Num#(EligibleUsageLitres)                AS EligibleLitres,
+    Num#(EligiblePurchasesLitres)            AS EligiblePurchasesLitres,
+    TypeOfVehicle, SpecificActivityPerformed, WhereActivityPerformed
+FROM [lib://AngloDW/FactFuelUsageClassification.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Meter Reading'                          AS FactType,
+    DateKey, EquipmentKey,
+    Num#(ReadingDiff)                        AS UnitsWorked
+FROM [lib://AngloDW/FactMeterReading.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Equipment Trip'                         AS FactType,
+    SourceDateKey                            AS DateKey,
+    EquipmentKey,
+    Num#(TripDurationInMinutes)              AS TripMinutes,
+    1                                        AS TripCount,
+    MaterialType, DestinationLocation
+FROM [lib://AngloDW/FactEquipmentTrip.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// --------------------------------------- SARS refund claims (data island)
+// Month-grain SARS 670.04 calculation done in the DW; kept as an island for
+// the Refund sheet KPIs (no key fields shared with the main model).
+RefundClaims:
+LOAD
+    ClaimYearMonth                           AS Claim.YearMonth,
+    Num#(TotalLitres)                        AS Claim.TotalLitres,
+    Num#(NonEligibleLitres)                  AS Claim.NonEligibleLitres,
+    Num#(EligibleLitres)                     AS Claim.EligibleLitres,
+    Num#(QualifyingClaimLitres)              AS Claim.QualifyingLitres,
+    Num#(RefundRateCentsPerLitre)            AS Claim.RateCentsPerLitre,
+    Num#(RefundAmountRand)                   AS Claim.RefundRand,
+    RateMissingFlag                          AS Claim.RateMissingFlag
+FROM [lib://AngloDW/FactDieselRefundClaim.tsv]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// ============================================================================
+// MASTER MEASURES to create in the app (Set Analysis on FactType):
+//   Litres Issued        : Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+//   Litres Delivered     : Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)
+//   Total Fuel Used      : Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)
+//   Eligible Litres      : Sum({<FactType={'Usage Classification'}>} EligibleLitres)
+//   Non-Eligible Litres  : Sum({<FactType={'Usage Classification'}>} NonEligibleLitres)
+//   Eligible %           : Sum({<FactType={'Usage Classification'}>} EligibleLitres)
+//                          / Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)
+//   Qualifying Litres    : Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8
+//   Refund (R, 349c/l)   : Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8 * 3.49
+//   Litres per Hour/Km   : Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+//                          / Sum({<FactType={'Meter Reading'}>} UnitsWorked)
+//   Trips                : Sum({<FactType={'Equipment Trip'}>} TripCount)
+//   Tank Net Movement    : Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)
+//                          - Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+// NOTE: the 349c/l rate is the 2020 SARS policy example from the evidence
+// pack - not current tax advice. Claims island has the DW-computed values.
+// ============================================================================

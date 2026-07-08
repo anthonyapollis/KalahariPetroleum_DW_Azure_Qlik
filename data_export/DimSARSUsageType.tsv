@@ -1,0 +1,5 @@
+SARSUsageTypeKey	UsageTypeName	Sector	QualifyingPercentage	RateChangeFactor
+1	On Land (Farming, Mining & Forestry)	Primary - On Land	80.00	.95587
+2	Offshore	Offshore		.95551
+3	Electricity Generation Plants	Electricity		.95578
+4	Rail & Harbour Services	Rail & Harbour		.95652

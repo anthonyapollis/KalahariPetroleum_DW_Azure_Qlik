@@ -1,0 +1,18 @@
+{
+    "type": "DelimitedText",
+    "linkedServiceName": { "referenceName": "ls_adls", "type": "LinkedServiceReference" },
+    "parameters": { "fileName": { "type": "string" } },
+    "typeProperties": {
+        "location": {
+            "type": "AzureBlobFSLocation",
+            "fileSystem": "raw",
+            "folderPath": "dw",
+            "fileName": { "value": "@dataset().fileName", "type": "Expression" }
+        },
+        "columnDelimiter": "\t",
+        "rowDelimiter": "\r\n",
+        "firstRowAsHeader": true,
+        "quoteChar": ""
+    },
+    "schema": []
+}

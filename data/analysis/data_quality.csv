@@ -1,0 +1,10 @@
+issue,row_count
+Usage row unmatched to equipment,203309
+Fuel issue exceeds 1.5x tank size,14746
+AFS duplicate FuelEventId,1728
+Delivery zero/negative volume,288
+Delivery flagged duplicate,0
+Usage non-eligible exceeds total,0
+AFS transaction missing equipment,0
+AFS transaction missing location,0
+AFS transaction zero/negative litres,0

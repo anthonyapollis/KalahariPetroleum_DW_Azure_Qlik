@@ -1,0 +1,12 @@
+EligibleActivityKey	ActivityCodePattern	ActivityDescription	EligibilityStatus
+1	Waste%	Removal of waste products and disposal of mining operations	Eligible
+2	LGO%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+3	VLGO%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+4	HGO%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+5	MGO%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+6	G1%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+7	HLG%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+8	LLG%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+9	OG2%	Transport on mining site of ore or substances containing minerals for processing/recovery	Eligible
+10	L/HR	Equipment metered per operating hour (mining equipment)	Eligible - Mining
+99	%	Unclassified / other activity	Ineligible

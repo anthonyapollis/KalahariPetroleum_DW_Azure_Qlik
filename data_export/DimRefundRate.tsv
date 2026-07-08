@@ -1,0 +1,9 @@
+RefundRateKey	SARSUsageTypeKey	EffectiveFromDate	EffectiveToDate	RefundRateCentsPerLitre	SourceNote
+1	1	2019-04-01	2020-03-31	333.60	SARS policy PDF example - previous rate
+2	1	2020-04-01		349.00	SARS policy PDF example - rate after 1 Apr 2020
+3	2	2019-04-01	2020-03-31	537.00	SARS policy PDF example - previous rate
+4	2	2020-04-01		562.00	SARS policy PDF example - rate after 1 Apr 2020
+5	3	2019-04-01	2020-03-31	367.50	SARS policy PDF example - previous rate
+6	3	2020-04-01		384.50	SARS policy PDF example - rate after 1 Apr 2020
+7	4	2019-04-01	2020-03-31	198.00	SARS policy PDF example - previous rate
+8	4	2020-04-01		207.00	SARS policy PDF example - rate after 1 Apr 2020

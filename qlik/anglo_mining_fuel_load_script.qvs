@@ -1,0 +1,162 @@
+// ============================================================================
+// ANGLO MINING FUEL / SARS DIESEL REFUND - QLIK SENSE LOAD SCRIPT
+// Tenant : https://go10njvx344b4j2.eu.qlikcloud.com
+// Source : ADLS Gen2 account stanglominingdw01, container raw/dw (TSV, tab)
+// Model  : Single concatenated fact + conformed dimensions (avoids Qlik
+//          circular references between the multiple DW fact tables).
+// ============================================================================
+// SETUP (one of two options):
+//  A) Web files: paste a container-level read SAS token below (vSAS) and
+//     reload. Generate with:
+//       az storage container generate-sas --account-name stanglominingdw01
+//          --name raw --permissions rl --expiry <yyyy-mm-dd> -o tsv
+//  B) Qlik "Azure Storage" connector: create the connection to
+//     stanglominingdw01/raw and replace the FROM clauses with lib:// paths.
+// ============================================================================
+
+SET ThousandSep=' ';
+SET DecimalSep='.';
+SET DateFormat='YYYY-MM-DD';
+SET TimestampFormat='YYYY-MM-DD hh:mm:ss[.fff]';
+
+LET vBase = 'https://stanglominingdw01.blob.core.windows.net/raw/dw';
+LET vSAS  = '';   // <-- paste SAS token here (see raw_container_sas_*.txt, gitignored, or regenerate per SETUP note above)
+
+// ---------------------------------------------------------------- dimensions
+DimDate:
+LOAD
+    DateKey,
+    Date#(FullDate,'YYYY-MM-DD')            AS FullDate,
+    Year, Quarter, MonthNumber, MonthName,
+    YearMonth, DayOfMonth, DayName,
+    IsWeekend, FiscalYearSA, SeasonSouthernAfrica
+FROM [$(vBase)/DimDate.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimEquipment:
+LOAD
+    EquipmentKey,
+    FleetId, RegNumber, EquipmentDescription,
+    MakeName, ModelName, VehicleTypeName,
+    IsEligibleVehicleType, ConsumptionTypeName,
+    TankSize, EligibilityClass
+FROM [$(vBase)/DimEquipment.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimLocation:
+LOAD
+    LocationKey,
+    LocationDescription, IsFixed, IsMobile, Capacity
+FROM [$(vBase)/DimLocation.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimProduct:
+LOAD
+    ProductKey, ProductName, IsFuel
+FROM [$(vBase)/DimProduct.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimCostCentre:
+LOAD
+    CostCentreKey, CostCentreName, ResponsibilityCode,
+    BusinessRevenueCode, TaxRebateCode, GlAccount
+FROM [$(vBase)/DimCostCentre.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+DimEligibleActivity:
+LOAD
+    EligibleActivityKey, ActivityCodePattern,
+    ActivityDescription, EligibilityStatus
+FROM [$(vBase)/DimEligibleActivity.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// ------------------------------------------------- concatenated fact table
+// FactType distinguishes the grains; measures are FactType-specific and
+// aggregated with Set Analysis in the master measures.
+Fuel:
+LOAD
+    'Fuel Issue'                             AS FactType,
+    DateKey, EquipmentKey, LocationKey, ProductKey,
+    CostCentreKey, EligibleActivityKey,
+    Num#(Litres)                             AS IssuedLitres,
+    Num#(HoursOdoReading)                    AS HoursOdoReading,
+    FuelEventId, VoucherNumber, Pump, DeviceId,
+    VehicleCategoryDescription
+FROM [$(vBase)/FactFuelTransaction.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Fuel Delivery'                          AS FactType,
+    DateKey, LocationKey, ProductKey,
+    Num#(VolumeLitres)                       AS DeliveredLitres,
+    DocumentNumber
+FROM [$(vBase)/FactFuelDelivery.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Usage Classification'                   AS FactType,
+    DateKey, EquipmentKey,
+    Num#(TotalFuelUsedLitres)                AS UsageTotalLitres,
+    Num#(NonEligibleLitres)                  AS NonEligibleLitres,
+    Num#(EligibleUsageLitres)                AS EligibleLitres,
+    Num#(EligiblePurchasesLitres)            AS EligiblePurchasesLitres,
+    TypeOfVehicle, SpecificActivityPerformed, WhereActivityPerformed
+FROM [$(vBase)/FactFuelUsageClassification.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Meter Reading'                          AS FactType,
+    DateKey, EquipmentKey,
+    Num#(ReadingDiff)                        AS UnitsWorked
+FROM [$(vBase)/FactMeterReading.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+CONCATENATE (Fuel)
+LOAD
+    'Equipment Trip'                         AS FactType,
+    SourceDateKey                            AS DateKey,
+    EquipmentKey,
+    Num#(TripDurationInMinutes)              AS TripMinutes,
+    1                                        AS TripCount,
+    MaterialType, DestinationLocation
+FROM [$(vBase)/FactEquipmentTrip.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// --------------------------------------- SARS refund claims (data island)
+// Month-grain SARS 670.04 calculation done in the DW; kept as an island for
+// the Refund sheet KPIs (no key fields shared with the main model).
+RefundClaims:
+LOAD
+    ClaimYearMonth                           AS Claim.YearMonth,
+    Num#(TotalLitres)                        AS Claim.TotalLitres,
+    Num#(NonEligibleLitres)                  AS Claim.NonEligibleLitres,
+    Num#(EligibleLitres)                     AS Claim.EligibleLitres,
+    Num#(QualifyingClaimLitres)              AS Claim.QualifyingLitres,
+    Num#(RefundRateCentsPerLitre)            AS Claim.RateCentsPerLitre,
+    Num#(RefundAmountRand)                   AS Claim.RefundRand,
+    RateMissingFlag                          AS Claim.RateMissingFlag
+FROM [$(vBase)/FactDieselRefundClaim.tsv?$(vSAS)]
+(txt, utf8, embedded labels, delimiter is '\t');
+
+// ============================================================================
+// MASTER MEASURES to create in the app (Set Analysis on FactType):
+//   Litres Issued        : Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+//   Litres Delivered     : Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)
+//   Total Fuel Used      : Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)
+//   Eligible Litres      : Sum({<FactType={'Usage Classification'}>} EligibleLitres)
+//   Non-Eligible Litres  : Sum({<FactType={'Usage Classification'}>} NonEligibleLitres)
+//   Eligible %           : Sum({<FactType={'Usage Classification'}>} EligibleLitres)
+//                          / Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)
+//   Qualifying Litres    : Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8
+//   Refund (R, 349c/l)   : Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8 * 3.49
+//   Litres per Hour/Km   : Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+//                          / Sum({<FactType={'Meter Reading'}>} UnitsWorked)
+//   Trips                : Sum({<FactType={'Equipment Trip'}>} TripCount)
+//   Tank Net Movement    : Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)
+//                          - Sum({<FactType={'Fuel Issue'}>} IssuedLitres)
+// NOTE: the 349c/l rate is the 2020 SARS policy example from the evidence
+// pack - not current tax advice. Claims island has the DW-computed values.
+// ============================================================================

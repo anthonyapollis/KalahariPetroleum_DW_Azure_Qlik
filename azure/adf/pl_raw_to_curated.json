@@ -1,0 +1,48 @@
+{
+    "activities": [
+        {
+            "name": "ForEachTable",
+            "type": "ForEach",
+            "typeProperties": {
+                "items": { "value": "@pipeline().parameters.tableList", "type": "Expression" },
+                "isSequential": false,
+                "batchCount": 4,
+                "activities": [
+                    {
+                        "name": "CopyTsvToParquet",
+                        "type": "Copy",
+                        "policy": { "retry": 1, "timeout": "0.02:00:00" },
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "storeSettings": { "type": "AzureBlobFSReadSettings" },
+                                "formatSettings": { "type": "DelimitedTextReadSettings" }
+                            },
+                            "sink": {
+                                "type": "ParquetSink",
+                                "storeSettings": { "type": "AzureBlobFSWriteSettings" },
+                                "formatSettings": { "type": "ParquetWriteSettings" }
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "ds_raw_tsv",
+                                "type": "DatasetReference",
+                                "parameters": { "fileName": { "value": "@concat(item(), '.tsv')", "type": "Expression" } }
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "ds_curated_parquet",
+                                "type": "DatasetReference",
+                                "parameters": { "tableName": { "value": "@item()", "type": "Expression" } }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "parameters": { "tableList": { "type": "array" } }
+}
