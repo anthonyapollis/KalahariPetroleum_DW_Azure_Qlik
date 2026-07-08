@@ -1,5 +1,7 @@
 # Qlik Sense App Guide — Anglo Mining Fuel / SARS Diesel Refund
 
+[← Back to project overview](../README.md) · [Data story](../index.html) · [Azure architecture](../azure/AZURE_ARCHITECTURE.md)
+
 Tenant: `https://go10njvx344b4j2.eu.qlikcloud.com`
 
 ## Getting the data in (pick one)

@@ -12,6 +12,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHARTS = os.path.join(BASE, "data", "charts")
 ANA = os.path.join(BASE, "data", "analysis")
 OUT = os.path.join(BASE, "index.html")
+REPO = "https://github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik"
 
 def img(name):
     with open(os.path.join(CHARTS, name), "rb") as f:
@@ -71,14 +72,45 @@ tr:nth-child(even) {{ background:#f4f6f9; }}
 .note {{ background:#FFF7E6; border-left:4px solid var(--gold); padding:12px 16px; border-radius:6px; font-size:.9rem; margin:14px 0; }}
 .flow {{ background:#0b1526; color:#9fd3ff; font-family:Consolas,monospace; font-size:.82rem; padding:18px; border-radius:8px; overflow-x:auto; white-space:pre; margin:12px 0; }}
 footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; }}
+.topnav {{ position:sticky; top:0; z-index:100; background:var(--navy); display:flex; flex-wrap:wrap;
+  align-items:center; gap:2px; padding:0 16px; box-shadow:0 2px 10px rgba(0,0,0,.15); }}
+.topnav .home {{ color:var(--gold); font-weight:700; letter-spacing:1.5px; font-size:13px; padding:14px 12px 14px 0; text-transform:uppercase; }}
+.topnav a {{ color:#cfe0f5; text-decoration:none; font-size:12px; padding:14px 10px; border-bottom:2px solid transparent; transition:.15s; white-space:nowrap; }}
+.topnav a:hover {{ color:#fff; border-bottom-color:var(--gold); }}
+.topnav .ext {{ margin-left:auto; display:flex; gap:6px; padding:8px 0; }}
+.topnav .ext a {{ background:var(--teal); color:#fff; border-radius:6px; padding:7px 13px; font-weight:600; border-bottom:none; }}
+.topnav .ext a:hover {{ background:#00807e; color:#fff; }}
+.topnav .ext a.pdf {{ background:var(--red); }}
+.topnav .ext a.pdf:hover {{ background:#b5001f; }}
+html {{ scroll-behavior:smooth; }}
+section {{ scroll-margin-top:60px; }}
+@media print {{ .topnav {{ display:none; }} }}
 </style>
 </head>
 <body>
+
+<div class="topnav">
+  <span class="home">Anglo Mining Fuel</span>
+  <a href="#story">Story</a>
+  <a href="#fuel">Fuel</a>
+  <a href="#fleet">Fleet &amp; haulage</a>
+  <a href="#refund">SARS refund</a>
+  <a href="#dq">Data quality</a>
+  <a href="#build">How it's built</a>
+  <a href="qlik/QLIK_APP_GUIDE.md">Qlik guide</a>
+  <a href="azure/AZURE_ARCHITECTURE.md">Azure architecture</a>
+  <div class="ext">
+    <a href="{REPO}" target="_blank" rel="noopener">GitHub repo</a>
+    <a href="reports/Anglo_Mining_Fuel_Data_Story.xlsx" download>Excel</a>
+    <a class="pdf" href="reports/Anglo_Mining_Fuel_Data_Story.pdf" download>PDF report</a>
+  </div>
+</div>
 
 <div class="hero">
   <h1>Fuelling a Mining Giant</h1>
   <p>A diesel, haulage and SARS-refund data story — 23.7 million rows from a mining fleet-operations ERP,
      modelled as a SQL Server star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
+  <p style="margin-top:14px;font-size:.85rem;"><a href="{REPO}" target="_blank" rel="noopener" style="color:#FFB81C;">View source on GitHub →</a></p>
 </div>
 
 <div class="kpis">
@@ -91,7 +123,7 @@ footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; 
 
 <div class="wrap">
 
-<section>
+<section id="story">
   <h2>1 · More than fuel records</h2>
   <p>The source system is an operational ERP for a mining fleet: an Automated Fuel System (AFS) issuing diesel
      to trucks and drill rigs, tank deliveries, odometer and hour-meter readings, haulage trips with material
@@ -104,7 +136,7 @@ footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; 
      rand per month.</p>
 </section>
 
-<section>
+<section id="fuel">
   <h2>2 · The fuel story</h2>
   {img('02_yearly_fuel.png')}
   <p>Fuel issue volumes step up sharply from 2019 as the AFS rollout reaches full coverage, settling around
@@ -116,7 +148,7 @@ footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; 
      refund forecast needs more than a flat average.</p>
 </section>
 
-<section>
+<section id="fleet">
   <h2>3 · Fleet &amp; haulage</h2>
   {img('05_top_equipment.png')}
   {img('06_vehicle_type_fuel.png')}
@@ -127,7 +159,7 @@ footer {{ text-align:center; color:var(--grey); font-size:.82rem; padding:26px; 
   {img('08_trips_by_month.png')}
 </section>
 
-<section>
+<section id="refund">
   <h2>4 · The SARS diesel refund</h2>
   <p>For on-land primary producers (mining included), the refund formula from the policy evidence is:</p>
   <div class="flow">eligible_litres    = total_litres − non_eligible_litres
@@ -144,7 +176,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
   <code>dw.DimRefundRate</code> with current rates before relying on any figure.</div>
 </section>
 
-<section>
+<section id="dq">
   <h2>5 · Data quality — where the money leaks</h2>
   {img('10_data_quality.png')}
   <table>
@@ -158,7 +190,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
      the only row in 23.7 million that broke a rectangular file export.</p>
 </section>
 
-<section>
+<section id="build">
   <h2>6 · How it's built</h2>
   <div class="flow">SQL Server (AngloData QA)                    ── local, always works offline
   └─ dw star schema  · 8 dims, 8 facts, 5 views   (01_create_load_dw_full.sql)
@@ -171,12 +203,18 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
   <p>The warehouse reconciles exactly: 290 557 288.29 litres issued in both source and fact table, to the
      hundredth of a litre. Everything regenerates from five scripts, and the Azure resource group tears down
      with one command when it has served its purpose.</p>
+  <p>Full source, the SQL build script, both Qlik load scripts (cloud + local), and the Azure Data Factory
+     definitions are in the repository: <a href="{REPO}" target="_blank" rel="noopener">{REPO}</a>. See
+     <a href="qlik/QLIK_APP_GUIDE.md">qlik/QLIK_APP_GUIDE.md</a> for the six-sheet Qlik Sense app design, and
+     <a href="azure/AZURE_ARCHITECTURE.md">azure/AZURE_ARCHITECTURE.md</a> for the deployed-resource inventory
+     and kill switch.</p>
 </section>
 
 </div>
 <footer>
   Anthony Apollis · 2026 · Built with SQL Server, Azure Data Factory, ADLS Gen2, Python &amp; Qlik Sense.<br>
-  QA data, anonymised context; SARS figures are modelled examples, not tax advice.
+  QA data, anonymised context; SARS figures are modelled examples, not tax advice.<br>
+  <a href="{REPO}" target="_blank" rel="noopener" style="color:var(--teal);">{REPO.replace('https://', '')}</a>
 </footer>
 </body>
 </html>

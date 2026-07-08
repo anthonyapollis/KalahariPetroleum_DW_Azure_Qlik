@@ -1,5 +1,7 @@
 # Azure Architecture — Anglo Mining Fuel DW
 
+[← Back to project overview](../README.md) · [Data story](../index.html) · [Qlik app guide](../qlik/QLIK_APP_GUIDE.md)
+
 ## Deployed resources (subscription "Azure subscription 1", tenant the-spot.tech)
 
 | Resource | Name | Region | Notes |

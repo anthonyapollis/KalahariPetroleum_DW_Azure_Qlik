@@ -1,5 +1,7 @@
 # ERD — Anglo Mining Fuel DW (schema `dw`, AngloData_QA_20220825_1820)
 
+[← Back to project overview](../README.md) · [Data story](../index.html)
+
 ```mermaid
 erDiagram
     DimDate ||--o{ FactFuelTransaction : DateKey

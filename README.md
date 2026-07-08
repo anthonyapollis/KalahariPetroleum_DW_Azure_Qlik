@@ -1,5 +1,9 @@
 # Anglo Mining Fuel — SQL DW → Azure Data Factory → Qlik Sense
 
+**[Open `index.html`](index.html) for the interactive data story** — "Fuelling a Mining Giant."
+Repo: [github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik](https://github.com/anthonyapollis/AngloMiningFuel_DW_Azure_Qlik) (private) ·
+[PDF report](reports/Anglo_Mining_Fuel_Data_Story.pdf) · [Excel workbook](reports/Anglo_Mining_Fuel_Data_Story.xlsx)
+
 End-to-end analytics build over the Anglo mining fuel / petroleum-logbook ERP
 (`AngloData_QA_20220825_1820`, local SQL Server) with SARS diesel-refund
 (Rebate Item 670.04) business logic from the Gmail evidence pack.
@@ -13,24 +17,24 @@ Built 2026-07-06/07. ~23.7M rows shipped through the full pipeline:
 
 | Path | What |
 |---|---|
-| `sql/01_create_load_dw_full.sql` | Complete re-runnable star-schema build: 8 dimensions, 8 facts, 5 analysis views, FKs + indexes, in schema `dw` |
-| `sql/02_export_dw_to_tsv.ps1` | bcp export of all DW tables + CoordRef to headered TSV |
-| `sql/03_build_local_parquet.py` | Local curated Parquet build (incremental; pandas QUOTE_NONE parser) |
-| `data_export/` | The exported TSVs (source for both Azure and local curated) |
-| `curated_local/dw/` | **Local curated Parquet layer** — same layout as Azure `curated/dw/`; the project runs fully offline |
-| `azure/AZURE_ARCHITECTURE.md` | Deployed resources, data flow, SHIR production pattern, cost + kill switch |
-| `azure/deploy_adf.ps1`, `azure/run_pipeline.ps1` | Re-deploy ADF artifacts / trigger + poll the pipeline |
-| `azure/adf/*.json` | ADF dataset & pipeline definitions (TSV → Parquet ForEach copy) |
-| `qlik/anglo_mining_fuel_load_script.qvs` | Qlik Sense load script — cloud variant (ADLS via SAS) |
-| `qlik/anglo_mining_fuel_load_script_local.qvs` | Qlik load script — **local variant** (folder connection `AngloDW` → `data_export\`), same model |
-| `qlik/QLIK_APP_GUIDE.md` | App setup on go10njvx344b4j2.eu.qlikcloud.com + 6 sheet designs |
-| `docs/erd_mermaid.md` | ERD + reconciled row counts |
-| `sql/04_export_analysis_csvs.ps1` | Reporting aggregates (refunds, fuel trends, fleet, haulage, DQ) → `data/analysis/*.csv` |
-| `sql/05_build_reports.py` | Chart set (→ `data/charts/*.png`) + Excel workbook with native charts (→ `reports/*.xlsx`) |
-| `sql/06_build_ebook.py` | Self-contained data-story ebook (→ `index.html`, charts embedded as base64) |
-| `reports/Anglo_Mining_Fuel_Data_Story.xlsx` | 13-sheet workbook: KPIs, refund claims, fleet/haulage aggregates, data quality, native charts |
-| `reports/Anglo_Mining_Fuel_Data_Story.pdf` | Print render of the ebook |
-| `index.html` | The data-story ebook — "Fuelling a Mining Giant" (open directly in a browser) |
+| [`index.html`](index.html) | **The data-story ebook** — "Fuelling a Mining Giant" (open directly in a browser) |
+| [`reports/Anglo_Mining_Fuel_Data_Story.pdf`](reports/Anglo_Mining_Fuel_Data_Story.pdf) | Print render of the ebook |
+| [`reports/Anglo_Mining_Fuel_Data_Story.xlsx`](reports/Anglo_Mining_Fuel_Data_Story.xlsx) | 13-sheet workbook: KPIs, refund claims, fleet/haulage aggregates, data quality, native charts |
+| [`sql/01_create_load_dw_full.sql`](sql/01_create_load_dw_full.sql) | Complete re-runnable star-schema build: 8 dimensions, 8 facts, 5 analysis views, FKs + indexes, in schema `dw` |
+| [`sql/02_export_dw_to_tsv.ps1`](sql/02_export_dw_to_tsv.ps1) | bcp export of all DW tables + CoordRef to headered TSV |
+| [`sql/03_build_local_parquet.py`](sql/03_build_local_parquet.py) | Local curated Parquet build (incremental; pandas QUOTE_NONE parser) |
+| [`sql/04_export_analysis_csvs.ps1`](sql/04_export_analysis_csvs.ps1) | Reporting aggregates (refunds, fuel trends, fleet, haulage, DQ) → `data/analysis/*.csv` |
+| [`sql/05_build_reports.py`](sql/05_build_reports.py) | Chart set (→ `data/charts/*.png`) + Excel workbook with native charts (→ `reports/*.xlsx`) |
+| [`sql/06_build_ebook.py`](sql/06_build_ebook.py) | Builds `index.html` (charts embedded as base64) |
+| [`data_export/`](data_export/) | The exported TSVs (source for both Azure and local curated) |
+| [`curated_local/dw/`](curated_local/dw/) | **Local curated Parquet layer** — same layout as Azure `curated/dw/`; the project runs fully offline |
+| [`azure/AZURE_ARCHITECTURE.md`](azure/AZURE_ARCHITECTURE.md) | Deployed resources, data flow, SHIR production pattern, cost + kill switch |
+| [`azure/deploy_adf.ps1`](azure/deploy_adf.ps1), [`azure/run_pipeline.ps1`](azure/run_pipeline.ps1) | Re-deploy ADF artifacts / trigger + poll the pipeline |
+| [`azure/adf/`](azure/adf/) | ADF dataset & pipeline definitions (TSV → Parquet ForEach copy) |
+| [`qlik/anglo_mining_fuel_load_script.qvs`](qlik/anglo_mining_fuel_load_script.qvs) | Qlik Sense load script — cloud variant (ADLS via SAS) |
+| [`qlik/anglo_mining_fuel_load_script_local.qvs`](qlik/anglo_mining_fuel_load_script_local.qvs) | Qlik load script — **local variant** (folder connection `AngloDW` → `data_export\`), same model |
+| [`qlik/QLIK_APP_GUIDE.md`](qlik/QLIK_APP_GUIDE.md) | App setup on go10njvx344b4j2.eu.qlikcloud.com + 6 sheet designs |
+| [`docs/erd_mermaid.md`](docs/erd_mermaid.md) | ERD + reconciled row counts |
 
 ## Star schema (schema `dw` on localhost)
 
