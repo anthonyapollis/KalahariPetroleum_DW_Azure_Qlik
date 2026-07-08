@@ -167,6 +167,8 @@ sheets = [
     ("Tank Reconciliation", "tank_reconciliation"),
     ("Data Quality", "data_quality"),
     ("DQ Over-Tank Issues", "dq_over_tank"),
+    ("ML Anomaly Review Queue", "ml_review_queue"),
+    ("Haulage Sites (Map)", "map_sites"),
 ]
 with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
     wb = xw.book
@@ -187,6 +189,7 @@ with pd.ExcelWriter(xlsx, engine="xlsxwriter") as xw:
         ("Haulage", "778,254 equipment trips"),
         ("Usage classified for SARS", "231.7M litres; 92.3M non-eligible"),
         ("Diesel refund modelled", "44 claim months (Rebate Item 670.04, 80% qualifying rule)"),
+        ("ML anomaly detection", "Isolation Forest, 325,504 transactions scored, 6,511 flagged (2.0%)"),
         ("Rows through the pipeline", "~23.7 million (incl. 21.9M-row CoordRef geo grid)"),
     ]
     r = 5

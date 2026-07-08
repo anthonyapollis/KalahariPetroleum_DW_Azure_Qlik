@@ -11,9 +11,13 @@ import pandas as pd
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHARTS = os.path.join(BASE, "data", "charts")
 ANA = os.path.join(BASE, "data", "analysis")
+MAPDIR = os.path.join(BASE, "map")
 OUT = os.path.join(BASE, "index.html")
 REPO = "https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik"
 COMPANY = "Kalahari Petroleum"
+
+with open(os.path.join(MAPDIR, "map_section.html"), encoding="utf-8") as f:
+    MAP_SECTION = f.read()
 
 def img(name):
     with open(os.path.join(CHARTS, name), "rb") as f:
@@ -29,6 +33,10 @@ total_refund = claimed.RefundAmountRand.sum()
 total_eligible = rf.EligibleLitres.sum()
 total_usage = rf.TotalLitres.sum()
 dq = pd.read_csv(os.path.join(ANA, "data_quality.csv"))
+ml = pd.read_csv(os.path.join(ANA, "ml_review_queue.csv"))
+ml_scores = pd.read_csv(os.path.join(ANA, "ml_anomaly_scores.csv"))
+ml_n_flagged = int(ml_scores["IsAnomaly"].sum())
+ml_pct_flagged = ml_n_flagged / len(ml_scores)
 
 refund_rows = "".join(
     f"<tr><td>{r.ClaimYearMonth}</td><td class='num'>{fmt(r.TotalLitres)}</td>"
@@ -40,6 +48,12 @@ refund_rows = "".join(
 dq_rows = "".join(
     f"<tr><td>{r.issue}</td><td class='num'>{fmt(r.row_count)}</td></tr>"
     for r in dq.itertuples() if r.row_count > 0
+)
+ml_rows = "".join(
+    f"<tr><td>{r.TransactionDateTime}</td><td>{r.FleetId}</td><td>{r.MakeName}</td>"
+    f"<td class='num'>{fmt(r.Litres, 1)}</td><td class='num'>{fmt(r.TankSize, 0)}</td>"
+    f"<td class='num'>{fmt(r.TankFillRatio, 1)}x</td><td class='num'>{fmt(r.AnomalyScore, 3)}</td></tr>"
+    for r in ml.head(10).itertuples()
 )
 
 html = f"""<!DOCTYPE html>
@@ -56,7 +70,7 @@ body {{ font-family:'Segoe UI',system-ui,sans-serif; color:#1a202c; line-height:
 .hero h1 {{ font-size:2.3rem; margin-bottom:10px; }}
 .hero p {{ opacity:.9; max-width:760px; margin:0 auto; }}
 .wrap {{ max-width:1000px; margin:0 auto; padding:24px; }}
-.kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:-38px auto 30px; max-width:1000px; padding:0 24px; }}
+.kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:-38px auto 30px; max-width:1000px; padding:0 24px; position:relative; z-index:2; }}
 .kpi {{ background:#fff; border-radius:10px; padding:18px; box-shadow:0 4px 14px rgba(0,0,0,.08); text-align:center; }}
 .kpi .v {{ font-size:1.45rem; font-weight:700; color:var(--navy); }}
 .kpi .l {{ font-size:.8rem; color:var(--grey); }}
@@ -95,8 +109,10 @@ section {{ scroll-margin-top:60px; }}
   <a href="#story">Story</a>
   <a href="#fuel">Fuel</a>
   <a href="#fleet">Fleet &amp; haulage</a>
+  <a href="#map">Map</a>
   <a href="#refund">SARS refund</a>
   <a href="#dq">Data quality</a>
+  <a href="#ml">ML anomalies</a>
   <a href="#build">How it's built</a>
   <a href="qlik/QLIK_APP_GUIDE.md">Qlik guide</a>
   <a href="azure/AZURE_ARCHITECTURE.md">Azure architecture</a>
@@ -112,13 +128,12 @@ section {{ scroll-margin-top:60px; }}
   <p>A diesel, haulage and SARS-refund data story — 23.7 million rows from {COMPANY}'s upstream fleet-operations
      ERP, modelled as a SQL Server star schema, shipped through Azure Data Factory, and served to Qlik Sense.</p>
   <p style="margin-top:14px;font-size:.85rem;"><a href="{REPO}" target="_blank" rel="noopener" style="color:#FFB81C;">View source on GitHub →</a></p>
-</div>
-
-<div class="note" style="max-width:952px; margin:16px auto 0;">
-  <strong>Case-study note:</strong> {COMPANY} is a fictional company invented for this portfolio piece. The
-  underlying operational data is real (anonymised) mining/haulage fleet-fuel ERP data, presented here under a
-  fictional oil &amp; gas identity to demonstrate the data model and analytics pipeline without naming the
-  source organisation.
+  <div class="note" style="max-width:900px; margin:20px auto 0; text-align:left;">
+    <strong>Case-study note:</strong> {COMPANY} is a fictional company invented for this portfolio piece. The
+    underlying operational data is real (anonymised) mining/haulage fleet-fuel ERP data, presented here under a
+    fictional oil &amp; gas identity to demonstrate the data model and analytics pipeline without naming the
+    source organisation.
+  </div>
 </div>
 
 <div class="kpis">
@@ -169,8 +184,18 @@ section {{ scroll-margin-top:60px; }}
   {img('08_trips_by_month.png')}
 </section>
 
+<section id="map">
+  <h2>4 · Haulage &amp; site activity map</h2>
+  <p>Real GPS trip data plotted against a label-free basemap — three toggleable layers built for
+     three different audiences: <strong>dispatch</strong> (where the traffic actually is),
+     <strong>production</strong> (what's moving out of each site), and <strong>compliance</strong>
+     (which activity supports a SARS eligible-activity claim). The top 40 haul routes overlay
+     shows road-maintenance priority by traffic volume.</p>
+  {MAP_SECTION}
+</section>
+
 <section id="refund">
-  <h2>4 · The SARS diesel refund</h2>
+  <h2>5 · The SARS diesel refund</h2>
   <p>For on-land primary producers (mining included), the refund formula from the policy evidence is:</p>
   <div class="flow">eligible_litres    = total_litres − non_eligible_litres
 qualifying_litres  = eligible_litres × 80%
@@ -187,7 +212,7 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
 </section>
 
 <section id="dq">
-  <h2>5 · Data quality — where the money leaks</h2>
+  <h2>6 · Data quality — where the money leaks</h2>
   {img('10_data_quality.png')}
   <table>
     <tr><th>Finding</th><th>Rows</th></tr>
@@ -200,8 +225,31 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
      the only row in 23.7 million that broke a rectangular file export.</p>
 </section>
 
+<section id="ml">
+  <h2>7 · Machine learning: fuel-anomaly detection</h2>
+  <p>An <strong>Isolation Forest</strong> (scikit-learn, 300 trees, 2% contamination) scores every fuel
+     transaction on five features: litres issued, tank-fill ratio, that vehicle's own fill-ratio
+     z-score (so a naturally large tanker isn't penalised for being large), hour of day, and day of
+     week. This catches what a fixed 1.5×-tank-size rule misses — multivariate outliers like a
+     small bakkie fuelling at an odd hour for a ratio that's unremarkable on its own but anomalous
+     in combination.</p>
+  {img('11_ml_anomaly_scatter.png')}
+  <p>{fmt(ml_n_flagged)} of {fmt(len(ml_scores))} transactions flagged ({ml_pct_flagged:.1%}). The highest-scoring
+     cases are extreme: single transactions of hundreds of thousands to millions of litres against
+     100–600 L tanks — almost certainly decimal-placement data-entry errors rather than physical
+     theft, but exactly the kind of finding a refund audit needs caught before litres get claimed.</p>
+  {img('12_ml_anomaly_by_equip.png')}
+  <h3>Top 10 highest-risk transactions</h3>
+  <table>
+    <tr><th>Date/time</th><th>Fleet ID</th><th>Make</th><th>Litres</th><th>Tank (L)</th><th>Fill ratio</th><th>Anomaly score</th></tr>
+    {ml_rows}
+  </table>
+  <p style="font-size:.85rem;color:#63666A;">Full 200-row review queue: <code>data/analysis/ml_review_queue.csv</code>
+     and the "ML Anomaly Review Queue" sheet in the Excel workbook. Model: <code>sql/10_ml_anomaly_detection.py</code>.</p>
+</section>
+
 <section id="build">
-  <h2>6 · How it's built</h2>
+  <h2>9 · How it's built</h2>
   <div class="flow">SQL Server (source ERP, QA copy)             ── local, always works offline
   └─ dw star schema  · 8 dims, 8 facts, 5 views   (01_create_load_dw_full.sql)
        └─ TSV export (bcp, UTF-8)                 (02_export_dw_to_tsv.ps1)

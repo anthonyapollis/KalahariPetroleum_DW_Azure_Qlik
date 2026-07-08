@@ -1,0 +1,142 @@
+
+<div id="haulmap-controls" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+  <button class="maplayer-btn active" data-layer="trips">Trip Volume</button>
+  <button class="maplayer-btn" data-layer="material">Material Type</button>
+  <button class="maplayer-btn" data-layer="eligibility">SARS Eligibility</button>
+  <label style="margin-left:auto; font-size:.82rem; color:#63666A; display:flex; align-items:center; gap:6px;">
+    <input type="checkbox" id="haulmap-routes-toggle"> Show top 40 haul routes
+  </label>
+</div>
+<div style="position:relative;">
+  <div id="haulmap" style="height:520px; border-radius:8px; border:1px solid #e5e7eb;"></div>
+  <div id="haulmap-legend" style="position:absolute; bottom:10px; left:10px; z-index:1000;
+    background:rgba(255,255,255,.95); border-radius:8px; padding:10px 14px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+    font-size:.78rem; color:#1a202c; max-width:260px;"></div>
+</div>
+<p style="font-size:.8rem; color:#63666A; margin-top:8px;">
+  45 haulage sites · 694,217 trips · real GPS coordinates
+  (site/company identity kept fictional — see case-study note — so the basemap below is
+  intentionally label-free: no place names, only terrain/road geometry for genuine
+  ops/dispatch use). Hover a site for a quick summary, click for full detail.
+  <strong>Data-quality note:</strong> the source system's Lat/Long columns are transposed
+  (the "Lat" column holds longitude values and vice versa) — corrected here.
+  Map requires an internet connection to load street tiles.
+</p>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function() {
+  var sites = [{"name": "Central Pit", "lat": -23.965275, "lng": 28.890536, "trips": 489787, "equip": 62, "avgMin": 24.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "Stockpile", "lat": -23.969903, "lng": 28.903698, "trips": 77686, "equip": 62, "avgMin": 12.0, "material": "HGO", "activity": "HGO-Stockpile-Crusher", "matColor": "#E4002B", "eligColor": "#00A3A1"}, {"name": "North Pit", "lat": -23.940337, "lng": 28.881436, "trips": 56591, "equip": 61, "avgMin": 32.2, "material": "MGO", "activity": "Waste-Blast-Dump", "matColor": "#FF8C00", "eligColor": "#5B5F66"}, {"name": "CUT 10 LOADING", "lat": -23.948426, "lng": 28.878575, "trips": 44524, "equip": 62, "avgMin": 14.8, "material": "Top Soil", "activity": "Top Soil-Blast-Dump", "matColor": "#8B5A2B", "eligColor": "#00A3A1"}, {"name": "CUT 10 LOADING 2", "lat": -23.942882, "lng": 28.875763, "trips": 7046, "equip": 49, "avgMin": 11.7, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 10 LOADING 3", "lat": -23.937553, "lng": 28.875825, "trips": 3868, "equip": 46, "avgMin": 12.5, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "South Pit", "lat": -23.979836, "lng": 28.901429, "trips": 3283, "equip": 49, "avgMin": 23.0, "material": "HGO", "activity": "Waste-Blast-Dump", "matColor": "#E4002B", "eligColor": "#5B5F66"}, {"name": "CUT9 OVERSPILL", "lat": -23.964795, "lng": 28.889777, "trips": 2685, "equip": 55, "avgMin": 29.7, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 CLEAN-UP", "lat": -23.967713, "lng": 28.890656, "trips": 2309, "equip": 58, "avgMin": 29.3, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 CLEAN UP", "lat": -23.963386, "lng": 28.887978, "trips": 960, "equip": 51, "avgMin": 22.9, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT10 H/ROAD STRIPPING1", "lat": -23.934632, "lng": 28.876596, "trips": 912, "equip": 44, "avgMin": 15.5, "material": "Top Soil", "activity": "Top Soil-Blast-Dump", "matColor": "#8B5A2B", "eligColor": "#00A3A1"}, {"name": "BENCH 411 CLEAN UP", "lat": -23.967939, "lng": 28.889241, "trips": 453, "equip": 40, "avgMin": 20.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 19 CLEAN UP", "lat": -23.960299, "lng": 28.887592, "trips": 407, "equip": 43, "avgMin": 24.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 8 BENCH 44 CLEAN UP", "lat": -23.964616, "lng": 28.890591, "trips": 379, "equip": 45, "avgMin": 33.9, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 10 CLEAN UP", "lat": -23.957973, "lng": 28.884839, "trips": 373, "equip": 52, "avgMin": 28.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 26 CLEANUP", "lat": -23.967972, "lng": 28.895149, "trips": 286, "equip": 50, "avgMin": 29.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 23 CLEAN UP", "lat": -23.964107, "lng": 28.887875, "trips": 266, "equip": 44, "avgMin": 27.4, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 38 CLEAN UP", "lat": -23.952, "lng": 28.885966, "trips": 240, "equip": 38, "avgMin": 26.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 B11 CLEAN UP", "lat": -23.971136, "lng": 28.894636, "trips": 217, "equip": 38, "avgMin": 19.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BOS 1 REHANDLE", "lat": -23.97225, "lng": 28.905679, "trips": 200, "equip": 21, "avgMin": 10.4, "material": "LGO", "activity": "LGO-Stockpile-Crusher", "matColor": "#00A3A1", "eligColor": "#00A3A1"}, {"name": "CUT8 OVERSPILL", "lat": -23.966684, "lng": 28.892311, "trips": 147, "equip": 40, "avgMin": 30.9, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT10 H/ROAD STRIPPING", "lat": -23.936436, "lng": 28.875954, "trips": 137, "equip": 24, "avgMin": 11.2, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "B44 FLOOR", "lat": -23.962783, "lng": 28.891328, "trips": 132, "equip": 34, "avgMin": 30.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH33 CLEAN UP", "lat": -23.965432, "lng": 28.889736, "trips": 118, "equip": 35, "avgMin": 26.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 8 CLEAN UP", "lat": -23.961287, "lng": 28.890657, "trips": 98, "equip": 32, "avgMin": 34.7, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 14 CLEAN UP", "lat": -23.969454, "lng": 28.890228, "trips": 94, "equip": 26, "avgMin": 24.8, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 23A CLEAN UP", "lat": -23.961025, "lng": 28.888926, "trips": 92, "equip": 32, "avgMin": 30.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "NORTH  CLEAN UP", "lat": -23.938096, "lng": 28.882239, "trips": 92, "equip": 23, "avgMin": 33.0, "material": "Waste", "activity": "Waste-Blast-Stockpile", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 40 CLEAN UP", "lat": -23.965357, "lng": 28.892335, "trips": 89, "equip": 35, "avgMin": 29.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 23 CLEANUP", "lat": -23.969561, "lng": 28.89502, "trips": 86, "equip": 35, "avgMin": 27.7, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 41 CLEAN UP", "lat": -23.966401, "lng": 28.894641, "trips": 80, "equip": 31, "avgMin": 32.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 32 CLEAN UP", "lat": -23.960409, "lng": 28.891774, "trips": 78, "equip": 21, "avgMin": 24.6, "material": "VLGO", "activity": "VLGO-Blast-Stockpile", "matColor": "#6A3FA0", "eligColor": "#00A3A1"}, {"name": "BENCH38 CLEAN UP", "lat": -23.962752, "lng": 28.889808, "trips": 72, "equip": 28, "avgMin": 31.5, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH23 CLEANUP", "lat": -23.955712, "lng": 28.889344, "trips": 70, "equip": 29, "avgMin": 20.8, "material": "VLGO", "activity": "VLGO-Blast-Stockpile", "matColor": "#6A3FA0", "eligColor": "#00A3A1"}, {"name": "SOUTH CLEAN UP", "lat": -23.974802, "lng": 28.898899, "trips": 60, "equip": 13, "avgMin": 38.1, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "TOPSOIL CENTRAL SOUTH", "lat": -23.970943, "lng": 28.891015, "trips": 42, "equip": 15, "avgMin": 17.8, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 B11 RAMP", "lat": -23.968934, "lng": 28.891759, "trips": 40, "equip": 23, "avgMin": 25.8, "material": "Waste", "activity": "Waste-Call Point-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "B11 NORTH", "lat": -23.958436, "lng": 28.888708, "trips": 36, "equip": 23, "avgMin": 23.0, "material": "Waste", "activity": "Waste-Call Point-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 B26-01", "lat": -23.969949, "lng": 28.891984, "trips": 33, "equip": 23, "avgMin": 26.4, "material": "Waste", "activity": "Waste-Call Point-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENCH 11 CLEAN UP", "lat": -23.969567, "lng": 28.890511, "trips": 31, "equip": 18, "avgMin": 25.2, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 8 B17-2", "lat": -23.956929, "lng": 28.888348, "trips": 29, "equip": 16, "avgMin": 27.6, "material": "Waste", "activity": "Waste-Call Point-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "SOUTHERN RAMP B17-2", "lat": -23.970662, "lng": 28.890982, "trips": 24, "equip": 14, "avgMin": 26.7, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "BENC 20 CLEAN UP", "lat": -23.945527, "lng": 28.885926, "trips": 23, "equip": 17, "avgMin": 26.0, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "NORTH CLEAN UP", "lat": -23.938136, "lng": 28.883435, "trips": 22, "equip": 12, "avgMin": 26.6, "material": "Waste", "activity": "Waste-Blast-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}, {"name": "CUT 9 B23-2", "lat": -23.96849, "lng": 28.888774, "trips": 20, "equip": 16, "avgMin": 29.5, "material": "Waste", "activity": "Waste-Call Point-Dump", "matColor": "#5B5F66", "eligColor": "#5B5F66"}];
+  var routes = [{"from": [-23.972261, 28.906026], "to": [-23.976213, 28.907359], "trips": 66804, "src": "Stockpile", "dst": "PPRN CRUSHER"}, {"from": [-23.96225, 28.889182], "to": [-23.945179, 28.897904], "trips": 66802, "src": "Central Pit", "dst": "EAST SHORT DUMP"}, {"from": [-23.96845, 28.89185], "to": [-23.962277, 28.926249], "trips": 45910, "src": "Central Pit", "dst": "BLINKWATER DUMP"}, {"from": [-23.966342, 28.890557], "to": [-23.943588, 28.894315], "trips": 37942, "src": "Central Pit", "dst": "MALEBATJA A2 RAMP"}, {"from": [-23.963653, 28.889258], "to": [-23.943144, 28.892949], "trips": 22443, "src": "Central Pit", "dst": "MALEBATJA A1"}, {"from": [-23.950181, 28.879341], "to": [-23.929045, 28.8912], "trips": 21697, "src": "CUT 10 LOADING", "dst": "NE TOPSOIL"}, {"from": [-23.967916, 28.8904], "to": [-23.953729, 28.930891], "trips": 19544, "src": "Central Pit", "dst": "BLINKWATER NORTH DUMP"}, {"from": [-23.962725, 28.888656], "to": [-23.939383, 28.894771], "trips": 18364, "src": "Central Pit", "dst": "MALEBATJA B EXT"}, {"from": [-23.968577, 28.891741], "to": [-23.958127, 28.936931], "trips": 18186, "src": "Central Pit", "dst": "BLINKWATER EAST DUMP"}, {"from": [-23.967913, 28.890974], "to": [-23.965285, 28.934644], "trips": 18143, "src": "Central Pit", "dst": "BLINKWATER SOUTH DUMP 2"}, {"from": [-23.964262, 28.889046], "to": [-23.939374, 28.894412], "trips": 16778, "src": "Central Pit", "dst": "MALEBATJA EXTENSION"}, {"from": [-23.945284, 28.877149], "to": [-23.937774, 28.87311], "trips": 14385, "src": "CUT 10 LOADING", "dst": "NORTH WEST DUMP"}, {"from": [-23.939813, 28.881323], "to": [-23.974991, 28.90644], "trips": 13474, "src": "North Pit", "dst": "PPRN CRUSHER"}, {"from": [-23.963061, 28.892213], "to": [-23.975546, 28.906694], "trips": 13138, "src": "Central Pit", "dst": "PPRN CRUSHER"}, {"from": [-23.964973, 28.889237], "to": [-23.945569, 28.902175], "trips": 12475, "src": "Central Pit", "dst": "EAST SHORT DUMP6"}, {"from": [-23.965085, 28.890586], "to": [-23.94336, 28.898794], "trips": 12011, "src": "Central Pit", "dst": "MALEBATJA A4"}, {"from": [-23.963597, 28.890104], "to": [-23.95257, 28.898384], "trips": 11144, "src": "Central Pit", "dst": "SECURITY SHORT DUMP"}, {"from": [-23.963505, 28.889064], "to": [-23.948164, 28.897511], "trips": 10863, "src": "Central Pit", "dst": "EAST SHORT DUMP RAMP"}, {"from": [-23.96856, 28.890045], "to": [-23.963553, 28.934264], "trips": 8840, "src": "Central Pit", "dst": "BLINKWATER SOUTH DUMP"}, {"from": [-23.964413, 28.890449], "to": [-23.944462, 28.897279], "trips": 8667, "src": "Central Pit", "dst": "EAST SHORT NEW"}, {"from": [-23.966411, 28.890885], "to": [-23.961491, 28.899407], "trips": 8328, "src": "Central Pit", "dst": "BUNWALL3"}, {"from": [-23.966116, 28.894613], "to": [-23.948951, 28.893022], "trips": 7760, "src": "Central Pit", "dst": "NEW SECURITY VLG"}, {"from": [-23.964847, 28.889771], "to": [-23.941894, 28.893117], "trips": 7669, "src": "Central Pit", "dst": "MALEBATJA EXT4"}, {"from": [-23.966044, 28.889638], "to": [-23.955041, 28.925946], "trips": 6874, "src": "Central Pit", "dst": "BLINKWATER WEST DUMP"}, {"from": [-23.964417, 28.889017], "to": [-23.941206, 28.8917], "trips": 6789, "src": "Central Pit", "dst": "MALEBATJA SHORT"}, {"from": [-23.96391, 28.892635], "to": [-23.971905, 28.906077], "trips": 6774, "src": "Central Pit", "dst": "P56"}, {"from": [-23.965388, 28.891381], "to": [-23.954081, 28.897448], "trips": 6168, "src": "Central Pit", "dst": "BUNWALL 4"}, {"from": [-23.952276, 28.886395], "to": [-23.936605, 28.874962], "trips": 6149, "src": "Stockpile", "dst": "NORTH WEST TOPSOIL DUMP"}, {"from": [-23.943307, 28.876506], "to": [-23.937571, 28.87268], "trips": 5668, "src": "CUT 10 LOADING 2", "dst": "NORTH WEST DUMP"}, {"from": [-23.939849, 28.880899], "to": [-23.971423, 28.907004], "trips": 5429, "src": "North Pit", "dst": "P50"}, {"from": [-23.963644, 28.892661], "to": [-23.973728, 28.905861], "trips": 5236, "src": "Central Pit", "dst": "P47"}, {"from": [-23.940528, 28.881284], "to": [-23.971444, 28.9058], "trips": 5199, "src": "North Pit", "dst": "P56"}, {"from": [-23.967027, 28.891144], "to": [-23.964594, 28.921071], "trips": 4900, "src": "Central Pit", "dst": "BLINKWATER 1 NORTH 2"}, {"from": [-23.964817, 28.888475], "to": [-23.946685, 28.900249], "trips": 4826, "src": "Central Pit", "dst": "EAST SHORT DUMP2"}, {"from": [-23.965538, 28.889334], "to": [-23.944873, 28.892675], "trips": 4737, "src": "Central Pit", "dst": "MALEBATJA A2"}, {"from": [-23.939688, 28.881408], "to": [-23.942409, 28.892338], "trips": 4474, "src": "North Pit", "dst": "MALEBATJA A1"}, {"from": [-23.962087, 28.889117], "to": [-23.939212, 28.889779], "trips": 4412, "src": "Central Pit", "dst": "MALEBATJA SHORT DUMP"}, {"from": [-23.962861, 28.88887], "to": [-23.942814, 28.899129], "trips": 4266, "src": "Central Pit", "dst": "EAST CENTRAL EXTENTION"}, {"from": [-23.969632, 28.894], "to": [-23.965, 28.920262], "trips": 3687, "src": "Central Pit", "dst": "BLINKWATER SHORT  DUMP2"}, {"from": [-23.968289, 28.891926], "to": [-23.965648, 28.924293], "trips": 3617, "src": "Central Pit", "dst": "BLINKWATER ENTRANCE"}];
+  var maxTrips = 489787;
+  var maxRoute = 66804;
+  var materialLegend = [{"color": "#E4002B", "label": "HGO (high-grade ore)"}, {"color": "#00A3A1", "label": "LGO (low-grade ore)"}, {"color": "#FF8C00", "label": "MGO (medium-grade ore)"}, {"color": "#8B5A2B", "label": "Top soil"}, {"color": "#6A3FA0", "label": "VLGO (very-low-grade ore)"}, {"color": "#5B5F66", "label": "Waste (overburden/mullock)"}];
+  var eligibilityLegend = [{"color": "#00A3A1", "label": "Ore/material transport on-site \u2014 eligible"}, {"color": "#5B5F66", "label": "Waste disposal \u2014 eligible"}, {"color": "#E4002B", "label": "Unclassified \u2014 needs review"}];
+
+  var map = L.map('haulmap').setView([-23.960595, 28.889300], 14);
+  // Label-free basemap (CartoDB Voyager, no-labels variant): keeps real terrain/road
+  // colour and contrast for genuine ops usefulness, without the place-name text overlay
+  // that would otherwise identify the real site on a standard OSM/Positron tile.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO', maxZoom: 19, subdomains: 'abcd'
+  }).addTo(map);
+
+  var markers = [];
+  var routeLines = [];
+  var currentLayer = 'trips';
+
+  function radius(trips) { return 5 + 22 * Math.sqrt(trips / maxTrips); }
+
+  function colorFor(s, layer) {
+    if (layer === 'material') return s.matColor;
+    if (layer === 'eligibility') return s.eligColor;
+    return '#0072CE';
+  }
+
+  sites.forEach(function(s) {
+    var m = L.circleMarker([s.lat, s.lng], {
+      radius: radius(s.trips), color: '#ffffff', weight: 2,
+      fillColor: colorFor(s, 'trips'), fillOpacity: 0.9
+    }).addTo(map);
+    m.bindTooltip(
+      '<b>' + s.name + '</b><br>' + s.trips.toLocaleString() + ' trips',
+      { direction: 'top', sticky: true }
+    );
+    m.bindPopup(
+      '<b>' + s.name + '</b><br>' +
+      s.trips.toLocaleString() + ' trips &middot; ' + s.equip + ' equipment<br>' +
+      'Avg trip: ' + s.avgMin + ' min<br>' +
+      'Top material: ' + s.material + '<br>' +
+      'Activity: ' + s.activity
+    );
+    markers.push({marker: m, site: s});
+  });
+
+  routes.forEach(function(r) {
+    var line = L.polyline([r.from, r.to], {
+      color: '#E4002B', weight: 1 + 6 * (r.trips / maxRoute), opacity: 0.6
+    });
+    line.bindTooltip(r.src + ' &rarr; ' + r.dst + '<br>' + r.trips.toLocaleString() + ' trips', { sticky: true });
+    routeLines.push(line);
+  });
+
+  function swatch(color, label) {
+    return '<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">' +
+      '<span style="width:12px;height:12px;border-radius:50%;background:' + color +
+      ';border:1.5px solid #fff;box-shadow:0 0 0 1px #ccc;display:inline-block;flex:none;"></span>' +
+      '<span>' + label + '</span></div>';
+  }
+
+  function renderLegend(layer) {
+    var el = document.getElementById('haulmap-legend');
+    var html = '';
+    if (layer === 'trips') {
+      html += '<div style="font-weight:700;margin-bottom:4px;">Trip volume</div>';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">' +
+        '<span style="width:10px;height:10px;border-radius:50%;background:#0072CE;border:1.5px solid #fff;box-shadow:0 0 0 1px #ccc;display:inline-block;"></span>' +
+        '<span>Fewer trips</span></div>';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">' +
+        '<span style="width:26px;height:26px;border-radius:50%;background:#0072CE;border:1.5px solid #fff;box-shadow:0 0 0 1px #ccc;display:inline-block;"></span>' +
+        '<span>More trips (bubble size)</span></div>';
+    } else if (layer === 'material') {
+      html += '<div style="font-weight:700;margin-bottom:4px;">Dominant material moved</div>';
+      materialLegend.forEach(function(it) { html += swatch(it.color, it.label); });
+    } else {
+      html += '<div style="font-weight:700;margin-bottom:4px;">SARS eligible-activity basis</div>';
+      eligibilityLegend.forEach(function(it) { html += swatch(it.color, it.label); });
+    }
+    el.innerHTML = html;
+  }
+
+  function setLayer(layer) {
+    currentLayer = layer;
+    markers.forEach(function(o) {
+      o.marker.setStyle({ fillColor: colorFor(o.site, layer) });
+    });
+    renderLegend(layer);
+  }
+
+  document.querySelectorAll('.maplayer-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.maplayer-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      setLayer(btn.dataset.layer);
+    });
+  });
+
+  document.getElementById('haulmap-routes-toggle').addEventListener('change', function(e) {
+    if (e.target.checked) { routeLines.forEach(function(l) { l.addTo(map); }); }
+    else { routeLines.forEach(function(l) { map.removeLayer(l); }); }
+  });
+
+  renderLegend('trips');
+})();
+</script>
+<style>
+.maplayer-btn { background:#fff; border:1px solid #d1d9e0; color:#002F6C; border-radius:6px;
+  padding:7px 14px; font-size:.82rem; font-weight:600; cursor:pointer; }
+.maplayer-btn:hover { background:#f0f4f8; }
+.maplayer-btn.active { background:#002F6C; color:#fff; border-color:#002F6C; }
+</style>
