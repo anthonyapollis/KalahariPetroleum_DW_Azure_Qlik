@@ -46,7 +46,7 @@ bulk copy program — on this machine).
 | Visualisation | matplotlib (static charts), Leaflet.js (interactive map), xlsxwriter (native Excel charts) |
 | BI / self-service | Qlik Sense Cloud — cloud (ADLS) and local (folder-connection) load-script variants |
 | Publishing | Self-contained HTML ebook, headless-Chrome PDF render, 13-sheet Excel workbook |
-| Version control | Git + Git LFS (Large File Storage, for files over GitHub's 100 MB limit) |
+| Version control | Git + GitHub Releases (for the 3 files over GitHub's 100 MB repo limit — see below) |
 
 ## Data availability — how to verify every number in this report
 
@@ -64,17 +64,20 @@ There is no step where you have to take a number on faith:
    order, so the whole pipeline (warehouse build → export → aggregates → charts/Excel/ebook/map/ML)
    is re-runnable from source, not just described.
 
-**Clone with the data included:**
+**Clone the repo, then grab three files from Releases:**
 ```
-git lfs install        # once per machine
 git clone https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik.git
 ```
-Three files exceed GitHub's 100 MB per-file limit (`data_export/CoordRef.tsv` 1 GB,
-`curated_local/dw/CoordRef/CoordRef.parquet` 331 MB, `data_export/FactEquipmentTrip.tsv` 174 MB)
-and are tracked via **Git LFS** — a standard git extension for exactly this situation. `git lfs
-install` (a one-time setup step) makes a normal `git clone` pull those files automatically,
-same as any other file in the repo. Nothing is held back or summarised-only; a reviewer can
-open any CSV/Parquet file and reconcile it against the report.
+That gets everything except three files that exceed GitHub's 100 MB per-file repo limit
+(`data_export/CoordRef.tsv` 1 GB, `curated_local/dw/CoordRef/CoordRef.parquet` 331 MB,
+`data_export/FactEquipmentTrip.tsv` 174 MB — together, the raw and Parquet forms of a
+21.9-million-row GPS reference table plus a large haulage-trip export). They're published as
+**[GitHub Release assets](https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik/releases/tag/v1.0-data)**
+instead of committed to the repo — download and drop each one at the path named on the release
+page. (Git LFS was the first approach tried here; its free tier is 1 GB storage + 1 GB/month
+bandwidth per account, and this dataset alone is 1.6 GB, so a single clone would exceed the
+free allowance. Release assets have no such quota.) Nothing is held back or summarised-only —
+every number in the report traces to one of these files, LFS or not.
 
 ## What's here
 
@@ -160,13 +163,12 @@ see `qlik/QLIK_APP_GUIDE.md`), reload. Model avoids Qlik circular references
 by concatenating the five transactional facts into one table with `FactType`,
 keeping the month-grain refund claims as a labelled data island.
 
-## Repository / Git LFS
+## Repository
 
 Pushed to `github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik` (private).
-`dbo.CoordRef`'s TSV and Parquet exports (1 GB / 331 MB) plus the 174 MB
-`FactEquipmentTrip.tsv` are tracked via [Git LFS](https://git-lfs.com) —
-everything else is plain git. Clone with `git lfs install` done once, then a
-normal `git clone` pulls LFS content automatically. No Azure secrets are
+Plain git, no Git LFS — see "Data availability" above for why, and the
+[v1.0-data release](https://github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik/releases/tag/v1.0-data)
+for the 3 files too large for the repo itself. No Azure secrets are
 committed: the Qlik cloud script ships with a blank SAS placeholder (see
 `qlik/QLIK_APP_GUIDE.md` to regenerate one), and `azure/*.key` /
 `qlik/raw_container_sas_*.txt` are gitignored.

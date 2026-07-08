@@ -1,3 +1,0 @@
-data_export/CoordRef.tsv filter=lfs diff=lfs merge=lfs -text
-curated_local/dw/CoordRef/CoordRef.parquet filter=lfs diff=lfs merge=lfs -text
-data_export/FactEquipmentTrip.tsv filter=lfs diff=lfs merge=lfs -text

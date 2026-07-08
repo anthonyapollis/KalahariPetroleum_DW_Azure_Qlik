@@ -6,3 +6,9 @@ Thumbs.db
 qlik/raw_container_sas_*.txt
 azure/*.key
 
+# Files over GitHub's 100MB limit - kept locally (local-first design), published
+# via GitHub Releases instead of Git LFS (see README > Data availability).
+data_export/CoordRef.tsv
+curated_local/dw/CoordRef/CoordRef.parquet
+data_export/FactEquipmentTrip.tsv
+
