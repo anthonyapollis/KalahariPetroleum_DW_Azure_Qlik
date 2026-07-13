@@ -424,7 +424,9 @@
     "showTitles": true,
     "title": "Litres Issued",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -515,7 +517,9 @@
     "showTitles": true,
     "title": "Litres Delivered",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -606,7 +610,9 @@
     "showTitles": true,
     "title": "Refund (R, 349c/l)",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -697,7 +703,9 @@
     "showTitles": true,
     "title": "Eligible %",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -788,7 +796,9 @@
     "showTitles": true,
     "title": "Claim Refund",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -879,7 +889,9 @@
     "showTitles": true,
     "title": "Claim Eligible Litres",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -970,7 +982,9 @@
     "showTitles": true,
     "title": "Claim Qualifying Litres",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -1061,7 +1075,9 @@
     "showTitles": true,
     "title": "Distinct FuelEventId (Fuel Issue)",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -1152,7 +1168,9 @@
     "showTitles": true,
     "title": "Duplicate FuelEventId Count",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -1243,7 +1261,9 @@
     "showTitles": true,
     "title": "Total Trips",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "showMeasureTitle": true,
+    "fontSize": "M"
   },
   {
     "qInfo": {
@@ -1370,8 +1390,18 @@
     },
     "showTitles": true,
     "title": "Litres Issued by Month",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Monthly diesel issued to fleet and plant",
+    "footnote": "Source: dw star schema, Fuel Issue fact rows (2009-2023)",
+    "dataPoint": {
+      "showLabels": false,
+      "show": false
+    },
+    "gridLine": {
+      "auto": true
+    },
+    "legend": {
+      "show": false
+    }
   },
   {
     "qInfo": {
@@ -1499,9 +1529,18 @@
     },
     "showTitles": true,
     "title": "Litres Issued by Location (Top 15)",
-    "subtitle": "",
-    "footnote": "",
-    "orientation": "horizontal"
+    "orientation": "horizontal",
+    "subtitle": "Top 15 issuing locations by volume",
+    "footnote": "Nitro+ and Ultra City are bulk depots - their volumes include bulk transfers, not only vehicle fills",
+    "dataPoint": {
+      "showLabels": true
+    },
+    "gridLine": {
+      "auto": true
+    },
+    "legend": {
+      "show": false
+    }
   },
   {
     "qInfo": {
@@ -1731,8 +1770,13 @@
     },
     "showTitles": true,
     "title": "Eligible vs Non-Eligible Litres, and Refund by Month",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Eligible vs non-eligible litres (bars) with refund value (line)",
+    "footnote": "Refund at the 349c/L SARS 2020 example rate (Rebate Item 670.04) - illustrative, not tax advice",
+    "legend": {
+      "dock": "auto",
+      "show": true,
+      "showTitle": true
+    }
   },
   {
     "qInfo": {
@@ -1889,8 +1933,14 @@
     },
     "showTitles": true,
     "title": "Meter Units Worked vs Litres Issued by Equipment",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Each point is one equipment unit",
+    "footnote": "X: meter units worked (hours/km) - Y: litres issued. Outliers off the diagonal warrant review",
+    "legend": {
+      "show": false
+    },
+    "gridLine": {
+      "auto": true
+    }
   },
   {
     "qInfo": {
@@ -2018,8 +2068,17 @@
     },
     "showTitles": true,
     "title": "Litres Issued by Activity Description (EligibleActivityKey-linked)",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Litres issued by SARS activity classification",
+    "footnote": "EligibleActivityKey exists on Fuel Issue rows only - see sheet description",
+    "dataPoint": {
+      "showLabels": true
+    },
+    "gridLine": {
+      "auto": true
+    },
+    "legend": {
+      "show": false
+    }
   },
   {
     "qInfo": {
@@ -2143,8 +2202,17 @@
     },
     "showTitles": true,
     "title": "Litres Issued by SARS Eligibility Status",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Litres issued by eligibility status",
+    "footnote": "Status from dw.DimEligibleActivity classification patterns",
+    "dataPoint": {
+      "showLabels": true
+    },
+    "gridLine": {
+      "auto": true
+    },
+    "legend": {
+      "show": false
+    }
   },
   {
     "qInfo": {
@@ -2268,8 +2336,17 @@
     },
     "showTitles": true,
     "title": "Tank Net Movement by Location",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Deliveries minus issues per location",
+    "footnote": "Positive = net stock build; negative = net drawdown. Persistent negatives suggest unrecorded deliveries or losses",
+    "dataPoint": {
+      "showLabels": true
+    },
+    "gridLine": {
+      "auto": true
+    },
+    "legend": {
+      "show": false
+    }
   },
   {
     "qInfo": {
@@ -2464,8 +2541,8 @@
     },
     "showTitles": true,
     "title": "Full Refund Claims Detail",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Month-grain SARS 670.04 claim lines computed in the DW",
+    "footnote": "Source: dw.FactRefundClaim (RefundClaims data island)"
   },
   {
     "qInfo": {
@@ -2646,8 +2723,8 @@
     },
     "showTitles": true,
     "title": "Litres per Hour/Km by Make/Model/Vehicle Type",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Fuel efficiency by make / model / vehicle type",
+    "footnote": "Litres per hour or km depending on the meter type of the vehicle class"
   },
   {
     "qInfo": {
@@ -2766,8 +2843,8 @@
     },
     "showTitles": true,
     "title": "Litres by Specific Activity Performed",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Litres by specific activity performed",
+    "footnote": "Source: dw.DimEligibleActivity via EligibleActivityKey on Fuel Issue rows"
   },
   {
     "qInfo": {
@@ -2915,8 +2992,8 @@
     },
     "showTitles": true,
     "title": "Deliveries by Document Number",
-    "subtitle": "",
-    "footnote": ""
+    "subtitle": "Delivery documents for reconciliation",
+    "footnote": "Source: Fuel Delivery fact rows"
   },
   {
     "qInfo": {
@@ -2953,7 +3030,12 @@
     "showTitles": true,
     "title": "Year",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -2990,7 +3072,12 @@
     "showTitles": true,
     "title": "Fiscal Year (SA)",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -3027,7 +3114,12 @@
     "showTitles": true,
     "title": "Location",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -3064,7 +3156,12 @@
     "showTitles": true,
     "title": "Product",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -3100,7 +3197,12 @@
     "showTitles": true,
     "title": "Consumption Type",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -3136,7 +3238,12 @@
     "showTitles": true,
     "title": "Eligibility Class",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {
@@ -3172,7 +3279,12 @@
     "showTitles": true,
     "title": "SARS Eligibility Status",
     "subtitle": "",
-    "footnote": ""
+    "footnote": "",
+    "layoutOptions": {
+      "dense": false,
+      "layoutOrder": "row"
+    },
+    "searchEnabled": true
   },
   {
     "qInfo": {

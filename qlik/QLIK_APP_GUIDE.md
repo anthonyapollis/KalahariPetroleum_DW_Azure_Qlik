@@ -22,10 +22,21 @@ spec doesn't care about the extension either way).
 
 The exact JSON used to build it is committed here: [`qlik_master_measures.json`](qlik_master_measures.json)
 (14 master measures) and [`qlik_app_objects.json`](qlik_app_objects.json) (all 6 sheets +
-27 objects, colors included) — apply with `qlik app measure set qlik_master_measures.json
---app <id>` then `qlik app object set qlik_app_objects.json --app <id>` to reproduce the
-whole visual layer in one shot. This guide remains the reference for rebuilding by hand
-in the UI, or for understanding what each file does.
+27 objects — colors, titles, subtitles, footnotes, value labels and per-column `cId`s
+included). **The fastest path is the build script:**
+
+```powershell
+.\build_qlik_app.ps1 -AppId <id>                          # measures + visual layer
+.\build_qlik_app.ps1 -AppId <id> -UploadData              # full build incl. data upload + reload
+.\build_qlik_app.ps1 -AppId <id> -VerifyOnly              # health check an existing app
+```
+
+[`build_qlik_app.ps1`](build_qlik_app.ps1) wraps every gotcha documented below (stdin
+redirect, one-call object posting) and finishes with three verifications: the Litres
+Issued KPI must reconcile to the DW figure 290,557,288, every sheet's `cells[]` must
+still reference the named objects, and every chart column must carry a `cId`. This guide
+remains the reference for rebuilding by hand in the UI, or for understanding what each
+file does.
 
 This guide is written so building the app takes ~10 minutes with no guesswork: every
 measure and every chart below is copy-paste ready — exact expression, exact dimension,
