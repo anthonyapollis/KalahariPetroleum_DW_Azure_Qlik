@@ -8,6 +8,18 @@
 
 Tenant: `https://go10njvx344b4j2.eu.qlikcloud.com`
 
+**The app described below is live**: "Kalahari Petroleum - Fuel & Diesel Refund"
+(`app id 9c13b9e4-e393-4d9a-9f8b-3d62e3a28719`), built end-to-end via `qlik-cli` and the
+Qlik Cloud REST/Engine APIs — data loaded (12 tables, reconciled row counts), 14 master
+measures, and all 6 sheets below with real charts, all verified against the actual
+warehouse totals (e.g. `Litres Issued` KPI evaluates to exactly 290,557,288 — the same
+figure validated throughout this project). Data lives in the app's own Qlik Cloud
+DataFiles storage (`lib://DataFiles/*.txt`, uploaded from `data_export/*.tsv` — `.tsv`
+isn't an allowed DataFiles extension, `.txt` is, so the files were renamed on upload;
+the load script's explicit `(txt, ..., delimiter is '\t')` format spec doesn't care about
+the extension either way). This guide remains the reference for rebuilding the app from
+scratch, or for anyone who prefers to build it by hand in the UI.
+
 This guide is written so building the app takes ~10 minutes with no guesswork: every
 measure and every chart below is copy-paste ready — exact expression, exact dimension,
 exact chart type as it appears in the Qlik Sense "Add chart" panel.
@@ -31,13 +43,28 @@ exact chart type as it appears in the Qlik Sense "Add chart" panel.
 Paste `kalahari_petroleum_fuel_load_script_local.qvs` instead — points at a folder
 connection (`KalahariDW`) over `data_export/`, works fully offline.
 
-**Automation option — build this whole app via API instead of clicking through it:**
-Generate an API key in the tenant (avatar/profile icon → **Settings → API keys →
-Generate new key**, scopes: Management API + User API). That key can drive Qlik's
-REST API (`/api/v1/apps`, `/api/v1/spaces`, the Engine JSON-RPC API for sheet/object
-creation) to create the app, run the load script, and build every sheet below
-programmatically — far more reliable than manual UI building. Requires the key to be
-generated interactively in the tenant (Claude can't do this step — it's a credential).
+**Automation — this is how the live app was actually built.** Generate an API key in
+the tenant (avatar/profile icon → **Settings → API keys → Generate new key**, scopes:
+Management API + User API — the value is shown once, copy it immediately). Then, with
+[`qlik-cli`](https://github.com/qlik-oss/qlik-cli):
+```
+qlik context create <name> --server https://go10njvx344b4j2.eu.qlikcloud.com --api-key <key>
+qlik context use <name>
+qlik app create --app "App Name"                       # note the returned app id
+qlik data-file create --name DimDate.txt --file data_export/DimDate.tsv   # repeat per table, .txt not .tsv (see note above)
+qlik app script set qlik/kalahari_petroleum_fuel_load_script_local.qvs --app <appId>
+                                                          # first rewrite FROM [lib://KalahariDW/X.tsv] -> FROM [lib://DataFiles/X.txt]
+qlik app reload --app <appId>
+qlik app measure set <measures.json> --app <appId>       # GenericMeasureProperties array, needs qInfo.qId per measure
+qlik app object set <sheets-and-charts.json> --app <appId>  # GenericObjectProperties array: sheets (qType "sheet", cells[]) + each chart/kpi/table object
+```
+Notes from doing this for real: `qlik data-file create` needs `< NUL` stdin redirection
+on Windows (its stdin-vs-file detection misfires otherwise); DataFiles rejects `.tsv` as
+an extension (`DF-010`) but accepts `.txt`; every master measure and generic object needs
+an explicit `qInfo.qId` or the API rejects it; percent number formats use `qNumFormat.qType:
+"R"` with a `%` in the format string, not a `"P"` type (that's not a valid enum value).
+`qlik app object data --app <appId> <objectId>` is the fastest way to verify a chart
+actually evaluates before moving on to the next one.
 
 ## Data model
 Single concatenated fact table `Fuel` (FactType = Fuel Issue / Fuel Delivery /

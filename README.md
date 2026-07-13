@@ -157,11 +157,13 @@ configured with quoting disabled (ADF `quoteChar:""`, pandas `QUOTE_NONE`).
 
 ## Qlik Sense
 
-Paste `qlik/kalahari_petroleum_fuel_load_script.qvs` into a new app on the
-tenant, add a container SAS (regenerate — the shipped placeholder is blank;
-see `qlik/QLIK_APP_GUIDE.md`), reload. Model avoids Qlik circular references
-by concatenating the five transactional facts into one table with `FactType`,
-keeping the month-grain refund claims as a labelled data island.
+**The app is live**: "Kalahari Petroleum - Fuel & Diesel Refund" on the tenant, built
+end-to-end via `qlik-cli` (data loaded, 14 master measures, 6 sheets with real charts,
+every KPI verified against the reconciled warehouse totals — e.g. Litres Issued shows
+exactly 290,557,288). See `qlik/QLIK_APP_GUIDE.md` for the exact commands used and for
+rebuilding it from scratch. Model avoids Qlik circular references by concatenating the
+five transactional facts into one table with `FactType`, keeping the month-grain refund
+claims as a labelled data island.
 
 ## Repository
 
