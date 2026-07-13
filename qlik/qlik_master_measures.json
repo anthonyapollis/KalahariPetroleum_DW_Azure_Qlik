@@ -1,0 +1,198 @@
+[
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "litres-issued"
+    },
+    "qMeasure": {
+      "qLabel": "Litres Issued",
+      "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "litres-delivered"
+    },
+    "qMeasure": {
+      "qLabel": "Litres Delivered",
+      "qDef": "Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "total-fuel-used"
+    },
+    "qMeasure": {
+      "qLabel": "Total Fuel Used",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "eligible-litres"
+    },
+    "qMeasure": {
+      "qLabel": "Eligible Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "non-eligible-litres"
+    },
+    "qMeasure": {
+      "qLabel": "Non-Eligible Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} NonEligibleLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "eligible-pct"
+    },
+    "qMeasure": {
+      "qLabel": "Eligible %",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) / Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "0.0%"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "qualifying-litres"
+    },
+    "qMeasure": {
+      "qLabel": "Qualifying Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "refund-r"
+    },
+    "qMeasure": {
+      "qLabel": "Refund (R, 349c/l)",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8 * 3.49",
+      "qNumFormat": {
+        "qType": "M",
+        "qFmt": "R #,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "litres-per-hr-km"
+    },
+    "qMeasure": {
+      "qLabel": "Litres per Hour/Km",
+      "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres) / Sum({<FactType={'Meter Reading'}>} UnitsWorked)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0.00"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "trips"
+    },
+    "qMeasure": {
+      "qLabel": "Trips",
+      "qDef": "Sum({<FactType={'Equipment Trip'}>} TripCount)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "tank-net-movement"
+    },
+    "qMeasure": {
+      "qLabel": "Tank Net Movement",
+      "qDef": "Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres) - Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "claim-refund"
+    },
+    "qMeasure": {
+      "qLabel": "Claim Refund",
+      "qDef": "Sum(Claim.RefundRand)",
+      "qNumFormat": {
+        "qType": "M",
+        "qFmt": "R #,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "claim-eligible-litres"
+    },
+    "qMeasure": {
+      "qLabel": "Claim Eligible Litres",
+      "qDef": "Sum(Claim.EligibleLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  },
+  {
+    "qInfo": {
+      "qType": "measure",
+      "qId": "claim-qualifying-litres"
+    },
+    "qMeasure": {
+      "qLabel": "Claim Qualifying Litres",
+      "qDef": "Sum(Claim.QualifyingLitres)",
+      "qNumFormat": {
+        "qType": "R",
+        "qFmt": "#,##0"
+      }
+    }
+  }
+]

@@ -11,14 +11,21 @@ Tenant: `https://go10njvx344b4j2.eu.qlikcloud.com`
 **The app described below is live**: "Kalahari Petroleum - Fuel & Diesel Refund"
 (`app id 9c13b9e4-e393-4d9a-9f8b-3d62e3a28719`), built end-to-end via `qlik-cli` and the
 Qlik Cloud REST/Engine APIs — data loaded (12 tables, reconciled row counts), 14 master
-measures, and all 6 sheets below with real charts, all verified against the actual
-warehouse totals (e.g. `Litres Issued` KPI evaluates to exactly 290,557,288 — the same
-figure validated throughout this project). Data lives in the app's own Qlik Cloud
-DataFiles storage (`lib://DataFiles/*.txt`, uploaded from `data_export/*.tsv` — `.tsv`
-isn't an allowed DataFiles extension, `.txt` is, so the files were renamed on upload;
-the load script's explicit `(txt, ..., delimiter is '\t')` format spec doesn't care about
-the extension either way). This guide remains the reference for rebuilding the app from
-scratch, or for anyone who prefers to build it by hand in the UI.
+measures, 6 sheets with 27 objects (KPIs, charts, tables, filter listboxes, caption text),
+all verified against the actual warehouse totals (e.g. `Litres Issued` KPI evaluates to
+exactly 290,557,288 — the same figure validated throughout this project). Fully brand-
+colored (navy/teal/gold/red/blue matching the ebook/Excel palette). Data lives in the
+app's own Qlik Cloud DataFiles storage (`lib://DataFiles/*.txt`, uploaded from
+`data_export/*.tsv` — `.tsv` isn't an allowed DataFiles extension, `.txt` is, so the files
+were renamed on upload; the load script's explicit `(txt, ..., delimiter is '\t')` format
+spec doesn't care about the extension either way).
+
+The exact JSON used to build it is committed here: [`qlik_master_measures.json`](qlik_master_measures.json)
+(14 master measures) and [`qlik_app_objects.json`](qlik_app_objects.json) (all 6 sheets +
+27 objects, colors included) — apply with `qlik app measure set qlik_master_measures.json
+--app <id>` then `qlik app object set qlik_app_objects.json --app <id>` to reproduce the
+whole visual layer in one shot. This guide remains the reference for rebuilding by hand
+in the UI, or for understanding what each file does.
 
 This guide is written so building the app takes ~10 minutes with no guesswork: every
 measure and every chart below is copy-paste ready — exact expression, exact dimension,
@@ -64,7 +71,29 @@ an extension (`DF-010`) but accepts `.txt`; every master measure and generic obj
 an explicit `qInfo.qId` or the API rejects it; percent number formats use `qNumFormat.qType:
 "R"` with a `%` in the format string, not a `"P"` type (that's not a valid enum value).
 `qlik app object data --app <appId> <objectId>` is the fastest way to verify a chart
-actually evaluates before moving on to the next one.
+actually evaluates before moving on to the next one (doesn't work for `listbox` objects —
+use `qlik app object properties` or `layout` for those instead, `qSize.qcy` shows the
+row count).
+
+**Sheet/object linking — the one that will bite you:** a sheet's `cells[].name` is meant
+to reference a chart/kpi/table by its `qId`, but this only works if that object is posted
+in the *same* `qlik app object set` call as the sheet. Post them in separate calls (e.g.
+build the sheet first, add colors to the KPI in a later call) and the CLI silently spawns
+a duplicate object with a random ID instead of updating the linked one — the sheet then
+shows an un-styled orphan copy, no error raised anywhere. Always assemble one combined
+JSON (every sheet + every object it references) and post it in a single call — see
+`qlik_app_objects.json` in this folder for the working pattern. If you suspect this has
+happened, `qlik app object properties --app <id> <sheetId>` and check whether
+`cells[].name` still matches your intended IDs or has been replaced with short random
+strings.
+
+**Data-model constraint found while building Sheet 4:** `EligibleActivityKey` (which
+links to `DimEligibleActivity`/`ActivityDescription`) only exists on Fuel Issue rows in
+the concatenated `Fuel` table, not on Usage Classification rows — so a chart of
+`ActivityDescription` × `Eligible Litres`/`Non-Eligible Litres` silently buckets
+everything into a single blank "-" dimension value (those measures are Usage-
+Classification-scoped). The working version uses `ActivityDescription` × `Litres Issued`
+instead, which resolves correctly.
 
 ## Data model
 Single concatenated fact table `Fuel` (FactType = Fuel Issue / Fuel Delivery /
@@ -145,16 +174,20 @@ the Isolation Forest model in `sql/10_ml_anomaly_detection.py`, but as an eyebal
 exploratory view instead of a scored list.
 
 ### Sheet 4 — Eligibility & Activity
+`DimEligibleActivity` *is* loaded in the shipped script (`ActivityCodePattern`,
+`ActivityDescription`, `EligibilityStatus`), associated via `EligibleActivityKey` — but
+that key only exists on Fuel Issue rows, not Usage Classification rows, so charts against
+it must use `Litres Issued`, not `Eligible Litres`/`Non-Eligible Litres` (see the
+data-model constraint note above — a chart built against the wrong measure silently
+buckets everything into a blank "-" dimension value with no error).
+
 | # | Chart type | Dimension | Measure(s) |
 |---|---|---|---|
-| 1 | Pie chart | synthetic dimension `='Eligible'` / `='Non-Eligible'` via two measures, or use a Bar chart instead (pie charts with two fixed slices are simpler as a bar) | Eligible Litres, Non-Eligible Litres |
-| 2 | Bar chart | `ActivityDescription` (from DimEligibleActivity, needs a join or an additional load — see note) | Litres Issued |
+| 1 | Bar chart | `ActivityDescription` | Litres Issued |
+| 2 | Bar chart | `EligibilityStatus` | Litres Issued |
 | 3 | Table | `SpecificActivityPerformed` | Total Fuel Used |
 
-*Note: `ActivityDescription`/`EligibilityStatus` live on `DimEligibleActivity`, not loaded
-in the shipped script (only `EligibleActivityKey` is carried on the Fuel Issue rows). Add
-a `DimEligibleActivity` LOAD block (same pattern as `DimLocation` etc.) if you want chart 2
-exactly as specified; otherwise substitute `EligibleActivityKey` as the dimension.*
+Filter pane: `EligibilityStatus`.
 
 ### Sheet 5 — Tank & Delivery Reconciliation
 | # | Chart type | Dimension | Measure(s) |
@@ -163,16 +196,16 @@ exactly as specified; otherwise substitute `EligibleActivityKey` as the dimensio
 | 2 | Table | `DocumentNumber`, `LocationDescription`, `YearMonth` | Litres Delivered |
 
 ### Sheet 6 — Data Quality
-| # | Chart type | Dimension | Measure(s) |
+| # | Type | Dimension | Measure(s) / content |
 |---|---|---|---|
 | 1 | KPI | — | `Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)` |
 | 2 | KPI | — | `Count({<FactType={'Fuel Issue'}>} FuelEventId) - Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)` *(duplicate count)* |
-| 3 | KPI | — | usage rows unmatched to equipment: 203,309 in the QA data (RegNumber mismatch vs equipment master — this is a static finding from `dw.vw_DataQuality`, not live-computable from the loaded fields; show as a text KPI) |
-| 4 | KPI | — | fuel issues exceeding 1.5× tank size: 14,746 (same — static from `dw.vw_DataQuality`) |
+| 3 | KPI | — | Trips (fleet-wide sanity total) |
+| 4 | Text/note | — | Static findings from `dw.vw_DataQuality`, not live-computable from the loaded fields: 203,309 usage-logbook rows unmatched to equipment master (RegNumber mismatch), 14,746 fuel issues exceeding 1.5× tank size |
 
-*For live-computable versions of KPIs 3–4, load `dw.vw_DataQuality` itself as an
-additional table in the script (`SELECT issue, row_count FROM dw.vw_DataQuality`) and
-bind these KPIs to it directly instead of hardcoding.*
+*For live-computable versions of the two static findings, load `dw.vw_DataQuality` itself
+as an additional table in the script (`SELECT issue, row_count FROM dw.vw_DataQuality`)
+and bind KPIs to it directly instead of the fixed text note.*
 
 ## Reproducibility
 
