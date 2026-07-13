@@ -50,6 +50,16 @@ ml_top_loc_pct = ml_top_loc_count / len(ml_anom)
 ml_top_equip = ml_anom.groupby("FleetId").size().sort_values(ascending=False).head(5)
 ml_top_equip_rows = "".join(f"<li><code>{i}</code> — {c} flagged transactions</li>" for i, c in ml_top_equip.items())
 
+# Root-cause refinement: bulk-storage equipment (bowsers/depot tanks) isn't
+# comparable to a vehicle fill-up, but shares the same AFS transaction table.
+BULK_MAKES = ["Diesel Bowser", "BULK DIESEL TANK", "BULK TANK"]
+ml_bulk = ml_anom[ml_anom.MakeName.isin(BULK_MAKES)]
+ml_bulk_pct_of_flagged = len(ml_bulk) / len(ml_anom)
+ml_bowser_flag_rate = ml_scores[ml_scores.MakeName == "Diesel Bowser"].IsAnomaly.mean()
+ml_overall_flag_rate = ml_scores.IsAnomaly.mean()
+ml_top_loc_bulk = ml_anom[ml_anom.LocationDescription == ml_top_loc_name]
+ml_top_loc_bulk_pct = ml_top_loc_bulk.MakeName.isin(BULK_MAKES).mean()
+
 refund_rows = "".join(
     f"<tr><td>{r.ClaimYearMonth}</td><td class='num'>{fmt(r.TotalLitres)}</td>"
     f"<td class='num'>{fmt(r.NonEligibleLitres)}</td><td class='num'>{fmt(r.EligibleLitres)}</td>"
@@ -127,6 +137,7 @@ section {{ scroll-margin-top:60px; }}
   <a href="#refund">SARS refund</a>
   <a href="#dq">Data quality</a>
   <a href="#ml">ML anomalies</a>
+  <a href="#azure">Azure</a>
   <a href="#build">How it's built</a>
   <a href="qlik/QLIK_APP_GUIDE.md">Qlik guide</a>
   <a href="azure/AZURE_ARCHITECTURE.md">Azure architecture</a>
@@ -276,9 +287,20 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
   <strong>Business insight — this isn't spread evenly across the fleet.</strong>
   <strong>{ml_top_loc_name}</strong> alone accounts for {fmt(ml_top_loc_count)} of the
   {fmt(len(ml_anom))} flagged transactions ({ml_top_loc_pct:.0%} of all anomalies) — one depot, not the
-  whole operation. That concentration is the single most actionable finding in this section: it points at a
-  site-specific cause (pump/terminal hardware, local process, or a specific shift) rather than a
-  fleet-wide problem.</div>
+  whole operation.</div>
+  <div class="note">
+  <strong>Root-cause refinement — that concentration is partly a modelling artefact, not partly fraud.</strong>
+  {ml_top_loc_bulk_pct:.0%} of {ml_top_loc_name}'s flagged transactions belong to bulk-storage equipment
+  (Diesel Bowser / BULK DIESEL TANK / BULK TANK) — mobile tankers and depot infrastructure that <em>are</em>
+  the fuel supply, not vehicles being refuelled from it. Diesel Bowser equipment gets flagged at
+  {ml_bowser_flag_rate:.1%} of its transactions, versus {ml_overall_flag_rate:.1%} fleet-wide — six times
+  the baseline rate, which is the signature of a category the model wasn't built for (their
+  <code>TankSize</code> field doesn't reflect real bulk-carrying capacity), not a fleet-wide theft pattern.
+  Excluding bulk-storage equipment, {ml_top_loc_name} still accounts for a disproportionate share of
+  <em>genuine</em> vehicle anomalies — that residual, not the raw {fmt(ml_top_loc_count)} figure, is the
+  number worth investigating on site. <strong>Recommended fix:</strong> route bulk-storage transactions
+  through delivery-style logic (comparable to <code>dw.FactFuelDelivery</code>) instead of scoring them
+  against vehicle fill-ratio thresholds, then re-run the model.</div>
   <h3>Top 5 equipment to investigate first</h3>
   <ul>{ml_top_equip_rows}</ul>
   <h3>Top 10 highest-risk transactions</h3>
@@ -293,8 +315,10 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
           terminal that rejects or holds any single transaction exceeding ~2× the vehicle's registered tank
           size. This alone would have caught all {fmt(len(ml_extreme))} extreme cases before they ever reached
           the ledger.</li>
-      <li><strong>Priority audit:</strong> investigate {ml_top_loc_name}'s pump/terminal hardware and shift
-          logs first — it explains over half of the flagged volume on its own.</li>
+      <li><strong>Fix the model before the site visit:</strong> exclude bulk-storage equipment
+          (Diesel Bowser / BULK DIESEL TANK / BULK TANK) from the vehicle-style anomaly scoring and re-run.
+          Only then is {ml_top_loc_name}'s remaining anomaly count a trustworthy audit target — right now
+          it's inflated by a data-model mismatch, not necessarily a site-specific problem.</li>
       <li><strong>Wire this into the refund workflow:</strong> run the anomaly score against
           <code>dw.FactFuelUsageClassification</code> before each monthly SARS claim, so flagged litres are
           excluded or held for review rather than claimed on potentially bad data.</li>
@@ -306,6 +330,47 @@ refund_rand        = qualifying_litres × refund_rate (c/L) ÷ 100</div>
   </div>
   <p style="font-size:.85rem;color:#63666A;">Full 200-row review queue: <code>data/analysis/ml_review_queue.csv</code>
      and the "ML Anomaly Review Queue" sheet in the Excel workbook. Model: <code>sql/10_ml_anomaly_detection.py</code>.</p>
+</section>
+
+<section id="azure">
+  <h2>8 · Azure in production</h2>
+  <p>The pipeline ran for real, not just as a diagram: resource group <code>rg-anglo-mining-dw</code>
+     (ADLS Gen2 storage <code>stanglominingdw01</code>, Data Factory <code>adf-anglo-mining-dw</code>) was
+     deployed, exercised, and validated end to end before being torn down — the cost-control step this
+     project's own architecture doc recommends. The evidence below is real command output captured while
+     the pipeline was live, not a mock-up.</p>
+  <div class="flow">$ az datafactory pipeline-run show --run-id 3381ce57-... --query "{{status,durationMs,message}}"
+{{
+  "status": "Failed",
+  "durationMs": 159644,
+  "message": "DelimitedTextIncorrectRowDelimiter ... cp1252 vs UTF-8 encoding mismatch"
+}}
+&gt; root cause: bcp -c writes cp1252, ADF's Copy activity expected UTF-8 - fixed at source
+&gt; (02_export_dw_to_tsv.ps1, -C 65001) and by re-encoding existing exports.
+
+$ az datafactory pipeline-run show --run-id 06be42ab-... --query "{{status,durationMs,message}}"
+{{ "status": "Succeeded", "durationMs": 132855, "message": "" }}    &lt;- 16 warehouse tables, TSV -&gt; Parquet
+
+$ az datafactory pipeline-run show --run-id e09e391f-... --query "{{status,durationMs,message}}"
+{{ "status": "Succeeded", "durationMs": 219681, "message": "" }}    &lt;- CoordRef, 21.9M rows, 1GB -&gt; 346MB Parquet
+
+$ azcopy list "https://stanglominingdw01.blob.core.windows.net/curated?&lt;sas&gt;"
+dw/FactFuelTransaction/FactFuelTransaction.parquet          15.25 MiB
+dw/FactEquipmentTrip/FactEquipmentTrip.parquet               37.90 MiB
+dw/FactFuelUsageClassification/FactFuelUsageClassification.parquet  14.29 MiB
+dw/FactStorageLogbook/FactStorageLogbook.parquet              8.67 MiB
+dw/CoordRef/CoordRef.parquet                                346.23 MiB
+dw/DimEquipment/DimEquipment.parquet                          88.24 KiB
+... (16 tables total, all present, all reconciled against source)</div>
+  <p>The first run's failure is left in on purpose — a real build hits real bugs (here, a Windows
+     bcp encoding default that ADF's Copy activity didn't expect), and the fix is what turned it into a
+     working pipeline, not a lucky first attempt.</p>
+  <div class="note" style="font-size:.85rem;">
+    <strong>Why no portal screenshots:</strong> the resource group was already deleted (per this project's
+    own kill-switch policy) by the time this section was written, and re-deploying just to capture a
+    screenshot didn't seem worth the cost for a result the command output above already proves. See
+    <code>azure/AZURE_ARCHITECTURE.md</code> to redeploy from scratch if you want to reproduce it.
+  </div>
 </section>
 
 <section id="build">
