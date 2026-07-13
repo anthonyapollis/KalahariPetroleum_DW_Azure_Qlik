@@ -1,163 +1,3217 @@
 [
-  {"qInfo": {"qType": "kpi", "qId": "kpi-litres-issued"}, "qMetaDef": {"title": "Litres Issued"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#002F6C"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "litres-issued", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-litres-delivered"}, "qMetaDef": {"title": "Litres Delivered"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#00A3A1"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "litres-delivered", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-refund"}, "qMetaDef": {"title": "Refund (R, 349c/l)"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#FFB81C"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "refund-r", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-eligible-pct"}, "qMetaDef": {"title": "Eligible %"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#0072CE"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "eligible-pct", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "linechart", "qId": "line-litres-by-month"}, "qMetaDef": {"title": "Litres Issued by Month"}, "visualization": "linechart",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#0072CE"}}},
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["YearMonth"]}}], "qMeasures": [{"qLibraryId": "litres-issued", "qDef": {"qDef": ""}}],
-     "qInitialDataFetch": [{"qWidth": 2, "qHeight": 200}], "qInterColumnSortOrder": [0, 1]}},
-  {"qInfo": {"qType": "barchart", "qId": "bar-litres-by-location"}, "qMetaDef": {"title": "Litres Issued by Location (Top 15)"}, "visualization": "barchart",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#002F6C"}}},
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["LocationDescription"]}}],
-     "qMeasures": [{"qLibraryId": "litres-issued", "qDef": {"qDef": ""}, "qSortBy": {"qSortByNumeric": -1}}],
-     "qInitialDataFetch": [{"qWidth": 2, "qHeight": 15}], "qInterColumnSortOrder": [1, 0]}},
-  {"qInfo": {"qType": "listbox", "qId": "filter-year"}, "qMetaDef": {"title": "Year"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["Year"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "listbox", "qId": "filter-fiscalyear"}, "qMetaDef": {"title": "Fiscal Year (SA)"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["FiscalYearSA"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "listbox", "qId": "filter-location"}, "qMetaDef": {"title": "Location"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["LocationDescription"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "listbox", "qId": "filter-product"}, "qMetaDef": {"title": "Product"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["ProductName"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-1-overview"}, "qMetaDef": {"title": "1. Executive Fuel Overview", "description": ""},
-   "rank": 0, "thumbnail": {}, "columns": 24, "rows": 17,
-   "cells": [
-     {"name": "filter-year", "type": "listbox", "col": 0, "row": 0, "colspan": 6, "rowspan": 2},
-     {"name": "filter-fiscalyear", "type": "listbox", "col": 6, "row": 0, "colspan": 6, "rowspan": 2},
-     {"name": "filter-location", "type": "listbox", "col": 12, "row": 0, "colspan": 6, "rowspan": 2},
-     {"name": "filter-product", "type": "listbox", "col": 18, "row": 0, "colspan": 6, "rowspan": 2},
-     {"name": "kpi-litres-issued", "type": "kpi", "col": 0, "row": 2, "colspan": 6, "rowspan": 3},
-     {"name": "kpi-litres-delivered", "type": "kpi", "col": 6, "row": 2, "colspan": 6, "rowspan": 3},
-     {"name": "kpi-refund", "type": "kpi", "col": 12, "row": 2, "colspan": 6, "rowspan": 3},
-     {"name": "kpi-eligible-pct", "type": "kpi", "col": 18, "row": 2, "colspan": 6, "rowspan": 3},
-     {"name": "line-litres-by-month", "type": "linechart", "col": 0, "row": 5, "colspan": 24, "rowspan": 6},
-     {"name": "bar-litres-by-location", "type": "barchart", "col": 0, "row": 11, "colspan": 24, "rowspan": 6}
-   ]},
-
-  {"qInfo": {"qType": "kpi", "qId": "kpi-claim-refund"}, "qMetaDef": {"title": "Claim Refund"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#FFB81C"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "claim-refund", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-claim-eligible"}, "qMetaDef": {"title": "Claim Eligible Litres"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#00A3A1"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "claim-eligible-litres", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-claim-qualifying"}, "qMetaDef": {"title": "Claim Qualifying Litres"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#002F6C"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "claim-qualifying-litres", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "combochart", "qId": "combo-refund-by-month"}, "qMetaDef": {"title": "Eligible vs Non-Eligible Litres, and Refund by Month"}, "visualization": "combochart",
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["Claim.YearMonth"]}}],
-     "qMeasures": [
-       {"qDef": {"qDef": "Sum(Claim.EligibleLitres)", "qLabel": "Eligible Litres"}, "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#00A3A1"}}}},
-       {"qDef": {"qDef": "Sum(Claim.NonEligibleLitres)", "qLabel": "Non-Eligible Litres"}, "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#63666A"}}}},
-       {"qDef": {"qDef": "Sum(Claim.RefundRand)", "qLabel": "Refund (R)"}, "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#E4002B"}}}}
-     ], "qInitialDataFetch": [{"qWidth": 4, "qHeight": 100}], "qInterColumnSortOrder": [0, 1, 2, 3]}},
-  {"qInfo": {"qType": "table", "qId": "table-refund-claims"}, "qMetaDef": {"title": "Full Refund Claims Detail"}, "visualization": "table",
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["Claim.YearMonth"]}}],
-     "qMeasures": [
-       {"qLibraryId": "claim-eligible-litres", "qDef": {"qDef": ""}},
-       {"qLibraryId": "claim-qualifying-litres", "qDef": {"qDef": ""}},
-       {"qLibraryId": "claim-refund", "qDef": {"qDef": ""}}
-     ], "qInitialDataFetch": [{"qWidth": 4, "qHeight": 100}]}},
-  {"qInfo": {"qType": "text-image", "qId": "note-sars-caution"}, "qMetaDef": {"title": "SARS caution"}, "visualization": "text-image",
-   "paragraphs": [{"text": "Caution: rates are the 2020 SARS policy examples (Rebate Item 670.04) from the project's evidence pack - not tax advice.", "hAlign": "left"}]},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-2-refund"}, "qMetaDef": {"title": "2. SARS Diesel Refund", "description": ""},
-   "rank": 1, "thumbnail": {}, "columns": 24, "rows": 17,
-   "cells": [
-     {"name": "kpi-claim-refund", "type": "kpi", "col": 0, "row": 0, "colspan": 8, "rowspan": 3},
-     {"name": "kpi-claim-eligible", "type": "kpi", "col": 8, "row": 0, "colspan": 8, "rowspan": 3},
-     {"name": "kpi-claim-qualifying", "type": "kpi", "col": 16, "row": 0, "colspan": 8, "rowspan": 3},
-     {"name": "combo-refund-by-month", "type": "combochart", "col": 0, "row": 3, "colspan": 24, "rowspan": 6},
-     {"name": "table-refund-claims", "type": "table", "col": 0, "row": 9, "colspan": 24, "rowspan": 6},
-     {"name": "note-sars-caution", "type": "text-image", "col": 0, "row": 15, "colspan": 24, "rowspan": 2}
-   ]},
-
-  {"qInfo": {"qType": "listbox", "qId": "filter-consumptiontype"}, "qMetaDef": {"title": "Consumption Type"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["ConsumptionTypeName"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "listbox", "qId": "filter-eligibilityclass"}, "qMetaDef": {"title": "Eligibility Class"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["EligibilityClass"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 50}]}},
-  {"qInfo": {"qType": "scatterplot", "qId": "scatter-equip-efficiency"}, "qMetaDef": {"title": "Meter Units Worked vs Litres Issued by Equipment"}, "visualization": "scatterplot",
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["FleetId"]}}],
-     "qMeasures": [
-       {"qDef": {"qDef": "Sum({<FactType={'Meter Reading'}>} UnitsWorked)", "qLabel": "Units Worked"}},
-       {"qDef": {"qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres)", "qLabel": "Litres Issued"}}
-     ], "qInitialDataFetch": [{"qWidth": 3, "qHeight": 500}]}},
-  {"qInfo": {"qType": "table", "qId": "table-litres-per-hrkm"}, "qMetaDef": {"title": "Litres per Hour/Km by Make/Model/Vehicle Type"}, "visualization": "table",
-   "qHyperCubeDef": {"qDimensions": [
-       {"qDef": {"qFieldDefs": ["MakeName"]}}, {"qDef": {"qFieldDefs": ["ModelName"]}}, {"qDef": {"qFieldDefs": ["VehicleTypeName"]}}
-     ], "qMeasures": [{"qLibraryId": "litres-per-hr-km", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 4, "qHeight": 200}]}},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-3-equipment"}, "qMetaDef": {"title": "3. Equipment Efficiency", "description": ""},
-   "rank": 2, "thumbnail": {}, "columns": 24, "rows": 14,
-   "cells": [
-     {"name": "filter-consumptiontype", "type": "listbox", "col": 0, "row": 0, "colspan": 12, "rowspan": 2},
-     {"name": "filter-eligibilityclass", "type": "listbox", "col": 12, "row": 0, "colspan": 12, "rowspan": 2},
-     {"name": "scatter-equip-efficiency", "type": "scatterplot", "col": 0, "row": 2, "colspan": 24, "rowspan": 7},
-     {"name": "table-litres-per-hrkm", "type": "table", "col": 0, "row": 9, "colspan": 24, "rowspan": 5}
-   ]},
-
-  {"qInfo": {"qType": "listbox", "qId": "filter-eligibilitystatus"}, "qMetaDef": {"title": "SARS Eligibility Status"},
-   "qListObjectDef": {"qDef": {"qFieldDefs": ["EligibilityStatus"]}, "qInitialDataFetch": [{"qWidth": 1, "qHeight": 20}]}},
-  {"qInfo": {"qType": "barchart", "qId": "bar-eligible-vs-non"}, "qMetaDef": {"title": "Litres Issued by Activity Description (EligibleActivityKey-linked)"}, "visualization": "barchart",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#FFB81C"}}},
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["ActivityDescription"]}}],
-     "qMeasures": [{"qLibraryId": "litres-issued", "qDef": {"qDef": ""}, "qSortBy": {"qSortByNumeric": -1}}],
-     "qInitialDataFetch": [{"qWidth": 2, "qHeight": 20}], "qInterColumnSortOrder": [1, 0]}},
-  {"qInfo": {"qType": "barchart", "qId": "bar-eligibilitystatus-litres"}, "qMetaDef": {"title": "Litres Issued by SARS Eligibility Status"}, "visualization": "barchart",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#0072CE"}}},
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["EligibilityStatus"]}}],
-     "qMeasures": [{"qLibraryId": "litres-issued", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 2, "qHeight": 20}]}},
-  {"qInfo": {"qType": "table", "qId": "table-activity-detail"}, "qMetaDef": {"title": "Litres by Specific Activity Performed"}, "visualization": "table",
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["SpecificActivityPerformed"]}}],
-     "qMeasures": [{"qLibraryId": "total-fuel-used", "qDef": {"qDef": ""}, "qSortBy": {"qSortByNumeric": -1}}],
-     "qInitialDataFetch": [{"qWidth": 2, "qHeight": 100}], "qInterColumnSortOrder": [1, 0]}},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-4-eligibility"},
-   "qMetaDef": {"title": "4. Eligibility & Activity", "description": "ActivityDescription/EligibilityStatus come from dw.DimEligibleActivity, seeded from fn_GetStorageReportLive classification patterns. Linked via EligibleActivityKey, which exists on Fuel Issue rows only (not Usage Classification) - so these two charts use Litres Issued, not Eligible/Non-Eligible Litres."},
-   "rank": 3, "thumbnail": {}, "columns": 24, "rows": 17,
-   "cells": [
-     {"name": "filter-eligibilitystatus", "type": "listbox", "col": 0, "row": 0, "colspan": 24, "rowspan": 2},
-     {"name": "bar-eligible-vs-non", "type": "barchart", "col": 0, "row": 2, "colspan": 12, "rowspan": 5},
-     {"name": "bar-eligibilitystatus-litres", "type": "barchart", "col": 12, "row": 2, "colspan": 12, "rowspan": 5},
-     {"name": "table-activity-detail", "type": "table", "col": 0, "row": 7, "colspan": 24, "rowspan": 6}
-   ]},
-
-  {"qInfo": {"qType": "barchart", "qId": "bar-tank-net-by-location"}, "qMetaDef": {"title": "Tank Net Movement by Location"}, "visualization": "barchart",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#00A3A1"}}},
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["LocationDescription"]}}],
-     "qMeasures": [{"qLibraryId": "tank-net-movement", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 2, "qHeight": 30}]}},
-  {"qInfo": {"qType": "table", "qId": "table-deliveries-by-doc"}, "qMetaDef": {"title": "Deliveries by Document Number"}, "visualization": "table",
-   "qHyperCubeDef": {"qDimensions": [{"qDef": {"qFieldDefs": ["DocumentNumber"]}}, {"qDef": {"qFieldDefs": ["LocationDescription"]}}],
-     "qMeasures": [{"qLibraryId": "litres-delivered", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 3, "qHeight": 200}]}},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-5-tank"}, "qMetaDef": {"title": "5. Tank & Delivery Reconciliation", "description": ""},
-   "rank": 4, "thumbnail": {}, "columns": 24, "rows": 12,
-   "cells": [
-     {"name": "bar-tank-net-by-location", "type": "barchart", "col": 0, "row": 0, "colspan": 24, "rowspan": 6},
-     {"name": "table-deliveries-by-doc", "type": "table", "col": 0, "row": 6, "colspan": 24, "rowspan": 6}
-   ]},
-
-  {"qInfo": {"qType": "kpi", "qId": "kpi-distinct-fuelevents"}, "qMetaDef": {"title": "Distinct FuelEventId (Fuel Issue)"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#002F6C"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qDef": {"qDef": "Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)"}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-duplicate-fuelevents"}, "qMetaDef": {"title": "Duplicate FuelEventId Count"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#E4002B"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qDef": {"qDef": "Count({<FactType={'Fuel Issue'}>} FuelEventId) - Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)"}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "kpi", "qId": "kpi-trips-total"}, "qMetaDef": {"title": "Total Trips"}, "visualization": "kpi",
-   "color": {"mode": "primary", "primary": {"color": {"index": -1, "color": "#63666A"}}},
-   "qHyperCubeDef": {"qMeasures": [{"qLibraryId": "trips", "qDef": {"qDef": ""}}], "qInitialDataFetch": [{"qWidth": 1, "qHeight": 1}]}},
-  {"qInfo": {"qType": "text-image", "qId": "note-dq-static"}, "qMetaDef": {"title": "DQ static findings"}, "visualization": "text-image",
-   "paragraphs": [{"text": "Static findings from dw.vw_DataQuality (not live-computable from the fields loaded in this app): 203,309 usage-logbook rows carry RegNumbers absent from the equipment master. 14,746 fuel issues exceed 1.5x the receiving vehicle's tank size.", "hAlign": "left"}]},
-  {"qInfo": {"qType": "sheet", "qId": "sheet-6-dq"}, "qMetaDef": {"title": "6. Data Quality", "description": ""},
-   "rank": 5, "thumbnail": {}, "columns": 24, "rows": 11,
-   "cells": [
-     {"name": "kpi-distinct-fuelevents", "type": "kpi", "col": 0, "row": 0, "colspan": 8, "rowspan": 4},
-     {"name": "kpi-duplicate-fuelevents", "type": "kpi", "col": 8, "row": 0, "colspan": 8, "rowspan": 4},
-     {"name": "kpi-trips-total", "type": "kpi", "col": 16, "row": 0, "colspan": 8, "rowspan": 4},
-     {"name": "note-dq-static", "type": "text-image", "col": 0, "row": 4, "colspan": 24, "rowspan": 3}
-   ]}
+  {
+    "qInfo": {
+      "qId": "sheet-1-overview",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "1. Executive Fuel Overview",
+      "description": ""
+    },
+    "rank": 0,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 18,
+    "cells": [
+      {
+        "name": "filter-year",
+        "type": "listbox",
+        "col": 0,
+        "row": 0,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "filter-fiscalyear",
+        "type": "listbox",
+        "col": 6,
+        "row": 0,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "filter-location",
+        "type": "listbox",
+        "col": 12,
+        "row": 0,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "filter-product",
+        "type": "listbox",
+        "col": 18,
+        "row": 0,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-litres-issued",
+        "type": "kpi",
+        "col": 0,
+        "row": 3,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-litres-delivered",
+        "type": "kpi",
+        "col": 6,
+        "row": 3,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-refund",
+        "type": "kpi",
+        "col": 12,
+        "row": 3,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-eligible-pct",
+        "type": "kpi",
+        "col": 18,
+        "row": 3,
+        "colspan": 6,
+        "rowspan": 3
+      },
+      {
+        "name": "line-litres-by-month",
+        "type": "linechart",
+        "col": 0,
+        "row": 6,
+        "colspan": 24,
+        "rowspan": 6
+      },
+      {
+        "name": "bar-litres-by-location",
+        "type": "barchart",
+        "col": 0,
+        "row": 12,
+        "colspan": 24,
+        "rowspan": 6
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "sheet-2-refund",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "2. SARS Diesel Refund",
+      "description": ""
+    },
+    "rank": 1,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 17,
+    "cells": [
+      {
+        "name": "kpi-claim-refund",
+        "type": "kpi",
+        "col": 0,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-claim-eligible",
+        "type": "kpi",
+        "col": 8,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 3
+      },
+      {
+        "name": "kpi-claim-qualifying",
+        "type": "kpi",
+        "col": 16,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 3
+      },
+      {
+        "name": "combo-refund-by-month",
+        "type": "combochart",
+        "col": 0,
+        "row": 3,
+        "colspan": 24,
+        "rowspan": 6
+      },
+      {
+        "name": "table-refund-claims",
+        "type": "table",
+        "col": 0,
+        "row": 9,
+        "colspan": 24,
+        "rowspan": 6
+      },
+      {
+        "name": "note-sars-caution",
+        "type": "text-image",
+        "col": 0,
+        "row": 15,
+        "colspan": 24,
+        "rowspan": 2
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "sheet-3-equipment",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "3. Equipment Efficiency",
+      "description": ""
+    },
+    "rank": 2,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 15,
+    "cells": [
+      {
+        "name": "filter-consumptiontype",
+        "type": "listbox",
+        "col": 0,
+        "row": 0,
+        "colspan": 12,
+        "rowspan": 3
+      },
+      {
+        "name": "filter-eligibilityclass",
+        "type": "listbox",
+        "col": 12,
+        "row": 0,
+        "colspan": 12,
+        "rowspan": 3
+      },
+      {
+        "name": "scatter-equip-efficiency",
+        "type": "scatterplot",
+        "col": 0,
+        "row": 3,
+        "colspan": 24,
+        "rowspan": 7
+      },
+      {
+        "name": "table-litres-per-hrkm",
+        "type": "table",
+        "col": 0,
+        "row": 10,
+        "colspan": 24,
+        "rowspan": 5
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "sheet-4-eligibility",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "4. Eligibility & Activity",
+      "description": "ActivityDescription/EligibilityStatus come from dw.DimEligibleActivity, seeded from fn_GetStorageReportLive classification patterns. Linked via EligibleActivityKey, which exists on Fuel Issue rows only (not Usage Classification) - so these two charts use Litres Issued, not Eligible/Non-Eligible Litres."
+    },
+    "rank": 3,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 14,
+    "cells": [
+      {
+        "name": "filter-eligibilitystatus",
+        "type": "listbox",
+        "col": 0,
+        "row": 0,
+        "colspan": 24,
+        "rowspan": 3
+      },
+      {
+        "name": "bar-eligible-vs-non",
+        "type": "barchart",
+        "col": 0,
+        "row": 3,
+        "colspan": 12,
+        "rowspan": 5
+      },
+      {
+        "name": "bar-eligibilitystatus-litres",
+        "type": "barchart",
+        "col": 12,
+        "row": 3,
+        "colspan": 12,
+        "rowspan": 5
+      },
+      {
+        "name": "table-activity-detail",
+        "type": "table",
+        "col": 0,
+        "row": 8,
+        "colspan": 24,
+        "rowspan": 6
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "sheet-5-tank",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "5. Tank & Delivery Reconciliation",
+      "description": ""
+    },
+    "rank": 4,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 12,
+    "cells": [
+      {
+        "name": "bar-tank-net-by-location",
+        "type": "barchart",
+        "col": 0,
+        "row": 0,
+        "colspan": 24,
+        "rowspan": 6
+      },
+      {
+        "name": "table-deliveries-by-doc",
+        "type": "table",
+        "col": 0,
+        "row": 6,
+        "colspan": 24,
+        "rowspan": 6
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "sheet-6-dq",
+      "qType": "sheet"
+    },
+    "qMetaDef": {
+      "title": "6. Data Quality",
+      "description": ""
+    },
+    "rank": 5,
+    "thumbnail": {},
+    "columns": 24,
+    "rows": 11,
+    "cells": [
+      {
+        "name": "kpi-distinct-fuelevents",
+        "type": "kpi",
+        "col": 0,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 4
+      },
+      {
+        "name": "kpi-duplicate-fuelevents",
+        "type": "kpi",
+        "col": 8,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 4
+      },
+      {
+        "name": "kpi-trips-total",
+        "type": "kpi",
+        "col": 16,
+        "row": 0,
+        "colspan": 8,
+        "rowspan": 4
+      },
+      {
+        "name": "note-dq-static",
+        "type": "text-image",
+        "col": 0,
+        "row": 4,
+        "colspan": 24,
+        "rowspan": 3
+      }
+    ]
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-litres-issued",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Litres Issued"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#002F6C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-issued",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-litres-issued-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Issued",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-litres-delivered",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Litres Delivered"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#00A3A1"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-delivered",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-litres-delivered-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Delivered",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-refund",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Refund (R, 349c/l)"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#FFB81C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "refund-r",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-refund-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Refund (R, 349c/l)",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-eligible-pct",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Eligible %"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#0072CE"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "eligible-pct",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-eligible-pct-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Eligible %",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-claim-refund",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Claim Refund"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#FFB81C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "claim-refund",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-claim-refund-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Claim Refund",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-claim-eligible",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Claim Eligible Litres"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#00A3A1"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "claim-eligible-litres",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-claim-eligible-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Claim Eligible Litres",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-claim-qualifying",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Claim Qualifying Litres"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#002F6C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "claim-qualifying-litres",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-claim-qualifying-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Claim Qualifying Litres",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-distinct-fuelevents",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Distinct FuelEventId (Fuel Issue)"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#002F6C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-distinct-fuelevents-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Distinct FuelEventId (Fuel Issue)",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-duplicate-fuelevents",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Duplicate FuelEventId Count"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#E4002B"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Count({<FactType={'Fuel Issue'}>} FuelEventId) - Count({<FactType={'Fuel Issue'}>} DISTINCT FuelEventId)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-duplicate-fuelevents-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Duplicate FuelEventId Count",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "kpi-trips-total",
+      "qType": "kpi"
+    },
+    "qMetaDef": {
+      "title": "Total Trips"
+    },
+    "visualization": "kpi",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#63666A"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [],
+      "qMeasures": [
+        {
+          "qLibraryId": "trips",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "kpi-trips-total-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 1
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Total Trips",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "line-litres-by-month",
+      "qType": "linechart"
+    },
+    "qMetaDef": {
+      "title": "Litres Issued by Month"
+    },
+    "visualization": "linechart",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#0072CE"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "YearMonth"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "line-litres-by-month-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-issued",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "line-litres-by-month-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [
+        0,
+        1
+      ],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 200
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Issued by Month",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "bar-litres-by-location",
+      "qType": "barchart"
+    },
+    "qMetaDef": {
+      "title": "Litres Issued by Location (Top 15)"
+    },
+    "visualization": "barchart",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#002F6C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "LocationDescription"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "bar-litres-by-location-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-issued",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "bar-litres-by-location-m0"
+          },
+          "qSortBy": {
+            "qSortByNumeric": -1,
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [
+        1,
+        0
+      ],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 15
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Issued by Location (Top 15)",
+    "subtitle": "",
+    "footnote": "",
+    "orientation": "horizontal"
+  },
+  {
+    "qInfo": {
+      "qId": "combo-refund-by-month",
+      "qType": "combochart"
+    },
+    "qMetaDef": {
+      "title": "Eligible vs Non-Eligible Litres, and Refund by Month"
+    },
+    "visualization": "combochart",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "Claim.YearMonth"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "combo-refund-by-month-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qDef": {
+            "qLabel": "Eligible Litres",
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Sum(Claim.EligibleLitres)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "combo-refund-by-month-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          },
+          "color": {
+            "mode": "primary",
+            "primary": {
+              "color": {
+                "index": -1,
+                "color": "#00A3A1"
+              }
+            }
+          }
+        },
+        {
+          "qDef": {
+            "qLabel": "Non-Eligible Litres",
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Sum(Claim.NonEligibleLitres)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "combo-refund-by-month-m1"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          },
+          "color": {
+            "mode": "primary",
+            "primary": {
+              "color": {
+                "index": -1,
+                "color": "#63666A"
+              }
+            }
+          }
+        },
+        {
+          "qDef": {
+            "qLabel": "Refund (R)",
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Sum(Claim.RefundRand)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "combo-refund-by-month-m2"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          },
+          "color": {
+            "mode": "primary",
+            "primary": {
+              "color": {
+                "index": -1,
+                "color": "#E4002B"
+              }
+            }
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 4,
+          "qHeight": 100
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Eligible vs Non-Eligible Litres, and Refund by Month",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "scatter-equip-efficiency",
+      "qType": "scatterplot"
+    },
+    "qMetaDef": {
+      "title": "Meter Units Worked vs Litres Issued by Equipment"
+    },
+    "visualization": "scatterplot",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "FleetId"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "scatter-equip-efficiency-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qDef": {
+            "qLabel": "Units Worked",
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Sum({<FactType={'Meter Reading'}>} UnitsWorked)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "scatter-equip-efficiency-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        },
+        {
+          "qDef": {
+            "qLabel": "Litres Issued",
+            "qTags": [],
+            "qGrouping": "N",
+            "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "scatter-equip-efficiency-m1"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 3,
+          "qHeight": 500
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Meter Units Worked vs Litres Issued by Equipment",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "bar-eligible-vs-non",
+      "qType": "barchart"
+    },
+    "qMetaDef": {
+      "title": "Litres Issued by Activity Description (EligibleActivityKey-linked)"
+    },
+    "visualization": "barchart",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#FFB81C"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "ActivityDescription"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "bar-eligible-vs-non-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-issued",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "bar-eligible-vs-non-m0"
+          },
+          "qSortBy": {
+            "qSortByNumeric": -1,
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [
+        1,
+        0
+      ],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 20
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Issued by Activity Description (EligibleActivityKey-linked)",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "bar-eligibilitystatus-litres",
+      "qType": "barchart"
+    },
+    "qMetaDef": {
+      "title": "Litres Issued by SARS Eligibility Status"
+    },
+    "visualization": "barchart",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#0072CE"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "EligibilityStatus"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "bar-eligibilitystatus-litres-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-issued",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "bar-eligibilitystatus-litres-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 20
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres Issued by SARS Eligibility Status",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "bar-tank-net-by-location",
+      "qType": "barchart"
+    },
+    "qMetaDef": {
+      "title": "Tank Net Movement by Location"
+    },
+    "visualization": "barchart",
+    "color": {
+      "mode": "primary",
+      "primary": {
+        "color": {
+          "index": -1,
+          "color": "#00A3A1"
+        }
+      }
+    },
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "LocationDescription"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "bar-tank-net-by-location-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "tank-net-movement",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "bar-tank-net-by-location-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 30
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Tank Net Movement by Location",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "table-refund-claims",
+      "qType": "table"
+    },
+    "qMetaDef": {
+      "title": "Full Refund Claims Detail"
+    },
+    "visualization": "table",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "Claim.YearMonth"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-refund-claims-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "claim-eligible-litres",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-refund-claims-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        },
+        {
+          "qLibraryId": "claim-qualifying-litres",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-refund-claims-m1"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        },
+        {
+          "qLibraryId": "claim-refund",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-refund-claims-m2"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 4,
+          "qHeight": 100
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Full Refund Claims Detail",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "table-litres-per-hrkm",
+      "qType": "table"
+    },
+    "qMetaDef": {
+      "title": "Litres per Hour/Km by Make/Model/Vehicle Type"
+    },
+    "visualization": "table",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "MakeName"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-litres-per-hrkm-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        },
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "ModelName"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-litres-per-hrkm-d1"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        },
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "VehicleTypeName"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-litres-per-hrkm-d2"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-per-hr-km",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-litres-per-hrkm-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 4,
+          "qHeight": 200
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres per Hour/Km by Make/Model/Vehicle Type",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "table-activity-detail",
+      "qType": "table"
+    },
+    "qMetaDef": {
+      "title": "Litres by Specific Activity Performed"
+    },
+    "visualization": "table",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "SpecificActivityPerformed"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-activity-detail-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "total-fuel-used",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-activity-detail-m0"
+          },
+          "qSortBy": {
+            "qSortByNumeric": -1,
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [
+        1,
+        0
+      ],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 2,
+          "qHeight": 100
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Litres by Specific Activity Performed",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "table-deliveries-by-doc",
+      "qType": "table"
+    },
+    "qMetaDef": {
+      "title": "Deliveries by Document Number"
+    },
+    "visualization": "table",
+    "qHyperCubeDef": {
+      "qDimensions": [
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "DocumentNumber"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-deliveries-by-doc-d0"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        },
+        {
+          "qDef": {
+            "qGrouping": "N",
+            "qFieldDefs": [
+              "LocationDescription"
+            ],
+            "qFieldLabels": [],
+            "qSortCriterias": [],
+            "qNumberPresentations": [],
+            "qActiveField": 0,
+            "cId": "table-deliveries-by-doc-d1"
+          },
+          "qOtherTotalSpec": {
+            "qOtherMode": "OTHER_OFF",
+            "qOtherCounted": {},
+            "qOtherLimit": {},
+            "qOtherLimitMode": "OTHER_GT_LIMIT",
+            "qForceBadValueKeeping": true,
+            "qApplyEvenWhenPossiblyWrongResult": true,
+            "qOtherSortMode": "OTHER_SORT_DESCENDING",
+            "qTotalMode": "TOTAL_OFF",
+            "qReferencedExpression": {}
+          },
+          "qOtherLabel": {},
+          "qTotalLabel": {},
+          "qCalcCond": {},
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          }
+        }
+      ],
+      "qMeasures": [
+        {
+          "qLibraryId": "litres-delivered",
+          "qDef": {
+            "qTags": [],
+            "qGrouping": "N",
+            "qAccumulate": 0,
+            "qActiveExpression": 0,
+            "qExpressions": [],
+            "cId": "table-deliveries-by-doc-m0"
+          },
+          "qSortBy": {
+            "qExpression": {}
+          },
+          "qAttributeExpressions": [],
+          "qAttributeDimensions": [],
+          "qCalcCond": {},
+          "qCalcCondition": {
+            "qCond": {},
+            "qMsg": {}
+          },
+          "qTrendLines": [],
+          "qMiniChartDef": {
+            "qSortBy": {
+              "qExpression": {}
+            },
+            "qOtherTotalSpec": {
+              "qOtherMode": "OTHER_OFF",
+              "qOtherCounted": {},
+              "qOtherLimit": {},
+              "qOtherLimitMode": "OTHER_GT_LIMIT",
+              "qForceBadValueKeeping": true,
+              "qApplyEvenWhenPossiblyWrongResult": true,
+              "qOtherSortMode": "OTHER_SORT_DESCENDING",
+              "qTotalMode": "TOTAL_OFF",
+              "qReferencedExpression": {}
+            },
+            "qMaxNumberPoints": -1,
+            "qAttributeExpressions": []
+          }
+        }
+      ],
+      "qInterColumnSortOrder": [],
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 3,
+          "qHeight": 200
+        }
+      ],
+      "qReductionMode": "N",
+      "qMode": "S",
+      "qPseudoDimPos": -1,
+      "qNoOfLeftDims": -1,
+      "qMaxStackedCells": 5000,
+      "qCalcCond": {},
+      "qTitle": {},
+      "qCalcCondition": {
+        "qCond": {},
+        "qMsg": {}
+      },
+      "qColumnOrder": [],
+      "qExpansionState": [],
+      "qDynamicScript": []
+    },
+    "showTitles": true,
+    "title": "Deliveries by Document Number",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-year",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Year"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "Year"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-year-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "checkboxes": false,
+    "showTitles": true,
+    "title": "Year",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-fiscalyear",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Fiscal Year (SA)"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "FiscalYearSA"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-fiscalyear-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "checkboxes": false,
+    "showTitles": true,
+    "title": "Fiscal Year (SA)",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-location",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Location"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "LocationDescription"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-location-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "checkboxes": false,
+    "showTitles": true,
+    "title": "Location",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-product",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Product"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "ProductName"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-product-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "checkboxes": false,
+    "showTitles": true,
+    "title": "Product",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-consumptiontype",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Consumption Type"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "ConsumptionTypeName"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-consumptiontype-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "showTitles": true,
+    "title": "Consumption Type",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-eligibilityclass",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "Eligibility Class"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "EligibilityClass"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-eligibilityclass-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 50
+        }
+      ],
+      "qExpressions": []
+    },
+    "showTitles": true,
+    "title": "Eligibility Class",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "filter-eligibilitystatus",
+      "qType": "listbox"
+    },
+    "qMetaDef": {
+      "title": "SARS Eligibility Status"
+    },
+    "qListObjectDef": {
+      "qDef": {
+        "qGrouping": "N",
+        "qFieldDefs": [
+          "EligibilityStatus"
+        ],
+        "qFieldLabels": [],
+        "qSortCriterias": [],
+        "qNumberPresentations": [],
+        "qActiveField": 0,
+        "cId": "filter-eligibilitystatus-lb"
+      },
+      "qFrequencyMode": "N",
+      "qInitialDataFetch": [
+        {
+          "qLeft": 0,
+          "qTop": 0,
+          "qWidth": 1,
+          "qHeight": 20
+        }
+      ],
+      "qExpressions": []
+    },
+    "showTitles": true,
+    "title": "SARS Eligibility Status",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "note-sars-caution",
+      "qType": "text-image"
+    },
+    "qMetaDef": {
+      "title": "SARS caution"
+    },
+    "visualization": "text-image",
+    "paragraphs": [
+      {
+        "text": "Caution: rates are the 2020 SARS policy examples (Rebate Item 670.04) from the project's evidence pack - not tax advice.",
+        "hAlign": "left"
+      }
+    ],
+    "showTitles": true,
+    "title": "SARS caution",
+    "subtitle": "",
+    "footnote": ""
+  },
+  {
+    "qInfo": {
+      "qId": "note-dq-static",
+      "qType": "text-image"
+    },
+    "qMetaDef": {
+      "title": "DQ static findings"
+    },
+    "visualization": "text-image",
+    "paragraphs": [
+      {
+        "text": "Static findings from dw.vw_DataQuality (not live-computable from the fields loaded in this app): 203,309 usage-logbook rows carry RegNumbers absent from the equipment master. 14,746 fuel issues exceed 1.5x the receiving vehicle's tank size.",
+        "hAlign": "left"
+      }
+    ],
+    "showTitles": true,
+    "title": "DQ static findings",
+    "subtitle": "",
+    "footnote": ""
+  }
 ]

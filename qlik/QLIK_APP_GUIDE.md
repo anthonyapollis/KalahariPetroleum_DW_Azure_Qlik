@@ -87,6 +87,23 @@ happened, `qlik app object properties --app <id> <sheetId>` and check whether
 `cells[].name` still matches your intended IDs or has been replaced with short random
 strings.
 
+**Number format renders literally without separator characters:** a measure's
+`qNumFormat` with `qUseThou: 0` but a thousands separator in the pattern (`"qFmt":
+"#,##0"`) makes the engine print the format string itself — KPIs show `290557288,##0`
+instead of `290,557,288`. The working combination is `qUseThou: 1` plus explicit
+separator characters: `"qDec": "."`, `"qThou": ","`. See `qlik_master_measures.json`
+for the corrected definitions.
+
+**Charts render blank without per-column `cId`:** KPIs and listboxes draw fine, but
+any object with a dimension (bar/line/combo/scatter/table) renders as an empty panel
+if its hypercube columns lack a component ID — the Qlik Sense client indexes columns
+by `qDef.cId`, which the engine API does not require and does not generate. Give every
+entry in `qDimensions` and `qMeasures` a unique `qDef.cId` (this project uses
+`<objectId>-d0`/`<objectId>-m0`), and set `showTitles: true` + `title` at the object's
+top level or the chart header stays empty too. `qlik app object data` returning correct
+values does NOT prove the chart will render — that call exercises the engine, not the
+client.
+
 **Data-model constraint found while building Sheet 4:** `EligibleActivityKey` (which
 links to `DimEligibleActivity`/`ActivityDescription`) only exists on Fuel Issue rows in
 the concatenated `Fuel` table, not on Usage Classification rows — so a chart of

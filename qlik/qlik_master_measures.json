@@ -1,198 +1,322 @@
 [
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "litres-issued"
+      "qId": "litres-issued",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Litres Issued",
       "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "litres-delivered"
+      "qId": "litres-delivered",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Litres Delivered",
       "qDef": "Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "total-fuel-used"
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
     },
-    "qMeasure": {
-      "qLabel": "Total Fuel Used",
-      "qDef": "Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "eligible-litres"
-    },
-    "qMeasure": {
-      "qLabel": "Eligible Litres",
-      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "non-eligible-litres"
-    },
-    "qMeasure": {
-      "qLabel": "Non-Eligible Litres",
-      "qDef": "Sum({<FactType={'Usage Classification'}>} NonEligibleLitres)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "eligible-pct"
-    },
-    "qMeasure": {
-      "qLabel": "Eligible %",
-      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) / Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "0.0%"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "qualifying-litres"
-    },
-    "qMeasure": {
-      "qLabel": "Qualifying Litres",
-      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "refund-r"
+      "qId": "refund-r",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Refund (R, 349c/l)",
       "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8 * 3.49",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "M",
-        "qFmt": "R #,##0"
-      }
-    }
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "R #,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "litres-per-hr-km"
+      "qId": "eligible-pct",
+      "qType": "measure"
     },
     "qMeasure": {
-      "qLabel": "Litres per Hour/Km",
-      "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres) / Sum({<FactType={'Meter Reading'}>} UnitsWorked)",
+      "qLabel": "Eligible %",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) / Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "R",
-        "qFmt": "#,##0.00"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "trips"
+        "qnDec": 10,
+        "qUseThou": 0,
+        "qFmt": "0.0%"
+      },
+      "qOrigin": "PROGRAM"
     },
-    "qMeasure": {
-      "qLabel": "Trips",
-      "qDef": "Sum({<FactType={'Equipment Trip'}>} TripCount)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "tank-net-movement"
-    },
-    "qMeasure": {
-      "qLabel": "Tank Net Movement",
-      "qDef": "Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres) - Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
-      "qNumFormat": {
-        "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
-  },
-  {
-    "qInfo": {
-      "qType": "measure",
-      "qId": "claim-refund"
+      "qId": "claim-refund",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Claim Refund",
       "qDef": "Sum(Claim.RefundRand)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "M",
-        "qFmt": "R #,##0"
-      }
-    }
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "R #,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "claim-eligible-litres"
+      "qId": "claim-eligible-litres",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Claim Eligible Litres",
       "qDef": "Sum(Claim.EligibleLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
   },
   {
     "qInfo": {
-      "qType": "measure",
-      "qId": "claim-qualifying-litres"
+      "qId": "claim-qualifying-litres",
+      "qType": "measure"
     },
     "qMeasure": {
       "qLabel": "Claim Qualifying Litres",
       "qDef": "Sum(Claim.QualifyingLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
       "qNumFormat": {
         "qType": "R",
-        "qFmt": "#,##0"
-      }
-    }
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "eligible-litres",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Eligible Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "non-eligible-litres",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Non-Eligible Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} NonEligibleLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "qualifying-litres",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Qualifying Litres",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} EligibleLitres) * 0.8",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "total-fuel-used",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Total Fuel Used",
+      "qDef": "Sum({<FactType={'Usage Classification'}>} UsageTotalLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "tank-net-movement",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Tank Net Movement",
+      "qDef": "Sum({<FactType={'Fuel Delivery'}>} DeliveredLitres) - Sum({<FactType={'Fuel Issue'}>} IssuedLitres)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "litres-per-hr-km",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Litres per Hour/Km",
+      "qDef": "Sum({<FactType={'Fuel Issue'}>} IssuedLitres) / Sum({<FactType={'Meter Reading'}>} UnitsWorked)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 2,
+        "qUseThou": 1,
+        "qFmt": "#,##0.00",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
+  },
+  {
+    "qInfo": {
+      "qId": "trips",
+      "qType": "measure"
+    },
+    "qMeasure": {
+      "qLabel": "Trips",
+      "qDef": "Sum({<FactType={'Equipment Trip'}>} TripCount)",
+      "qGrouping": "N",
+      "qExpressions": [],
+      "qActiveExpression": 0,
+      "qNumFormat": {
+        "qType": "R",
+        "qnDec": 0,
+        "qUseThou": 1,
+        "qFmt": "#,##0",
+        "qDec": ".",
+        "qThou": ","
+      },
+      "qOrigin": "PROGRAM"
+    },
+    "qMetaDef": {}
   }
 ]
