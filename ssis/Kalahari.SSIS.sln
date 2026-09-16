@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Kalahari.SSIS", "Kalahari.SSIS\Kalahari.SSIS.dtproj", "{58FDE36A-CA3E-45DF-9B14-B82FEFB8A2F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58FDE36A-CA3E-45DF-9B14-B82FEFB8A2F3}.Development|Default.ActiveCfg = Development
+		{58FDE36A-CA3E-45DF-9B14-B82FEFB8A2F3}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {197F43A1-6206-4992-A1CC-206D6C9F0DB5}
+	EndGlobalSection
+EndGlobal

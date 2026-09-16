@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:48" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{A9BDDDF1-C434-484D-87AB-7EBBD59831FC}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Dim_DimLocation" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{97F31F49-72E5-48C2-8113-ACE7063EDEFB}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{3B937DAD-05C2-48E3-B72F-6278EF874A42}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{EFDA68F8-8231-428E-B49E-B723371DC9FB}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{166AC479-D805-4CB7-A63A-908B9A1A9879}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{CB701E5E-065E-4AD0-9ECE-39AD03FD083B}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{912E4B94-1020-4595-A28B-8495C62820C3}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{EFB12EED-CE05-4D7B-AE5E-12D6A115EB9E}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{3E6E483C-6A35-4815-8842-3F6CDC56C3B2}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{D699EAE0-B9F1-4E6F-BD8A-1D54577BF93F}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeInserted">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{A2C74797-4B7E-41E6-9CEF-9FDC9EC14665}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeUpdated">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{98AEF4D9-3A59-4D68-B2BE-D05F715C6A8A}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{01529115-6C80-4B90-82E6-CE56D18C37F7}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Truncate stg DimLocation" DTS:refId="Package\SQL Truncate stg DimLocation" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="TRUNCATE TABLE stg.DimLocation;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{7031F9E8-6EAE-4092-A3F5-FF7B901BBE97}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Stage DimLocation" DTS:refId="Package\DFT Stage DimLocation" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC DimLocation" refId="Package\DFT Stage DimLocation\SRC DimLocation" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{EFDA68F8-8231-428E-B49E-B723371DC9FB}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimLocation\SRC DimLocation.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceLocationId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[SourceLocationId]" />
+                    <externalMetadataColumn dataType="i4" name="AFSDepotId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[AFSDepotId]" />
+                    <externalMetadataColumn dataType="wstr" length="300" name="LocationDescription" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[LocationDescription]" />
+                    <externalMetadataColumn dataType="bool" name="IsFixed" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsFixed]" />
+                    <externalMetadataColumn dataType="bool" name="IsMobile" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsMobile]" />
+                    <externalMetadataColumn dataType="r8" name="Capacity" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[Capacity]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[SourceLocationId]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[SourceLocationId]" name="SourceLocationId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[SourceLocationId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[AFSDepotId]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[AFSDepotId]" name="AFSDepotId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[AFSDepotId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[LocationDescription]" length="300" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[LocationDescription]" name="LocationDescription" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[LocationDescription]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsFixed]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsFixed]" name="IsFixed" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsFixed]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsMobile]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsMobile]" name="IsMobile" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsMobile]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[Capacity]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[Capacity]" name="Capacity" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[Capacity]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsActive]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[SourceLocationId]" name="SourceLocationId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[SourceLocationId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[AFSDepotId]" name="AFSDepotId" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[AFSDepotId]" />
+                    <outputColumn dataType="wstr" length="300" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[LocationDescription]" name="LocationDescription" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[LocationDescription]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsFixed]" name="IsFixed" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsFixed]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsMobile]" name="IsMobile" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsMobile]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[Capacity]" name="Capacity" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[Capacity]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[IsActive]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Id AS SourceLocationId, AFSDepotId, CAST(Description AS nvarchar(300)) AS LocationDescription, IsFixed, IsMobile, Capacity, IsActive FROM dbo.lstLocation</property>
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">2</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Stage DimLocation\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC DimLocation_Output_RC Read" refId="Package\DFT Stage DimLocation\RC Read.Inputs[SRC DimLocation_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimLocation\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Stage DimLocation\RC Read.Inputs[SRC DimLocation_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST stg DimLocation" refId="Package\DFT Stage DimLocation\DST stg DimLocation" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{3B937DAD-05C2-48E3-B72F-6278EF874A42}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Read_Output_DST stg DimLocation" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceLocationId" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[SourceLocationId]" />
+                    <externalMetadataColumn dataType="i4" name="AFSDepotId" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[AFSDepotId]" />
+                    <externalMetadataColumn dataType="wstr" length="300" name="LocationDescription" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[LocationDescription]" />
+                    <externalMetadataColumn dataType="bool" name="IsFixed" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsFixed]" />
+                    <externalMetadataColumn dataType="bool" name="IsMobile" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsMobile]" />
+                    <externalMetadataColumn dataType="r8" name="Capacity" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[Capacity]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="SourceLocationId" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[SourceLocationId]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[SourceLocationId]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[SourceLocationId]" />
+                    <inputColumn cachedDataType="i4" cachedName="AFSDepotId" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[AFSDepotId]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[AFSDepotId]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[AFSDepotId]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="300" cachedName="LocationDescription" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[LocationDescription]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[LocationDescription]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[LocationDescription]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsFixed" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsFixed]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsFixed]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[IsFixed]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsMobile" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsMobile]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsMobile]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[IsMobile]" />
+                    <inputColumn cachedDataType="r8" cachedName="Capacity" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[Capacity]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[Capacity]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[Capacity]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsActive" externalMetadataColumnId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output].Columns[IsActive]" name="" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation].Columns[IsActive]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Outputs[Error]" synchronousInputId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\DST stg DimLocation.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimLocation\DST stg DimLocation.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimLocation\DST stg DimLocation.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[stg].[DimLocation]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Stage DimLocation\RC Read.Inputs[SRC DimLocation_Output_RC Read]" name="SRC DimLocation_Output_RC Read" refId="Package\DFT Stage DimLocation.Paths[SRC DimLocation_Output_RC Read]" startId="Package\DFT Stage DimLocation\SRC DimLocation.Outputs[Output]" />
+            <path endId="Package\DFT Stage DimLocation\DST stg DimLocation.Inputs[RC Read_Output_DST stg DimLocation]" name="RC Read_Output_DST stg DimLocation" refId="Package\DFT Stage DimLocation.Paths[RC Read_Output_DST stg DimLocation]" startId="Package\DFT Stage DimLocation\RC Read.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{473BD019-ABC8-44D0-8303-BBFE4D767653}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Merge into dw DimLocation" DTS:refId="Package\SQL Merge into dw DimLocation" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="&#xA;SET NOCOUNT ON;&#xA;DECLARE @actions TABLE (act nvarchar(10));&#xA;MERGE dw.DimLocation AS t&#xA;USING stg.DimLocation AS s&#xA;   ON t.SourceLocationId = s.SourceLocationId&#xA;WHEN MATCHED AND EXISTS (SELECT s.AFSDepotId, s.LocationDescription, s.IsFixed, s.IsMobile, s.Capacity, s.IsActive&#xA;                         EXCEPT&#xA;                         SELECT t.AFSDepotId, t.LocationDescription, t.IsFixed, t.IsMobile, t.Capacity, t.IsActive) THEN&#xA;    UPDATE SET AFSDepotId = s.AFSDepotId, LocationDescription = s.LocationDescription, IsFixed = s.IsFixed, IsMobile = s.IsMobile, Capacity = s.Capacity, IsActive = s.IsActive&#xA;WHEN NOT MATCHED BY TARGET THEN&#xA;    INSERT (SourceLocationId, AFSDepotId, LocationDescription, IsFixed, IsMobile, Capacity, IsActive)&#xA;    VALUES (s.SourceLocationId, s.AFSDepotId, s.LocationDescription, s.IsFixed, s.IsMobile, s.Capacity, s.IsActive)&#xA;OUTPUT $action INTO @actions;&#xA;SELECT SUM(CASE WHEN act = 'INSERT' THEN 1 ELSE 0 END) AS Inserted,&#xA;       SUM(CASE WHEN act = 'UPDATE' THEN 1 ELSE 0 END) AS Updated&#xA;FROM (SELECT act FROM @actions UNION ALL SELECT NULL) x;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeInserted" SQLTask:ResultName="0" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeUpdated" SQLTask:ResultName="1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExpressionTask" DTS:DTSID="{E4971327-7B10-4968-BB49-6B613946976C}" DTS:ExecutableType="Microsoft.ExpressionTask" DTS:LocaleID="-1" DTS:ObjectName="EXP Rows written _ inserted + updated" DTS:refId="Package\EXP Rows written _ inserted + updated" DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExpressionTask Expression="@[User::RowsWritten] = @[User::MergeInserted] + @[User::MergeUpdated]" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{C5B77229-C507-4DD7-B6E9-13E7BC28BB15}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{49344302-8458-49A9-9E2E-7B113B9BFDB2}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Truncate stg DimLocation" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Truncate stg DimLocation]" DTS:To="Package\SQL Truncate stg DimLocation" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{9BF149D7-B1A4-48B1-824C-919E7A78EEAD}" DTS:From="Package\SQL Truncate stg DimLocation" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Truncate stg DimLocation_To_DFT Stage DimLocation" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Truncate stg DimLocation_To_DFT Stage DimLocation]" DTS:To="Package\DFT Stage DimLocation" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{78877E5D-3510-408D-AAF0-420B1AF96E6E}" DTS:From="Package\DFT Stage DimLocation" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Stage DimLocation_To_SQL Merge into dw DimLocation" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Stage DimLocation_To_SQL Merge into dw DimLocation]" DTS:To="Package\SQL Merge into dw DimLocation" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{6EC09F87-7F05-4E62-9FEB-AFFE0080A957}" DTS:From="Package\SQL Merge into dw DimLocation" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Merge into dw DimLocation_To_EXP Rows written _ inserted + updated" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Merge into dw DimLocation_To_EXP Rows written _ inserted + updated]" DTS:To="Package\EXP Rows written _ inserted + updated" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{59241412-1284-4599-973C-A655461BE32E}" DTS:From="Package\EXP Rows written _ inserted + updated" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{CC11A5F6-9576-4E4D-ACDF-C78283DEA48D}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{E636EA44-C1D3-4236-B939-1E249413A34C}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{EBCBBAD7-F0C9-4DC9-AFD7-6D8BA7707D1E}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

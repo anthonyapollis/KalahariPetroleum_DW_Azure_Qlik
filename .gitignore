@@ -12,3 +12,9 @@ data_export/CoordRef.tsv
 curated_local/dw/CoordRef/CoordRef.parquet
 data_export/FactEquipmentTrip.tsv
 
+
+# SSIS build outputs and local VS state
+ssis/**/bin/
+ssis/**/obj/
+ssis/**/*.dtproj.user
+ssis/.vs/

@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:51" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{19B20A66-F4DB-49A1-BAA2-95D42A926543}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Fact_FactFuelDelivery" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{1C557459-3610-41F8-81C3-C866EB2B1BDD}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{7E171B37-A336-43F2-9A98-62236D849A63}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{033AA227-6535-4038-8A27-4E796C7C82AF}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{464F620A-CAA8-4662-9955-5BB4756E8B42}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{F6E67BF3-0E10-451D-9106-0FDA3DBA0F9D}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{9C9C8A3E-A62C-4C2F-AE9F-C656B09A9849}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{166018D4-3E39-40FF-A08C-11445515C43D}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{E640A9E5-BF17-49B5-9D1A-35B1085CC947}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{BEBBE8A5-6FB1-4CDC-836F-3B1C223AE307}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="LastSourceId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{5350E397-E3A7-48AA-BE57-54FC57542DAF}" DTS:EvaluateAsExpression="True" DTS:Expression="&quot;SELECT d.Id AS SourceFuelDeliveryId, YEAR(d.DeliveryTime)*10000 + MONTH(d.DeliveryTime)*100 + DAY(d.DeliveryTime) AS DateKey, d.DeliveryTime, d.LocationId, d.ProductId, d.Volume AS VolumeLitres, d.AFSTankDeliveryEventId, CAST(d.DocumentNumber AS nvarchar(200)) AS DocumentNumber, d.IsDuplicate, d.IsActive FROM dbo.datFuelDelivery d WITH (NOLOCK) WHERE d.Id &gt; &quot; + (DT_WSTR, 12) @[User::LastSourceId]" DTS:IncludeInDebugDump="2345" DTS:Namespace="User" DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue DTS:DataType="8">SELECT d.Id AS SourceFuelDeliveryId, YEAR(d.DeliveryTime)*10000 + MONTH(d.DeliveryTime)*100 + DAY(d.DeliveryTime) AS DateKey, d.DeliveryTime, d.LocationId, d.ProductId, d.Volume AS VolumeLitres, d.AFSTankDeliveryEventId, CAST(d.DocumentNumber AS nvarchar(200)) AS DocumentNumber, d.IsDuplicate, d.IsActive FROM dbo.datFuelDelivery d WITH (NOLOCK) WHERE d.Id &gt; 0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{8E957A1A-7D6D-4700-A087-5C69D2F3A879}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{2DDD6F68-0C69-4335-9B9A-5DE44AD232D8}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Get watermark" DTS:refId="Package\SQL Get watermark" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SELECT LastSourceId FROM etl.Watermark WHERE TableName = 'dw.FactFuelDelivery';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::LastSourceId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{8FCA4A78-A60D-469B-9B6C-BF0951EB78D1}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Load new FactFuelDelivery rows" DTS:refId="Package\DFT Load new FactFuelDelivery rows" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC new source rows" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{033AA227-6535-4038-8A27-4E796C7C82AF}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceFuelDeliveryId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[SourceFuelDeliveryId]" />
+                    <externalMetadataColumn dataType="i4" name="DateKey" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DateKey]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="DeliveryTime" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DeliveryTime]" />
+                    <externalMetadataColumn dataType="i4" name="LocationId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[LocationId]" />
+                    <externalMetadataColumn dataType="i4" name="ProductId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[ProductId]" />
+                    <externalMetadataColumn dataType="r8" name="VolumeLitres" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[VolumeLitres]" />
+                    <externalMetadataColumn dataType="i4" name="AFSTankDeliveryEventId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[AFSTankDeliveryEventId]" />
+                    <externalMetadataColumn dataType="wstr" length="200" name="DocumentNumber" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DocumentNumber]" />
+                    <externalMetadataColumn dataType="bool" name="IsDuplicate" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[IsDuplicate]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[SourceFuelDeliveryId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[SourceFuelDeliveryId]" name="SourceFuelDeliveryId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[SourceFuelDeliveryId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DateKey]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DateKey]" name="DateKey" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DateKey]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="dbTimeStamp" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DeliveryTime]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DeliveryTime]" name="DeliveryTime" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DeliveryTime]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[LocationId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[LocationId]" name="LocationId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[LocationId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[ProductId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[ProductId]" name="ProductId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[ProductId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[VolumeLitres]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[VolumeLitres]" name="VolumeLitres" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[VolumeLitres]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[AFSTankDeliveryEventId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[AFSTankDeliveryEventId]" name="AFSTankDeliveryEventId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[AFSTankDeliveryEventId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[DocumentNumber]" length="200" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DocumentNumber]" name="DocumentNumber" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DocumentNumber]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[IsDuplicate]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsDuplicate]" name="IsDuplicate" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsDuplicate]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].ExternalColumns[IsActive]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsActive]" name="IsActive" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsActive]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[SourceFuelDeliveryId]" name="SourceFuelDeliveryId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[SourceFuelDeliveryId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DateKey]" name="DateKey" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DateKey]" />
+                    <outputColumn dataType="dbTimeStamp" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DeliveryTime]" name="DeliveryTime" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DeliveryTime]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[LocationId]" name="LocationId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[LocationId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ProductId]" name="ProductId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ProductId]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[VolumeLitres]" name="VolumeLitres" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[VolumeLitres]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[AFSTankDeliveryEventId]" name="AFSTankDeliveryEventId" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[AFSTankDeliveryEventId]" />
+                    <outputColumn dataType="wstr" length="200" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DocumentNumber]" name="DocumentNumber" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[DocumentNumber]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[IsDuplicate]" name="IsDuplicate" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[IsDuplicate]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[IsActive]" name="IsActive" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[IsActive]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable">User::SourceQuery</property>
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">3</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Load new FactFuelDelivery rows\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC new source rows_Output_RC Read" refId="Package\DFT Load new FactFuelDelivery rows\RC Read.Inputs[SRC new source rows_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactFuelDelivery rows\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\RC Read.Inputs[SRC new source rows_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.Lookup" contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6" name="LKP DimLocation" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation" usesDispositions="true" version="6">
+              <connections>
+                <connection connectionManagerID="{7E171B37-A336-43F2-9A98-62236D849A63}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="Connection manager used to access lookup data." name="OleDbConnection" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input name="RC Read_Output_LKP DimLocation" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation]">
+                  <externalMetadataColumns />
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="LocationId" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[LocationId]" name="" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation].Columns[LocationId]">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table that a column joins." name="JoinToReferenceColumn">SourceLocationId</property>
+                        <property dataType="System.Null" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output errorOrTruncationOperation="Lookup" errorRowDisposition="IgnoreFailure" exclusionGroup="1" name="Match" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Match]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="CopyColumn" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Match].Columns[LocationKey]" name="LocationKey" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Match].Columns[LocationKey]" truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn">LocationKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                </output>
+                <output description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;" exclusionGroup="1" name="NoMatch" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[NoMatch]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation]">
+                  <externalMetadataColumns />
+                </output>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Error]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the SQL statement that generates the lookup table." expressionType="Notify" name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT SourceLocationId, LocationKey FROM dw.DimLocation;</property>
+                <property dataType="System.String" description="Specifies a SQL statement that uses parameters to generate the lookup table." expressionType="Notify" name="SqlCommandParam" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT SourceLocationId, LocationKey FROM dw.DimLocation;) [refTable] where [refTable].[SourceLocationId] = ?</property>
+                <property dataType="System.Int32" description="Specifies the type of connection used to access the reference dataset." name="ConnectionType" typeConverter="LookupConnectionType">0</property>
+                <property dataType="System.Int32" description="Specifies the cache type of the lookup table." name="CacheType" typeConverter="CacheType">0</property>
+                <property dataType="System.Int32" description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set." name="NoMatchBehavior" typeConverter="LookupNoMatchBehavior">0</property>
+                <property dataType="System.Int32" description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset." name="NoMatchCachePercentage">0</property>
+                <property dataType="System.Int32" description="Maximum Memory Usage for Reference Cache on a 32 bit platform." name="MaxMemoryUsage">25</property>
+                <property dataType="System.Int64" description="Maximum Memory Usage for Reference Cache on a 64 bit platform." name="MaxMemoryUsage64">25</property>
+                <property dataType="System.String" description="Indicates whether to reference metadata in an XML format." name="ReferenceMetadataXml">&lt;referenceMetadata&gt;
+  &lt;referenceColumns&gt;
+    &lt;referenceColumn name="SourceLocationId" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+    &lt;referenceColumn name="LocationKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+  &lt;/referenceColumns&gt;
+&lt;/referenceMetadata&gt;</property>
+                <property containsID="true" dataType="System.String" description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons." name="ParameterMap">#{Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[LocationId]};</property>
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used." name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.Lookup" contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6" name="LKP DimProduct" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct" usesDispositions="true" version="6">
+              <connections>
+                <connection connectionManagerID="{7E171B37-A336-43F2-9A98-62236D849A63}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="Connection manager used to access lookup data." name="OleDbConnection" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input name="LKP DimLocation_Match_LKP DimProduct" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct]">
+                  <externalMetadataColumns />
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="ProductId" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[ProductId]" name="" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct].Columns[ProductId]">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table that a column joins." name="JoinToReferenceColumn">SourceProductId</property>
+                        <property dataType="System.Null" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output errorOrTruncationOperation="Lookup" errorRowDisposition="IgnoreFailure" exclusionGroup="1" name="Match" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Match]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="CopyColumn" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Match].Columns[ProductKey]" name="ProductKey" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Match].Columns[ProductKey]" truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn">ProductKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                </output>
+                <output description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;" exclusionGroup="1" name="NoMatch" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[NoMatch]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct]">
+                  <externalMetadataColumns />
+                </output>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Error]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the SQL statement that generates the lookup table." expressionType="Notify" name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT SourceProductId, ProductKey FROM dw.DimProduct;</property>
+                <property dataType="System.String" description="Specifies a SQL statement that uses parameters to generate the lookup table." expressionType="Notify" name="SqlCommandParam" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT SourceProductId, ProductKey FROM dw.DimProduct;) [refTable] where [refTable].[SourceProductId] = ?</property>
+                <property dataType="System.Int32" description="Specifies the type of connection used to access the reference dataset." name="ConnectionType" typeConverter="LookupConnectionType">0</property>
+                <property dataType="System.Int32" description="Specifies the cache type of the lookup table." name="CacheType" typeConverter="CacheType">0</property>
+                <property dataType="System.Int32" description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set." name="NoMatchBehavior" typeConverter="LookupNoMatchBehavior">0</property>
+                <property dataType="System.Int32" description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset." name="NoMatchCachePercentage">0</property>
+                <property dataType="System.Int32" description="Maximum Memory Usage for Reference Cache on a 32 bit platform." name="MaxMemoryUsage">25</property>
+                <property dataType="System.Int64" description="Maximum Memory Usage for Reference Cache on a 64 bit platform." name="MaxMemoryUsage64">25</property>
+                <property dataType="System.String" description="Indicates whether to reference metadata in an XML format." name="ReferenceMetadataXml">&lt;referenceMetadata&gt;
+  &lt;referenceColumns&gt;
+    &lt;referenceColumn name="SourceProductId" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+    &lt;referenceColumn name="ProductKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+  &lt;/referenceColumns&gt;
+&lt;/referenceMetadata&gt;</property>
+                <property containsID="true" dataType="System.String" description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons." name="ParameterMap">#{Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[ProductId]};</property>
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used." name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Written" refId="Package\DFT Load new FactFuelDelivery rows\RC Written">
+              <inputs>
+                <input hasSideEffects="true" name="LKP DimProduct_Match_RC Written" refId="Package\DFT Load new FactFuelDelivery rows\RC Written.Inputs[LKP DimProduct_Match_RC Written]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactFuelDelivery rows\RC Written.Outputs[Output]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\RC Written.Inputs[LKP DimProduct_Match_RC Written]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsWritten</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST dw FactFuelDelivery" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{7E171B37-A336-43F2-9A98-62236D849A63}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Written_Output_DST dw FactFuelDelivery" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i8" name="FuelDeliveryKey" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[FuelDeliveryKey]" />
+                    <externalMetadataColumn dataType="i4" name="SourceFuelDeliveryId" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[SourceFuelDeliveryId]" />
+                    <externalMetadataColumn dataType="i4" name="DateKey" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DateKey]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="DeliveryTime" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DeliveryTime]" />
+                    <externalMetadataColumn dataType="i4" name="LocationKey" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[LocationKey]" />
+                    <externalMetadataColumn dataType="i4" name="ProductKey" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[ProductKey]" />
+                    <externalMetadataColumn dataType="r8" name="VolumeLitres" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[VolumeLitres]" />
+                    <externalMetadataColumn dataType="i4" name="AFSTankDeliveryEventId" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[AFSTankDeliveryEventId]" />
+                    <externalMetadataColumn dataType="wstr" length="200" name="DocumentNumber" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DocumentNumber]" />
+                    <externalMetadataColumn dataType="bool" name="IsDuplicate" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[IsDuplicate]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="ProductKey" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[ProductKey]" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Match].Columns[ProductKey]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[ProductKey]" />
+                    <inputColumn cachedDataType="i4" cachedName="LocationKey" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[LocationKey]" lineageId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Match].Columns[LocationKey]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[LocationKey]" />
+                    <inputColumn cachedDataType="i4" cachedName="SourceFuelDeliveryId" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[SourceFuelDeliveryId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[SourceFuelDeliveryId]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[SourceFuelDeliveryId]" />
+                    <inputColumn cachedDataType="i4" cachedName="DateKey" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DateKey]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DateKey]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[DateKey]" />
+                    <inputColumn cachedDataType="dbTimeStamp" cachedName="DeliveryTime" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DeliveryTime]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DeliveryTime]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[DeliveryTime]" />
+                    <inputColumn cachedDataType="r8" cachedName="VolumeLitres" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[VolumeLitres]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[VolumeLitres]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[VolumeLitres]" />
+                    <inputColumn cachedDataType="i4" cachedName="AFSTankDeliveryEventId" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[AFSTankDeliveryEventId]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[AFSTankDeliveryEventId]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[AFSTankDeliveryEventId]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="200" cachedName="DocumentNumber" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[DocumentNumber]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[DocumentNumber]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[DocumentNumber]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsDuplicate" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[IsDuplicate]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsDuplicate]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[IsDuplicate]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsActive" externalMetadataColumnId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].ExternalColumns[IsActive]" lineageId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output].Columns[IsActive]" name="" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery].Columns[IsActive]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Outputs[Error]" synchronousInputId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[dw].[FactFuelDelivery]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">100000</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Load new FactFuelDelivery rows\RC Read.Inputs[SRC new source rows_Output_RC Read]" name="SRC new source rows_Output_RC Read" refId="Package\DFT Load new FactFuelDelivery rows.Paths[SRC new source rows_Output_RC Read]" startId="Package\DFT Load new FactFuelDelivery rows\SRC new source rows.Outputs[Output]" />
+            <path endId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Inputs[RC Read_Output_LKP DimLocation]" name="RC Read_Output_LKP DimLocation" refId="Package\DFT Load new FactFuelDelivery rows.Paths[RC Read_Output_LKP DimLocation]" startId="Package\DFT Load new FactFuelDelivery rows\RC Read.Outputs[Output]" />
+            <path endId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Inputs[LKP DimLocation_Match_LKP DimProduct]" name="LKP DimLocation_Match_LKP DimProduct" refId="Package\DFT Load new FactFuelDelivery rows.Paths[LKP DimLocation_Match_LKP DimProduct]" startId="Package\DFT Load new FactFuelDelivery rows\LKP DimLocation.Outputs[Match]" />
+            <path endId="Package\DFT Load new FactFuelDelivery rows\RC Written.Inputs[LKP DimProduct_Match_RC Written]" name="LKP DimProduct_Match_RC Written" refId="Package\DFT Load new FactFuelDelivery rows.Paths[LKP DimProduct_Match_RC Written]" startId="Package\DFT Load new FactFuelDelivery rows\LKP DimProduct.Outputs[Match]" />
+            <path endId="Package\DFT Load new FactFuelDelivery rows\DST dw FactFuelDelivery.Inputs[RC Written_Output_DST dw FactFuelDelivery]" name="RC Written_Output_DST dw FactFuelDelivery" refId="Package\DFT Load new FactFuelDelivery rows.Paths[RC Written_Output_DST dw FactFuelDelivery]" startId="Package\DFT Load new FactFuelDelivery rows\RC Written.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{726E49CE-777A-4217-B41C-078838DFE775}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Move watermark" DTS:refId="Package\SQL Move watermark" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.Watermark SET LastSourceId = ISNULL((SELECT MAX(SourceFuelDeliveryId) FROM dw.FactFuelDelivery), 0), UpdatedAt = SYSDATETIME() WHERE TableName = 'dw.FactFuelDelivery';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{65EA4924-5362-4EB9-A6E2-37B858315C91}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{50D6BEFC-1179-4F5C-8126-D5EA6FA00E52}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Get watermark" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Get watermark]" DTS:To="Package\SQL Get watermark" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{D28D0E7F-8062-4C48-8DE8-6BDCE7860027}" DTS:From="Package\SQL Get watermark" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Get watermark_To_DFT Load new FactFuelDelivery rows" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Get watermark_To_DFT Load new FactFuelDelivery rows]" DTS:To="Package\DFT Load new FactFuelDelivery rows" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{58BB4A58-FCC3-48AE-9FB7-47CDE7D80E96}" DTS:From="Package\DFT Load new FactFuelDelivery rows" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Load new FactFuelDelivery rows_To_SQL Move watermark" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Load new FactFuelDelivery rows_To_SQL Move watermark]" DTS:To="Package\SQL Move watermark" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{A1162C3F-A4C0-4FC8-A90E-05A3A1D66536}" DTS:From="Package\SQL Move watermark" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Move watermark_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Move watermark_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{55AB2087-FCDD-4FB3-89D1-0BAA0C10FB1F}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{C4814837-8BF5-4C25-B1F5-3FD887DDDF56}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{A0A1309B-8A94-4D32-8EE5-259CAD4CC8C7}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

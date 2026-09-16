@@ -10,6 +10,14 @@ Repo: [github.com/anthonyapollis/KalahariPetroleum_DW_Azure_Qlik](https://github
 > fictional identity to demonstrate the data model and analytics pipeline without naming the
 > source organisation.
 
+> **SSIS, tabular model and Fabric migration.**
+> - [`ssis/`](ssis/README.md): the warehouse load rebuilt as metadata-driven SSIS packages generated from Biml.
+>   Dimensions use `MERGE`, facts load incrementally from a watermark, and every run is logged. It passes
+>   all 16 parity checks against the original warehouse.
+> - [`tabular/`](tabular/README.md): an SSAS Tabular model with DAX time intelligence, facts at three grains
+>   sharing conformed dimensions, and dynamic row-level security, verified measure by measure against SQL.
+> - [`docs/SSIS_TO_FABRIC_MIGRATION.md`](docs/SSIS_TO_FABRIC_MIGRATION.md): how this estate moves to Microsoft Fabric.
+
 ## The business problem, in one paragraph
 
 A heavy-vehicle fleet burns diesel it can partially reclaim from SARS (the South African

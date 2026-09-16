@@ -1,0 +1,314 @@
+<#@ template language="C#" hostspecific="true" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#
+/*
+  Kalahari Petroleum - metadata-driven SSIS load of the fuel star schema.
+
+  The load logic of sql/01_create_load_dw_full.sql (one drop-and-rebuild script) rebuilt as
+  incremental SSIS packages. One metadata list below drives every package, so adding a
+  dimension or fact is a new list entry, not a hand-built package.
+
+    KAL_Dim_<name>   source query -> stg.<Dim> -> generated MERGE into dw.<Dim> (Type 1 on the business key)
+    KAL_Fact_<name>  rows above etl.Watermark -> Lookup surrogate keys -> dw.<Fact>; watermark moves on success
+    KAL_Master       all dimensions, then all facts
+
+  Every package logs start/end/row counts to etl.PackageRun and records the error text on failure.
+  The source ERP database is read-only to these packages.
+*/
+var target = "KalahariDW_SSIS";
+var source = "KalahariSource";
+var sourceDb = "AngloData_QA_20220825_1820";   // local QA copy of the anonymised fleet-fuel ERP
+
+var dims = new List<Dim> {
+    new Dim("DimLocation", "SourceLocationId",
+        new[] { "SourceLocationId","AFSDepotId","LocationDescription","IsFixed","IsMobile","Capacity","IsActive" },
+        "SELECT Id AS SourceLocationId, AFSDepotId, CAST(Description AS nvarchar(300)) AS LocationDescription, IsFixed, IsMobile, Capacity, IsActive FROM dbo.lstLocation"),
+    new Dim("DimProduct", "SourceProductId",
+        new[] { "SourceProductId","ProductName","IsFuel","IsActive" },
+        "SELECT Id AS SourceProductId, CAST(Name AS nvarchar(200)) AS ProductName, CAST(CASE WHEN UPPER(Name) LIKE '%DIESEL%' OR UPPER(Name) LIKE '%FUEL%' THEN 1 ELSE 0 END AS bit) AS IsFuel, IsActive FROM dbo.lstProduct"),
+    new Dim("DimEquipment", "SourceEquipmentId",
+        new[] { "SourceEquipmentId","AFSEquipmentId","FleetId","RegNumber","EquipmentDescription","MakeName","ModelName","VehicleTypeName","IsEligibleVehicleType","ConsumptionTypeName","TankSize","DecommissionDate","IsActive","EligibleActivityKey","EligibilityClass" },
+        @"SELECT e.Id AS SourceEquipmentId, e.AFSEquipmentId,
+       CAST(REPLACE(e.FleetId, CHAR(9), ' ') AS nvarchar(100)) AS FleetId,
+       CAST(REPLACE(e.RegNumber, CHAR(9), ' ') AS nvarchar(100)) AS RegNumber,
+       CAST(REPLACE(e.EquipmentDescription, CHAR(9), ' ') AS nvarchar(300)) AS EquipmentDescription,
+       mk.Name AS MakeName, md.Name AS ModelName, vt.Name AS VehicleTypeName, vt.IsEligible AS IsEligibleVehicleType, ct.Name AS ConsumptionTypeName,
+       e.TankSize, e.DecommissionDate, e.IsActive, ea.k AS EligibleActivityKey,
+       CAST(CASE WHEN ea.k = 99 THEN 'Ineligible' ELSE 'Eligible' END AS varchar(30)) AS EligibilityClass
+FROM dbo.lstEquipment e
+LEFT JOIN dbo.lstMake mk ON mk.Id = e.MakeId
+LEFT JOIN dbo.lstModel md ON md.Id = e.ModelId
+LEFT JOIN dbo.lstVehicleType vt ON vt.Id = e.VehicleTypeId
+LEFT JOIN dbo.lstConsumptionType ct ON ct.Id = e.ConsumptionTypeId
+CROSS APPLY (SELECT CASE
+    WHEN e.FleetId LIKE 'Waste%' OR e.RegNumber LIKE 'Waste%' THEN 1
+    WHEN e.FleetId LIKE 'VLGO%'  OR e.RegNumber LIKE 'VLGO%'  THEN 3
+    WHEN e.FleetId LIKE 'LGO%'   OR e.RegNumber LIKE 'LGO%'   THEN 2
+    WHEN e.FleetId LIKE 'HGO%'   OR e.RegNumber LIKE 'HGO%'   THEN 4
+    WHEN e.FleetId LIKE 'MGO%'   OR e.RegNumber LIKE 'MGO%'   THEN 5
+    WHEN e.FleetId LIKE 'G1%'    OR e.RegNumber LIKE 'G1%'    THEN 6
+    WHEN e.FleetId LIKE 'HLG%'   OR e.RegNumber LIKE 'HLG%'   THEN 7
+    WHEN e.FleetId LIKE 'LLG%'   OR e.RegNumber LIKE 'LLG%'   THEN 8
+    WHEN e.FleetId LIKE 'OG2%'   OR e.RegNumber LIKE 'OG2%'   THEN 9
+    WHEN ct.Name = 'L/HR'                                     THEN 10
+    ELSE 99 END AS k) ea"),
+    new Dim("DimCostCentre", "CostCentreHash",
+        new[] { "CostCentreHash","CostCentreName","ResponsibilityCode","BusinessRevenueCode","TaxRebateCode","GlAccount" },
+        @"SELECT CAST(HASHBYTES('SHA1', CONCAT(IIF(n IS NULL,'~',''),UPPER(RTRIM(n)),'|',IIF(r IS NULL,'~',''),UPPER(RTRIM(r)),'|',IIF(b IS NULL,'~',''),UPPER(RTRIM(b)),'|',IIF(t IS NULL,'~',''),UPPER(RTRIM(t)),'|',IIF(g IS NULL,'~',''),UPPER(RTRIM(g)))) AS binary(20)) AS CostCentreHash,
+       n AS CostCentreName, r AS ResponsibilityCode, b AS BusinessRevenueCode, t AS TaxRebateCode, g AS GlAccount
+FROM (SELECT DISTINCT CAST(LEFT(CostCentreName,200) AS varchar(200)) AS n, CAST(LEFT(ResponsibilityCode,200) AS varchar(200)) AS r,
+                      CAST(LEFT(BusinessRevenueCode,200) AS varchar(200)) AS b, CAST(LEFT(TaxRebateCode,200) AS varchar(200)) AS t,
+                      CAST(LEFT(GlAccount,200) AS varchar(200)) AS g
+      FROM dbo.CostCentre WITH (NOLOCK)) c")
+};
+
+// Hash input is upper-cased and right-trimmed: the database collation treats 'abc' and 'ABC ' as equal
+// (the original load joined on =), but a hash does not, and 8,549 transactions differed only that way.
+var costCentreHashExpr = "CAST(HASHBYTES('SHA1', CONCAT(IIF(CostCentreName IS NULL,'~',''),UPPER(RTRIM(CAST(LEFT(CostCentreName,200) AS varchar(200)))),'|',IIF(ResponsibilityCode IS NULL,'~',''),UPPER(RTRIM(CAST(LEFT(ResponsibilityCode,200) AS varchar(200)))),'|',IIF(BusinessRevenueCode IS NULL,'~',''),UPPER(RTRIM(CAST(LEFT(BusinessRevenueCode,200) AS varchar(200)))),'|',IIF(TaxRebateCode IS NULL,'~',''),UPPER(RTRIM(CAST(LEFT(TaxRebateCode,200) AS varchar(200)))),'|',IIF(GlAccount IS NULL,'~',''),UPPER(RTRIM(CAST(LEFT(GlAccount,200) AS varchar(200)))))) AS binary(20))";
+
+var facts = new List<Fact> {
+    new Fact("FactFuelTransaction", "SourceAFSRecordId", "a.Id",
+        "SELECT a.Id AS SourceAFSRecordId, YEAR(a.TransactionDateTime)*10000 + MONTH(a.TransactionDateTime)*100 + DAY(a.TransactionDateTime) AS DateKey, a.TransactionDateTime, a.EquipmentId, a.LocationId, a.ProductId, cc.CostCentreHash, a.Litres, a.HoursOdoReading, a.CalculatedODO, a.FuelEventId, CAST(a.VoucherNumber AS nvarchar(200)) AS VoucherNumber, CAST(a.DeviceId AS nvarchar(200)) AS DeviceId, CAST(a.Pump AS nvarchar(200)) AS Pump, CAST(a.TransactionPlate AS nvarchar(200)) AS TransactionPlate, CAST(a.VehicleCategoryDescription AS nvarchar(200)) AS VehicleCategoryDescription, a.IsActive FROM dbo.datAFSRecord a WITH (NOLOCK) LEFT JOIN (SELECT FuelEventId, MIN(" + costCentreHashExpr + ") AS CostCentreHash FROM dbo.CostCentre WITH (NOLOCK) WHERE FuelEventId IS NOT NULL GROUP BY FuelEventId) cc ON cc.FuelEventId = a.FuelEventId",
+        new[] {
+            new Lkp("DimEquipment", "EquipmentId", "SourceEquipmentId", new[] { "EquipmentKey", "EligibleActivityKey AS EquipmentEligibleActivityKey" }),
+            new Lkp("DimLocation", "LocationId", "SourceLocationId", new[] { "LocationKey" }),
+            new Lkp("DimProduct", "ProductId", "SourceProductId", new[] { "ProductKey" }),
+            new Lkp("DimCostCentre", "CostCentreHash", "CostCentreHash", new[] { "CostCentreKey" }) },
+        true),
+    new Fact("FactFuelDelivery", "SourceFuelDeliveryId", "d.Id",
+        "SELECT d.Id AS SourceFuelDeliveryId, YEAR(d.DeliveryTime)*10000 + MONTH(d.DeliveryTime)*100 + DAY(d.DeliveryTime) AS DateKey, d.DeliveryTime, d.LocationId, d.ProductId, d.Volume AS VolumeLitres, d.AFSTankDeliveryEventId, CAST(d.DocumentNumber AS nvarchar(200)) AS DocumentNumber, d.IsDuplicate, d.IsActive FROM dbo.datFuelDelivery d WITH (NOLOCK)",
+        new[] {
+            new Lkp("DimLocation", "LocationId", "SourceLocationId", new[] { "LocationKey" }),
+            new Lkp("DimProduct", "ProductId", "SourceProductId", new[] { "ProductKey" }) },
+        false),
+    new Fact("FactMeterReading", "SourceMeterReadingId", "m.Id",
+        "SELECT m.Id AS SourceMeterReadingId, YEAR(m.ReadingDate)*10000 + MONTH(m.ReadingDate)*100 + DAY(m.ReadingDate) AS DateKey, m.ReadingDate, m.PreviousReadingDate, m.EquipmentId, m.MeasuringPoint, m.ReadingDiff, m.CounterReading, m.PreviousReading, m.ConsumptionTypeId, m.ReadingTypeId, m.IsActive FROM dbo.datMeterReading m WITH (NOLOCK)",
+        new[] {
+            new Lkp("DimEquipment", "EquipmentId", "SourceEquipmentId", new[] { "EquipmentKey" }) },
+        false)
+};
+#>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Connections>
+    <OleDbConnection Name="<#= target #>" ConnectionString="Data Source=localhost;Initial Catalog=<#= target #>;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+    <OleDbConnection Name="<#= source #>" ConnectionString="Data Source=localhost;Initial Catalog=<#= sourceDb #>;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+  </Connections>
+
+  <Packages>
+<# foreach (var d in dims) { #>
+    <!-- ===================================================================== -->
+    <Package Name="KAL_Dim_<#= d.Name #>" ConstraintMode="Linear" ProtectionLevel="DontSaveSensitive">
+      <#= Parameters() #>
+      <#= Connections(target, source) #>
+      <Variables>
+        <#= StandardVariables() #>
+        <Variable Name="MergeInserted" DataType="Int32">0</Variable>
+        <Variable Name="MergeUpdated" DataType="Int32">0</Variable>
+      </Variables>
+      <#= OnErrorHandler(target) #>
+      <Tasks>
+        <#= RunStart(target) #>
+        <ExecuteSQL Name="SQL Truncate stg <#= d.Name #>" ConnectionName="<#= target #>">
+          <DirectInput>TRUNCATE TABLE stg.<#= d.Name #>;</DirectInput>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Stage <#= d.Name #>">
+          <Transformations>
+            <OleDbSource Name="SRC <#= d.Name #>" ConnectionName="<#= source #>">
+              <DirectInput><![CDATA[<#= d.SourceQuery #>]]></DirectInput>
+            </OleDbSource>
+            <RowCount Name="RC Read" VariableName="User.RowsRead" />
+            <OleDbDestination Name="DST stg <#= d.Name #>" ConnectionName="<#= target #>" UseFastLoadIfAvailable="true" TableLock="true">
+              <ExternalTableOutput Table="[stg].[<#= d.Name #>]" />
+            </OleDbDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Merge into dw <#= d.Name #>" ConnectionName="<#= target #>" ResultSet="SingleRow">
+          <DirectInput><![CDATA[
+SET NOCOUNT ON;
+DECLARE @actions TABLE (act nvarchar(10));
+MERGE dw.<#= d.Name #> AS t
+USING stg.<#= d.Name #> AS s
+   ON t.<#= d.BusinessKey #> = s.<#= d.BusinessKey #>
+WHEN MATCHED AND EXISTS (SELECT <#= string.Join(", ", d.Attributes.Select(c => "s." + c)) #>
+                         EXCEPT
+                         SELECT <#= string.Join(", ", d.Attributes.Select(c => "t." + c)) #>) THEN
+    UPDATE SET <#= string.Join(", ", d.Attributes.Select(c => c + " = s." + c)) #>
+WHEN NOT MATCHED BY TARGET THEN
+    INSERT (<#= string.Join(", ", d.Columns) #>)
+    VALUES (<#= string.Join(", ", d.Columns.Select(c => "s." + c)) #>)
+OUTPUT $action INTO @actions;
+SELECT SUM(CASE WHEN act = 'INSERT' THEN 1 ELSE 0 END) AS Inserted,
+       SUM(CASE WHEN act = 'UPDATE' THEN 1 ELSE 0 END) AS Updated
+FROM (SELECT act FROM @actions UNION ALL SELECT NULL) x;]]></DirectInput>
+          <Results>
+            <Result Name="0" VariableName="User.MergeInserted" />
+            <Result Name="1" VariableName="User.MergeUpdated" />
+          </Results>
+        </ExecuteSQL>
+        <Expression Name="EXP Rows written = inserted + updated" Expression="@[User::RowsWritten] = @[User::MergeInserted] + @[User::MergeUpdated]" />
+        <#= RunEnd(target) #>
+      </Tasks>
+    </Package>
+<# } #>
+
+<# foreach (var f in facts) { #>
+    <!-- ===================================================================== -->
+    <Package Name="KAL_Fact_<#= f.Name #>" ConstraintMode="Linear" ProtectionLevel="DontSaveSensitive">
+      <#= Parameters() #>
+      <#= Connections(target, source) #>
+      <Variables>
+        <#= StandardVariables() #>
+        <Variable Name="LastSourceId" DataType="Int32">0</Variable>
+        <Variable Name="SourceQuery" DataType="String" EvaluateAsExpression="true">"<#= f.SourceQuery.Replace("\"", "\\\"") #> WHERE <#= f.SourceIdExpr #> &gt; " + (DT_WSTR, 12) @[User::LastSourceId]</Variable>
+      </Variables>
+      <#= OnErrorHandler(target) #>
+      <Tasks>
+        <#= RunStart(target) #>
+        <ExecuteSQL Name="SQL Get watermark" ConnectionName="<#= target #>" ResultSet="SingleRow">
+          <DirectInput>SELECT LastSourceId FROM etl.Watermark WHERE TableName = 'dw.<#= f.Name #>';</DirectInput>
+          <Results><Result Name="0" VariableName="User.LastSourceId" /></Results>
+        </ExecuteSQL>
+        <Dataflow Name="DFT Load new <#= f.Name #> rows">
+          <Transformations>
+            <OleDbSource Name="SRC new source rows" ConnectionName="<#= source #>">
+              <VariableInput VariableName="User.SourceQuery" />
+            </OleDbSource>
+            <RowCount Name="RC Read" VariableName="User.RowsRead" />
+<# foreach (var l in f.Lookups) { #>
+            <Lookup Name="LKP <#= l.Dim #>" OleDbConnectionName="<#= target #>" NoMatchBehavior="IgnoreFailure" CacheMode="Full">
+              <DirectInput>SELECT <#= l.TargetKey #>, <#= string.Join(", ", l.Returns) #> FROM dw.<#= l.Dim #>;</DirectInput>
+              <Inputs><Column SourceColumn="<#= l.SourceColumn #>" TargetColumn="<#= l.TargetKey #>" /></Inputs>
+              <Outputs>
+<# foreach (var r in l.Returns) { var name = r.Contains(" AS ") ? r.Substring(r.IndexOf(" AS ") + 4) : r; #>
+                <Column SourceColumn="<#= name #>" />
+<# } #>
+              </Outputs>
+            </Lookup>
+<# } #>
+<# if (f.DeriveEligibleActivity) { #>
+            <!-- unmatched equipment is classed as unclassified activity (99), as in the original load -->
+            <DerivedColumns Name="DC Eligible activity">
+              <Columns>
+                <Column Name="EligibleActivityKey" DataType="Int32">ISNULL(EquipmentEligibleActivityKey) ? 99 : EquipmentEligibleActivityKey</Column>
+              </Columns>
+            </DerivedColumns>
+<# } #>
+            <RowCount Name="RC Written" VariableName="User.RowsWritten" />
+            <OleDbDestination Name="DST dw <#= f.Name #>" ConnectionName="<#= target #>" UseFastLoadIfAvailable="true" TableLock="true" MaximumInsertCommitSize="100000">
+              <ExternalTableOutput Table="[dw].[<#= f.Name #>]" />
+            </OleDbDestination>
+          </Transformations>
+        </Dataflow>
+        <ExecuteSQL Name="SQL Move watermark" ConnectionName="<#= target #>">
+          <DirectInput>UPDATE etl.Watermark SET LastSourceId = ISNULL((SELECT MAX(<#= f.SourceIdColumn #>) FROM dw.<#= f.Name #>), 0), UpdatedAt = SYSDATETIME() WHERE TableName = 'dw.<#= f.Name #>';</DirectInput>
+        </ExecuteSQL>
+        <#= RunEnd(target) #>
+      </Tasks>
+    </Package>
+<# } #>
+
+    <!-- ===================================================================== -->
+    <Package Name="KAL_Master" ConstraintMode="Linear" ProtectionLevel="DontSaveSensitive">
+      <#= Parameters() #>
+      <#= Connections(target, source) #>
+      <Variables>
+        <#= StandardVariables() #>
+        <Variable Name="ServerNameValue" DataType="String" EvaluateAsExpression="true">@[$Package::ServerName]</Variable>
+      </Variables>
+      <#= OnErrorHandler(target) #>
+      <Tasks>
+        <#= RunStart(target) #>
+<# foreach (var name in dims.Select(x => "KAL_Dim_" + x.Name).Concat(facts.Select(x => "KAL_Fact_" + x.Name))) { #>
+        <ExecutePackage Name="EPT <#= name #>">
+          <ExternalProjectPackage Package="<#= name #>.dtsx" />
+          <ParameterBindings>
+            <ParameterBinding Name="ServerName" VariableName="User.ServerNameValue" />
+          </ParameterBindings>
+        </ExecutePackage>
+<# } #>
+        <#= RunEnd(target) #>
+      </Tasks>
+    </Package>
+  </Packages>
+</Biml>
+<#+
+    class Dim {
+        public string Name, BusinessKey, SourceQuery; public string[] Columns;
+        public Dim(string name, string bk, string[] cols, string query) { Name = name; BusinessKey = bk; Columns = cols; SourceQuery = query; }
+        public IEnumerable<string> Attributes { get { return Columns.Where(c => c != BusinessKey); } }
+    }
+    class Lkp {
+        public string Dim, SourceColumn, TargetKey; public string[] Returns;
+        public Lkp(string dim, string sourceColumn, string targetKey, string[] returns) { Dim = dim; SourceColumn = sourceColumn; TargetKey = targetKey; Returns = returns; }
+    }
+    class Fact {
+        public string Name, SourceIdColumn, SourceIdExpr, SourceQuery; public Lkp[] Lookups; public bool DeriveEligibleActivity;
+        public Fact(string name, string idCol, string idExpr, string query, Lkp[] lookups, bool eligible) { Name = name; SourceIdColumn = idCol; SourceIdExpr = idExpr; SourceQuery = query; Lookups = lookups; DeriveEligibleActivity = eligible; }
+    }
+
+    string Parameters()
+    {
+        return @"<Parameters>
+        <Parameter Name=""ServerName"" DataType=""String"">localhost</Parameter>
+      </Parameters>";
+    }
+
+    string Connections(string target, string source)
+    {
+        return @"<Connections>
+        <Connection ConnectionName=""" + target + @"""><Expressions><Expression ExternalProperty=""ServerName"">@[$Package::ServerName]</Expression></Expressions></Connection>
+        <Connection ConnectionName=""" + source + @"""><Expressions><Expression ExternalProperty=""ServerName"">@[$Package::ServerName]</Expression></Expressions></Connection>
+      </Connections>";
+    }
+
+    string StandardVariables()
+    {
+        return @"<Variable Name=""RunId"" DataType=""Int32"">0</Variable>
+        <Variable Name=""RowsRead"" DataType=""Int32"">0</Variable>
+        <Variable Name=""RowsWritten"" DataType=""Int32"">0</Variable>
+        <Variable Name=""RowsRejected"" DataType=""Int32"">0</Variable>";
+    }
+
+    string RunStart(string conn)
+    {
+        return @"<ExecuteSQL Name=""SQL Log run start"" ConnectionName=""" + conn + @""" ResultSet=""SingleRow"">
+          <DirectInput>SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);</DirectInput>
+          <Parameters>
+            <Parameter Name=""0"" VariableName=""System.PackageName"" DataType=""String"" Length=""200"" />
+            <Parameter Name=""1"" VariableName=""System.ExecutionInstanceGUID"" DataType=""String"" Length=""50"" />
+          </Parameters>
+          <Results><Result Name=""0"" VariableName=""User.RunId"" /></Results>
+        </ExecuteSQL>";
+    }
+
+    string RunEnd(string conn)
+    {
+        return @"<ExecuteSQL Name=""SQL Log run success"" ConnectionName=""" + conn + @""">
+          <DirectInput>UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;</DirectInput>
+          <Parameters>
+            <Parameter Name=""0"" VariableName=""User.RowsRead"" DataType=""Int32"" />
+            <Parameter Name=""1"" VariableName=""User.RowsWritten"" DataType=""Int32"" />
+            <Parameter Name=""2"" VariableName=""User.RowsRejected"" DataType=""Int32"" />
+            <Parameter Name=""3"" VariableName=""User.RunId"" DataType=""Int32"" />
+          </Parameters>
+        </ExecuteSQL>";
+    }
+
+    string OnErrorHandler(string conn)
+    {
+        return @"<Events>
+        <Event Name=""OnError"" EventType=""OnError"" ConstraintMode=""Linear"">
+          <Tasks>
+            <ExecuteSQL Name=""SQL Log run failure"" ConnectionName=""" + conn + @""">
+              <DirectInput>UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;</DirectInput>
+              <Parameters>
+                <Parameter Name=""0"" VariableName=""System.ErrorDescription"" DataType=""String"" Length=""4000"" />
+                <Parameter Name=""1"" VariableName=""User.RunId"" DataType=""Int32"" />
+              </Parameters>
+            </ExecuteSQL>
+          </Tasks>
+        </Event>
+      </Events>";
+    }
+#>

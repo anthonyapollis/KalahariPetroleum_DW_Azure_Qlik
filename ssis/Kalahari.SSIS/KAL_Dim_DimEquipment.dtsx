@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:50" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{1EF7171A-CD52-42E8-99FB-BF686885D67B}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Dim_DimEquipment" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{8E3113AE-FB97-4D9B-9504-DDE96F6DF8F3}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{6EAE3C7F-3456-4897-B70C-09D03C2E9258}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{CE69E643-80BC-4E48-B83A-BA0E9197543A}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{F1539498-A557-4D83-8AB5-0D3C98683C6D}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{E95B792D-CD2B-4C34-92BA-276DC96F84ED}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{3A2FC3BF-3DA5-41B8-9F77-B135F0B8EEF4}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{7A95B009-DFCE-4310-AF4E-8CE669E3F8C9}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{CB6072FE-B55B-410E-BF8E-B37CDB21C555}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{FD369E96-A936-4E26-A9F2-7A3C49961FF9}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeInserted">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{E9503D2B-8113-4B91-ACC2-4E7A99AC6DBB}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeUpdated">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{9D880C58-CE48-4222-A4B6-B38E33A6598D}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{4093F423-69AD-4ED6-AD94-17E014F3A8DD}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Truncate stg DimEquipment" DTS:refId="Package\SQL Truncate stg DimEquipment" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="TRUNCATE TABLE stg.DimEquipment;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{33738209-E1D3-4790-9969-6314F56EAFB5}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Stage DimEquipment" DTS:refId="Package\DFT Stage DimEquipment" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC DimEquipment" refId="Package\DFT Stage DimEquipment\SRC DimEquipment" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{CE69E643-80BC-4E48-B83A-BA0E9197543A}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[SourceEquipmentId]" />
+                    <externalMetadataColumn dataType="i4" name="AFSEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[AFSEquipmentId]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="FleetId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[FleetId]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="RegNumber" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[RegNumber]" />
+                    <externalMetadataColumn dataType="wstr" length="300" name="EquipmentDescription" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EquipmentDescription]" />
+                    <externalMetadataColumn dataType="wstr" length="25" name="MakeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[MakeName]" />
+                    <externalMetadataColumn dataType="wstr" length="50" name="ModelName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[ModelName]" />
+                    <externalMetadataColumn dataType="wstr" length="50" name="VehicleTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[VehicleTypeName]" />
+                    <externalMetadataColumn dataType="bool" name="IsEligibleVehicleType" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[IsEligibleVehicleType]" />
+                    <externalMetadataColumn dataType="wstr" length="25" name="ConsumptionTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[ConsumptionTypeName]" />
+                    <externalMetadataColumn dataType="r8" name="TankSize" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[TankSize]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="DecommissionDate" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[DecommissionDate]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[IsActive]" />
+                    <externalMetadataColumn dataType="i4" name="EligibleActivityKey" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EligibleActivityKey]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="30" name="EligibilityClass" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EligibilityClass]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[SourceEquipmentId]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[SourceEquipmentId]" name="SourceEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[SourceEquipmentId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[AFSEquipmentId]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[AFSEquipmentId]" name="AFSEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[AFSEquipmentId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[FleetId]" length="100" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[FleetId]" name="FleetId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[FleetId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[RegNumber]" length="100" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[RegNumber]" name="RegNumber" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[RegNumber]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EquipmentDescription]" length="300" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EquipmentDescription]" name="EquipmentDescription" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EquipmentDescription]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[MakeName]" length="25" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[MakeName]" name="MakeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[MakeName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[ModelName]" length="50" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ModelName]" name="ModelName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ModelName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[VehicleTypeName]" length="50" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[VehicleTypeName]" name="VehicleTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[VehicleTypeName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[IsEligibleVehicleType]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsEligibleVehicleType]" name="IsEligibleVehicleType" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsEligibleVehicleType]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[ConsumptionTypeName]" length="25" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ConsumptionTypeName]" name="ConsumptionTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ConsumptionTypeName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[TankSize]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[TankSize]" name="TankSize" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[TankSize]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="dbTimeStamp" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[DecommissionDate]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[DecommissionDate]" name="DecommissionDate" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[DecommissionDate]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsActive]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EligibleActivityKey]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibleActivityKey]" name="EligibleActivityKey" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibleActivityKey]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].ExternalColumns[EligibilityClass]" length="30" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibilityClass]" name="EligibilityClass" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibilityClass]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[SourceEquipmentId]" name="SourceEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[SourceEquipmentId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[AFSEquipmentId]" name="AFSEquipmentId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[AFSEquipmentId]" />
+                    <outputColumn dataType="wstr" length="100" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[FleetId]" name="FleetId" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[FleetId]" />
+                    <outputColumn dataType="wstr" length="100" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[RegNumber]" name="RegNumber" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[RegNumber]" />
+                    <outputColumn dataType="wstr" length="300" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EquipmentDescription]" name="EquipmentDescription" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EquipmentDescription]" />
+                    <outputColumn dataType="wstr" length="25" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[MakeName]" name="MakeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[MakeName]" />
+                    <outputColumn dataType="wstr" length="50" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ModelName]" name="ModelName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ModelName]" />
+                    <outputColumn dataType="wstr" length="50" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[VehicleTypeName]" name="VehicleTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[VehicleTypeName]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[IsEligibleVehicleType]" name="IsEligibleVehicleType" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[IsEligibleVehicleType]" />
+                    <outputColumn dataType="wstr" length="25" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ConsumptionTypeName]" name="ConsumptionTypeName" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ConsumptionTypeName]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[TankSize]" name="TankSize" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[TankSize]" />
+                    <outputColumn dataType="dbTimeStamp" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[DecommissionDate]" name="DecommissionDate" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[DecommissionDate]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[IsActive]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EligibleActivityKey]" name="EligibleActivityKey" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EligibleActivityKey]" />
+                    <outputColumn codePage="1252" dataType="str" length="30" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EligibilityClass]" name="EligibilityClass" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[EligibilityClass]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT e.Id AS SourceEquipmentId, e.AFSEquipmentId,
+       CAST(REPLACE(e.FleetId, CHAR(9), ' ') AS nvarchar(100)) AS FleetId,
+       CAST(REPLACE(e.RegNumber, CHAR(9), ' ') AS nvarchar(100)) AS RegNumber,
+       CAST(REPLACE(e.EquipmentDescription, CHAR(9), ' ') AS nvarchar(300)) AS EquipmentDescription,
+       mk.Name AS MakeName, md.Name AS ModelName, vt.Name AS VehicleTypeName, vt.IsEligible AS IsEligibleVehicleType, ct.Name AS ConsumptionTypeName,
+       e.TankSize, e.DecommissionDate, e.IsActive, ea.k AS EligibleActivityKey,
+       CAST(CASE WHEN ea.k = 99 THEN 'Ineligible' ELSE 'Eligible' END AS varchar(30)) AS EligibilityClass
+FROM dbo.lstEquipment e
+LEFT JOIN dbo.lstMake mk ON mk.Id = e.MakeId
+LEFT JOIN dbo.lstModel md ON md.Id = e.ModelId
+LEFT JOIN dbo.lstVehicleType vt ON vt.Id = e.VehicleTypeId
+LEFT JOIN dbo.lstConsumptionType ct ON ct.Id = e.ConsumptionTypeId
+CROSS APPLY (SELECT CASE
+    WHEN e.FleetId LIKE 'Waste%' OR e.RegNumber LIKE 'Waste%' THEN 1
+    WHEN e.FleetId LIKE 'VLGO%'  OR e.RegNumber LIKE 'VLGO%'  THEN 3
+    WHEN e.FleetId LIKE 'LGO%'   OR e.RegNumber LIKE 'LGO%'   THEN 2
+    WHEN e.FleetId LIKE 'HGO%'   OR e.RegNumber LIKE 'HGO%'   THEN 4
+    WHEN e.FleetId LIKE 'MGO%'   OR e.RegNumber LIKE 'MGO%'   THEN 5
+    WHEN e.FleetId LIKE 'G1%'    OR e.RegNumber LIKE 'G1%'    THEN 6
+    WHEN e.FleetId LIKE 'HLG%'   OR e.RegNumber LIKE 'HLG%'   THEN 7
+    WHEN e.FleetId LIKE 'LLG%'   OR e.RegNumber LIKE 'LLG%'   THEN 8
+    WHEN e.FleetId LIKE 'OG2%'   OR e.RegNumber LIKE 'OG2%'   THEN 9
+    WHEN ct.Name = 'L/HR'                                     THEN 10
+    ELSE 99 END AS k) ea</property>
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">2</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Stage DimEquipment\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC DimEquipment_Output_RC Read" refId="Package\DFT Stage DimEquipment\RC Read.Inputs[SRC DimEquipment_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimEquipment\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Stage DimEquipment\RC Read.Inputs[SRC DimEquipment_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST stg DimEquipment" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{6EAE3C7F-3456-4897-B70C-09D03C2E9258}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Read_Output_DST stg DimEquipment" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceEquipmentId" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[SourceEquipmentId]" />
+                    <externalMetadataColumn dataType="i4" name="AFSEquipmentId" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[AFSEquipmentId]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="FleetId" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[FleetId]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="RegNumber" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[RegNumber]" />
+                    <externalMetadataColumn dataType="wstr" length="300" name="EquipmentDescription" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EquipmentDescription]" />
+                    <externalMetadataColumn dataType="wstr" length="50" name="MakeName" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[MakeName]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="ModelName" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[ModelName]" />
+                    <externalMetadataColumn dataType="wstr" length="100" name="VehicleTypeName" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[VehicleTypeName]" />
+                    <externalMetadataColumn dataType="bool" name="IsEligibleVehicleType" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[IsEligibleVehicleType]" />
+                    <externalMetadataColumn dataType="wstr" length="50" name="ConsumptionTypeName" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[ConsumptionTypeName]" />
+                    <externalMetadataColumn dataType="r8" name="TankSize" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[TankSize]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="DecommissionDate" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[DecommissionDate]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[IsActive]" />
+                    <externalMetadataColumn dataType="i4" name="EligibleActivityKey" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EligibleActivityKey]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="30" name="EligibilityClass" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EligibilityClass]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="SourceEquipmentId" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[SourceEquipmentId]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[SourceEquipmentId]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[SourceEquipmentId]" />
+                    <inputColumn cachedDataType="i4" cachedName="AFSEquipmentId" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[AFSEquipmentId]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[AFSEquipmentId]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[AFSEquipmentId]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="100" cachedName="FleetId" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[FleetId]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[FleetId]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[FleetId]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="100" cachedName="RegNumber" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[RegNumber]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[RegNumber]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[RegNumber]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="300" cachedName="EquipmentDescription" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EquipmentDescription]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EquipmentDescription]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[EquipmentDescription]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="25" cachedName="MakeName" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[MakeName]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[MakeName]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[MakeName]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="50" cachedName="ModelName" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[ModelName]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ModelName]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[ModelName]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="50" cachedName="VehicleTypeName" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[VehicleTypeName]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[VehicleTypeName]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[VehicleTypeName]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsEligibleVehicleType" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[IsEligibleVehicleType]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsEligibleVehicleType]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[IsEligibleVehicleType]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="25" cachedName="ConsumptionTypeName" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[ConsumptionTypeName]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[ConsumptionTypeName]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[ConsumptionTypeName]" />
+                    <inputColumn cachedDataType="r8" cachedName="TankSize" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[TankSize]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[TankSize]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[TankSize]" />
+                    <inputColumn cachedDataType="dbTimeStamp" cachedName="DecommissionDate" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[DecommissionDate]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[DecommissionDate]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[DecommissionDate]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsActive" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[IsActive]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[IsActive]" />
+                    <inputColumn cachedDataType="i4" cachedName="EligibleActivityKey" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EligibleActivityKey]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibleActivityKey]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[EligibleActivityKey]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="30" cachedName="EligibilityClass" externalMetadataColumnId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].ExternalColumns[EligibilityClass]" lineageId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output].Columns[EligibilityClass]" name="" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment].Columns[EligibilityClass]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Outputs[Error]" synchronousInputId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[stg].[DimEquipment]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Stage DimEquipment\RC Read.Inputs[SRC DimEquipment_Output_RC Read]" name="SRC DimEquipment_Output_RC Read" refId="Package\DFT Stage DimEquipment.Paths[SRC DimEquipment_Output_RC Read]" startId="Package\DFT Stage DimEquipment\SRC DimEquipment.Outputs[Output]" />
+            <path endId="Package\DFT Stage DimEquipment\DST stg DimEquipment.Inputs[RC Read_Output_DST stg DimEquipment]" name="RC Read_Output_DST stg DimEquipment" refId="Package\DFT Stage DimEquipment.Paths[RC Read_Output_DST stg DimEquipment]" startId="Package\DFT Stage DimEquipment\RC Read.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{77024272-9DAA-4C9D-B7C6-BDA206FAD98B}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Merge into dw DimEquipment" DTS:refId="Package\SQL Merge into dw DimEquipment" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="&#xA;SET NOCOUNT ON;&#xA;DECLARE @actions TABLE (act nvarchar(10));&#xA;MERGE dw.DimEquipment AS t&#xA;USING stg.DimEquipment AS s&#xA;   ON t.SourceEquipmentId = s.SourceEquipmentId&#xA;WHEN MATCHED AND EXISTS (SELECT s.AFSEquipmentId, s.FleetId, s.RegNumber, s.EquipmentDescription, s.MakeName, s.ModelName, s.VehicleTypeName, s.IsEligibleVehicleType, s.ConsumptionTypeName, s.TankSize, s.DecommissionDate, s.IsActive, s.EligibleActivityKey, s.EligibilityClass&#xA;                         EXCEPT&#xA;                         SELECT t.AFSEquipmentId, t.FleetId, t.RegNumber, t.EquipmentDescription, t.MakeName, t.ModelName, t.VehicleTypeName, t.IsEligibleVehicleType, t.ConsumptionTypeName, t.TankSize, t.DecommissionDate, t.IsActive, t.EligibleActivityKey, t.EligibilityClass) THEN&#xA;    UPDATE SET AFSEquipmentId = s.AFSEquipmentId, FleetId = s.FleetId, RegNumber = s.RegNumber, EquipmentDescription = s.EquipmentDescription, MakeName = s.MakeName, ModelName = s.ModelName, VehicleTypeName = s.VehicleTypeName, IsEligibleVehicleType = s.IsEligibleVehicleType, ConsumptionTypeName = s.ConsumptionTypeName, TankSize = s.TankSize, DecommissionDate = s.DecommissionDate, IsActive = s.IsActive, EligibleActivityKey = s.EligibleActivityKey, EligibilityClass = s.EligibilityClass&#xA;WHEN NOT MATCHED BY TARGET THEN&#xA;    INSERT (SourceEquipmentId, AFSEquipmentId, FleetId, RegNumber, EquipmentDescription, MakeName, ModelName, VehicleTypeName, IsEligibleVehicleType, ConsumptionTypeName, TankSize, DecommissionDate, IsActive, EligibleActivityKey, EligibilityClass)&#xA;    VALUES (s.SourceEquipmentId, s.AFSEquipmentId, s.FleetId, s.RegNumber, s.EquipmentDescription, s.MakeName, s.ModelName, s.VehicleTypeName, s.IsEligibleVehicleType, s.ConsumptionTypeName, s.TankSize, s.DecommissionDate, s.IsActive, s.EligibleActivityKey, s.EligibilityClass)&#xA;OUTPUT $action INTO @actions;&#xA;SELECT SUM(CASE WHEN act = 'INSERT' THEN 1 ELSE 0 END) AS Inserted,&#xA;       SUM(CASE WHEN act = 'UPDATE' THEN 1 ELSE 0 END) AS Updated&#xA;FROM (SELECT act FROM @actions UNION ALL SELECT NULL) x;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeInserted" SQLTask:ResultName="0" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeUpdated" SQLTask:ResultName="1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExpressionTask" DTS:DTSID="{3B01638B-ED66-4AF8-8D6F-671BCD345B33}" DTS:ExecutableType="Microsoft.ExpressionTask" DTS:LocaleID="-1" DTS:ObjectName="EXP Rows written _ inserted + updated" DTS:refId="Package\EXP Rows written _ inserted + updated" DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExpressionTask Expression="@[User::RowsWritten] = @[User::MergeInserted] + @[User::MergeUpdated]" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{99979EB5-8320-4B80-8CA2-D2A816CAB52A}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{B8FDEC9E-3567-40C2-A25C-D57582532093}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Truncate stg DimEquipment" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Truncate stg DimEquipment]" DTS:To="Package\SQL Truncate stg DimEquipment" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{2DE9E8B7-C9AF-4DBA-9D39-1EFBED6E31A4}" DTS:From="Package\SQL Truncate stg DimEquipment" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Truncate stg DimEquipment_To_DFT Stage DimEquipment" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Truncate stg DimEquipment_To_DFT Stage DimEquipment]" DTS:To="Package\DFT Stage DimEquipment" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{18C477D6-DA82-4FD8-9090-CF84EC490662}" DTS:From="Package\DFT Stage DimEquipment" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Stage DimEquipment_To_SQL Merge into dw DimEquipment" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Stage DimEquipment_To_SQL Merge into dw DimEquipment]" DTS:To="Package\SQL Merge into dw DimEquipment" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{BAAEA999-BF0C-4107-B185-7EF61F842958}" DTS:From="Package\SQL Merge into dw DimEquipment" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Merge into dw DimEquipment_To_EXP Rows written _ inserted + updated" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Merge into dw DimEquipment_To_EXP Rows written _ inserted + updated]" DTS:To="Package\EXP Rows written _ inserted + updated" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{37521CDA-0B91-468C-993E-5647F53FC207}" DTS:From="Package\EXP Rows written _ inserted + updated" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{55516502-0E98-45D8-9913-DDF348FCA5B5}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{F520A313-4737-4CD9-B9C4-3F97FDCF10E8}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{0C304A1C-8010-4BBE-A06E-502CD61A715C}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

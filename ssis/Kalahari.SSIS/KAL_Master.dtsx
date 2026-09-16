@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:51" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{62F9DD73-DD8D-4063-8088-28F637A4C7E1}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Master" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{DC5EBFDE-5899-40E1-BB58-53E976106502}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{C10E1868-AD00-4E65-AD3B-3F3135CED062}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{71DFF786-27FF-4814-852A-4FF9802652BB}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{E3C27264-723D-4AE8-952A-4B983188F818}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{7EB30EE2-5E2C-497F-AF74-05DFB91A0B94}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{C44B2C25-363E-42D2-846C-76FFFCEE8F28}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{BE83A5A6-EE3E-4DEC-A78C-0DCAE5CF79C7}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{429C05C4-5656-4AA0-8DD0-AE625609AD39}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{DB420EC5-78E5-43A5-AC9D-22C434994B7A}" DTS:EvaluateAsExpression="True" DTS:Expression="@[$Package::ServerName]" DTS:IncludeInDebugDump="2345" DTS:Namespace="User" DTS:ObjectName="ServerNameValue">
+      <DTS:VariableValue DTS:DataType="8">localhost</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{A9C55028-0CA5-474A-8371-D33E2AEC6C0A}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{D87B9470-5E31-42A8-B40B-0DBF1DFFF273}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Dim_DimLocation" DTS:refId="Package\EPT KAL_Dim_DimLocation" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Dim_DimLocation.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{2351F679-66EB-4A67-A77E-688EE88B0EE7}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Dim_DimProduct" DTS:refId="Package\EPT KAL_Dim_DimProduct" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Dim_DimProduct.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{2E9B7F1A-BE4D-4F81-90F7-479D6F44CB32}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Dim_DimEquipment" DTS:refId="Package\EPT KAL_Dim_DimEquipment" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Dim_DimEquipment.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{3AE796E1-BF9F-481F-8C31-D2DB0F6A29FD}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Dim_DimCostCentre" DTS:refId="Package\EPT KAL_Dim_DimCostCentre" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Dim_DimCostCentre.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{BF050654-67FD-4BCC-88B7-14D5084DCD03}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Fact_FactFuelTransaction" DTS:refId="Package\EPT KAL_Fact_FactFuelTransaction" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Fact_FactFuelTransaction.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{8FC46D66-ED5A-4353-B9B4-0A1C3001D53B}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Fact_FactFuelDelivery" DTS:refId="Package\EPT KAL_Fact_FactFuelDelivery" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Fact_FactFuelDelivery.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecutePackageTask" DTS:DTSID="{E7995B5E-44C4-4CF3-B1E6-B9FA6C5C8B0B}" DTS:ExecutableType="Microsoft.ExecutePackageTask" DTS:LocaleID="-1" DTS:ObjectName="EPT KAL_Fact_FactMeterReading" DTS:refId="Package\EPT KAL_Fact_FactMeterReading" DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <PackageName>KAL_Fact_FactMeterReading.dtsx</PackageName>
+          <ParameterAssignment>
+            <BindedVariableOrParameterName>User::ServerNameValue</BindedVariableOrParameterName>
+            <ParameterName>ServerName</ParameterName>
+          </ParameterAssignment>
+          <UseProjectReference>True</UseProjectReference>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{31289213-8AF2-4784-9A57-1942794104B7}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{E2FD7026-7871-4B7F-AD26-044FDEF5D239}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_EPT KAL_Dim_DimLocation" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_EPT KAL_Dim_DimLocation]" DTS:To="Package\EPT KAL_Dim_DimLocation" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{911FDBC0-4FCB-4023-B3CC-C85553283CEE}" DTS:From="Package\EPT KAL_Dim_DimLocation" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Dim_DimLocation_To_EPT KAL_Dim_DimProduct" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Dim_DimLocation_To_EPT KAL_Dim_DimProduct]" DTS:To="Package\EPT KAL_Dim_DimProduct" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{5B15B637-BB81-47E4-968C-B82E31685192}" DTS:From="Package\EPT KAL_Dim_DimProduct" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Dim_DimProduct_To_EPT KAL_Dim_DimEquipment" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Dim_DimProduct_To_EPT KAL_Dim_DimEquipment]" DTS:To="Package\EPT KAL_Dim_DimEquipment" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{78A35AAF-E1F2-4BCB-8182-4B4687691D80}" DTS:From="Package\EPT KAL_Dim_DimEquipment" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Dim_DimEquipment_To_EPT KAL_Dim_DimCostCentre" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Dim_DimEquipment_To_EPT KAL_Dim_DimCostCentre]" DTS:To="Package\EPT KAL_Dim_DimCostCentre" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{1AB5C613-9790-4F06-B070-A2941124A8B1}" DTS:From="Package\EPT KAL_Dim_DimCostCentre" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Dim_DimCostCentre_To_EPT KAL_Fact_FactFuelTransaction" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Dim_DimCostCentre_To_EPT KAL_Fact_FactFuelTransaction]" DTS:To="Package\EPT KAL_Fact_FactFuelTransaction" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{D5D067CC-B30D-49DF-A97C-034AD7CF4F86}" DTS:From="Package\EPT KAL_Fact_FactFuelTransaction" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Fact_FactFuelTransaction_To_EPT KAL_Fact_FactFuelDelivery" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Fact_FactFuelTransaction_To_EPT KAL_Fact_FactFuelDelivery]" DTS:To="Package\EPT KAL_Fact_FactFuelDelivery" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{D2E218C0-DDF5-43EA-9181-63BC45955A90}" DTS:From="Package\EPT KAL_Fact_FactFuelDelivery" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Fact_FactFuelDelivery_To_EPT KAL_Fact_FactMeterReading" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Fact_FactFuelDelivery_To_EPT KAL_Fact_FactMeterReading]" DTS:To="Package\EPT KAL_Fact_FactMeterReading" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{575869E8-D567-46B3-A1EF-BB2E78F7FF0A}" DTS:From="Package\EPT KAL_Fact_FactMeterReading" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EPT KAL_Fact_FactMeterReading_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_EPT KAL_Fact_FactMeterReading_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{6801C8E6-4887-4D85-8799-D1A176D06C39}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{0C09CD11-C4E0-4C51-94E5-DCD0DC9CBDCC}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{7BE60CE5-4949-4250-972C-D35F91EA9FC4}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

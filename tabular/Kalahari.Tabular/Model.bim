@@ -1,0 +1,217 @@
+{
+  "name": "KalahariFuel",
+  "compatibilityLevel": 1400,
+  "model": {
+    "culture": "en-ZA",
+    "description": "Kalahari Petroleum fleet-fuel semantic model over the SSIS-loaded star schema (KalahariDW_SSIS). Facts at three grains share conformed Date, Location, Product and Equipment dimensions. Dynamic row-level security restricts site managers to their locations.",
+    "dataSources": [
+      {
+        "type": "provider",
+        "name": "KalahariDW_SSIS",
+        "connectionString": "Provider=SQLNCLI11;Data Source=localhost;Initial Catalog=KalahariDW_SSIS;Integrated Security=SSPI;Persist Security Info=false",
+        "impersonationMode": "impersonateServiceAccount"
+      }
+    ],
+    "tables": [
+      {
+        "name": "Date",
+        "dataCategory": "Time",
+        "columns": [
+          { "name": "DateKey", "dataType": "int64", "sourceColumn": "DateKey", "isHidden": true },
+          { "name": "Date", "dataType": "dateTime", "sourceColumn": "FullDate", "isKey": true, "formatString": "yyyy-MM-dd" },
+          { "name": "Year", "dataType": "int64", "sourceColumn": "Year", "formatString": "0" },
+          { "name": "Quarter", "dataType": "int64", "sourceColumn": "Quarter" },
+          { "name": "Month Number", "dataType": "int64", "sourceColumn": "MonthNumber", "isHidden": true },
+          { "name": "Month", "dataType": "string", "sourceColumn": "MonthName", "sortByColumn": "Month Number" },
+          { "name": "Year Month", "dataType": "string", "sourceColumn": "YearMonth" },
+          { "name": "Fiscal Year (SA)", "dataType": "string", "sourceColumn": "FiscalYearSA" },
+          { "name": "Season", "dataType": "string", "sourceColumn": "SeasonSouthernAfrica" },
+          { "name": "Is Weekend", "dataType": "boolean", "sourceColumn": "IsWeekend" }
+        ],
+        "partitions": [
+          { "name": "Date", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT DateKey, CAST(FullDate AS datetime) AS FullDate, [Year], [Quarter], MonthNumber, [MonthName], YearMonth, FiscalYearSA, SeasonSouthernAfrica, IsWeekend FROM dw.DimDate" } }
+        ],
+        "hierarchies": [
+          { "name": "Calendar", "levels": [
+            { "name": "Year", "ordinal": 0, "column": "Year" },
+            { "name": "Quarter", "ordinal": 1, "column": "Quarter" },
+            { "name": "Month", "ordinal": 2, "column": "Month" },
+            { "name": "Date", "ordinal": 3, "column": "Date" } ] }
+        ]
+      },
+      {
+        "name": "Location",
+        "columns": [
+          { "name": "LocationKey", "dataType": "int64", "sourceColumn": "LocationKey", "isHidden": true },
+          { "name": "Location", "dataType": "string", "sourceColumn": "LocationDescription" },
+          { "name": "Is Fixed", "dataType": "boolean", "sourceColumn": "IsFixed" },
+          { "name": "Is Mobile", "dataType": "boolean", "sourceColumn": "IsMobile" },
+          { "name": "Tank Capacity (L)", "dataType": "double", "sourceColumn": "Capacity", "formatString": "#,0" },
+          { "name": "Is Active", "dataType": "boolean", "sourceColumn": "IsActive" }
+        ],
+        "partitions": [
+          { "name": "Location", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT LocationKey, LocationDescription, IsFixed, IsMobile, Capacity, IsActive FROM dw.DimLocation" } }
+        ]
+      },
+      {
+        "name": "Product",
+        "columns": [
+          { "name": "ProductKey", "dataType": "int64", "sourceColumn": "ProductKey", "isHidden": true },
+          { "name": "Product", "dataType": "string", "sourceColumn": "ProductName" },
+          { "name": "Is Fuel", "dataType": "boolean", "sourceColumn": "IsFuel" }
+        ],
+        "partitions": [
+          { "name": "Product", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT ProductKey, ProductName, IsFuel FROM dw.DimProduct" } }
+        ]
+      },
+      {
+        "name": "Equipment",
+        "columns": [
+          { "name": "EquipmentKey", "dataType": "int64", "sourceColumn": "EquipmentKey", "isHidden": true },
+          { "name": "Fleet Id", "dataType": "string", "sourceColumn": "FleetId" },
+          { "name": "Registration", "dataType": "string", "sourceColumn": "RegNumber" },
+          { "name": "Make", "dataType": "string", "sourceColumn": "MakeName" },
+          { "name": "Model", "dataType": "string", "sourceColumn": "ModelName" },
+          { "name": "Vehicle Type", "dataType": "string", "sourceColumn": "VehicleTypeName" },
+          { "name": "Consumption Type", "dataType": "string", "sourceColumn": "ConsumptionTypeName" },
+          { "name": "Tank Size (L)", "dataType": "double", "sourceColumn": "TankSize", "formatString": "#,0" },
+          { "name": "Eligibility Class", "dataType": "string", "sourceColumn": "EligibilityClass" }
+        ],
+        "partitions": [
+          { "name": "Equipment", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT EquipmentKey, FleetId, RegNumber, MakeName, ModelName, VehicleTypeName, ConsumptionTypeName, TankSize, EligibilityClass FROM dw.DimEquipment" } }
+        ]
+      },
+      {
+        "name": "Cost Centre",
+        "columns": [
+          { "name": "CostCentreKey", "dataType": "int64", "sourceColumn": "CostCentreKey", "isHidden": true },
+          { "name": "Cost Centre", "dataType": "string", "sourceColumn": "CostCentreName" },
+          { "name": "Responsibility Code", "dataType": "string", "sourceColumn": "ResponsibilityCode" },
+          { "name": "GL Account", "dataType": "string", "sourceColumn": "GlAccount" },
+          { "name": "Tax Rebate Code", "dataType": "string", "sourceColumn": "TaxRebateCode" }
+        ],
+        "partitions": [
+          { "name": "Cost Centre", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT CostCentreKey, CostCentreName, ResponsibilityCode, GlAccount, TaxRebateCode FROM dw.DimCostCentre" } }
+        ]
+      },
+      {
+        "name": "Eligible Activity",
+        "columns": [
+          { "name": "EligibleActivityKey", "dataType": "int64", "sourceColumn": "EligibleActivityKey", "isHidden": true },
+          { "name": "Activity", "dataType": "string", "sourceColumn": "ActivityDescription" },
+          { "name": "Eligibility Status", "dataType": "string", "sourceColumn": "EligibilityStatus" }
+        ],
+        "partitions": [
+          { "name": "Eligible Activity", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT EligibleActivityKey, ActivityDescription, EligibilityStatus FROM dw.DimEligibleActivity" } }
+        ]
+      },
+      {
+        "name": "Fuel Transactions",
+        "description": "Grain: one AFS fuel-issue transaction.",
+        "columns": [
+          { "name": "DateKey", "dataType": "int64", "sourceColumn": "DateKey", "isHidden": true },
+          { "name": "EquipmentKey", "dataType": "int64", "sourceColumn": "EquipmentKey", "isHidden": true },
+          { "name": "LocationKey", "dataType": "int64", "sourceColumn": "LocationKey", "isHidden": true },
+          { "name": "ProductKey", "dataType": "int64", "sourceColumn": "ProductKey", "isHidden": true },
+          { "name": "CostCentreKey", "dataType": "int64", "sourceColumn": "CostCentreKey", "isHidden": true },
+          { "name": "EligibleActivityKey", "dataType": "int64", "sourceColumn": "EligibleActivityKey", "isHidden": true },
+          { "name": "Litres", "dataType": "double", "sourceColumn": "Litres", "isHidden": true },
+          { "name": "Voucher Number", "dataType": "string", "sourceColumn": "VoucherNumber" },
+          { "name": "Pump", "dataType": "string", "sourceColumn": "Pump" }
+        ],
+        "partitions": [
+          { "name": "Fuel Transactions", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT DateKey, EquipmentKey, LocationKey, ProductKey, CostCentreKey, EligibleActivityKey, Litres, VoucherNumber, Pump FROM dw.FactFuelTransaction" } }
+        ],
+        "measures": [
+          { "name": "Litres Issued", "expression": "SUM ( 'Fuel Transactions'[Litres] )", "formatString": "#,0" },
+          { "name": "Fuel Transactions", "expression": "COUNTROWS ( 'Fuel Transactions' )", "formatString": "#,0" },
+          { "name": "Avg Litres per Transaction", "expression": "DIVIDE ( [Litres Issued], [Fuel Transactions] )", "formatString": "#,0.0" },
+          { "name": "Eligible Litres", "description": "Litres issued to equipment in a SARS-eligible activity class.", "expression": "CALCULATE ( [Litres Issued], KEEPFILTERS ( 'Eligible Activity'[Eligibility Status] <> \"Ineligible\" ) )", "formatString": "#,0" },
+          { "name": "Eligible Litres %", "expression": "DIVIDE ( [Eligible Litres], [Litres Issued] )", "formatString": "0.0%" },
+          { "name": "Qualifying Claim Litres", "description": "On-land primary sector: 80% of eligible litres qualify (Rebate Item 670.04 policy example).", "expression": "[Eligible Litres] * 0.8", "formatString": "#,0" },
+          { "name": "Litres Issued PY", "expression": "CALCULATE ( [Litres Issued], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )", "formatString": "#,0" },
+          { "name": "Litres Issued YoY %", "expression": "DIVIDE ( [Litres Issued] - [Litres Issued PY], [Litres Issued PY] )", "formatString": "0.0%" },
+          { "name": "Litres Issued YTD", "expression": "TOTALYTD ( [Litres Issued], 'Date'[Date] )", "formatString": "#,0" },
+          { "name": "Litres Issued Rolling 3M", "expression": "CALCULATE ( [Litres Issued], DATESINPERIOD ( 'Date'[Date], MAX ( 'Date'[Date] ), -3, MONTH ) )", "formatString": "#,0" },
+          { "name": "Transactions Missing Equipment", "description": "Data-quality measure: issues that could not be matched to an equipment record.", "expression": "CALCULATE ( [Fuel Transactions], ISBLANK ( 'Fuel Transactions'[EquipmentKey] ) )", "formatString": "#,0" }
+        ]
+      },
+      {
+        "name": "Fuel Deliveries",
+        "description": "Grain: one tank or depot delivery.",
+        "columns": [
+          { "name": "DateKey", "dataType": "int64", "sourceColumn": "DateKey", "isHidden": true },
+          { "name": "LocationKey", "dataType": "int64", "sourceColumn": "LocationKey", "isHidden": true },
+          { "name": "ProductKey", "dataType": "int64", "sourceColumn": "ProductKey", "isHidden": true },
+          { "name": "VolumeLitres", "dataType": "double", "sourceColumn": "VolumeLitres", "isHidden": true },
+          { "name": "Is Duplicate", "dataType": "boolean", "sourceColumn": "IsDuplicate" },
+          { "name": "Document Number", "dataType": "string", "sourceColumn": "DocumentNumber" }
+        ],
+        "partitions": [
+          { "name": "Fuel Deliveries", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT DateKey, LocationKey, ProductKey, VolumeLitres, IsDuplicate, DocumentNumber FROM dw.FactFuelDelivery" } }
+        ],
+        "measures": [
+          { "name": "Litres Delivered", "description": "Excludes deliveries the source system flagged as duplicates.", "expression": "CALCULATE ( SUM ( 'Fuel Deliveries'[VolumeLitres] ), 'Fuel Deliveries'[Is Duplicate] = FALSE () )", "formatString": "#,0" },
+          { "name": "Delivered minus Issued (L)", "description": "Tank reconciliation across two facts at different grains, joined only through the conformed Date, Location and Product dimensions.", "expression": "[Litres Delivered] - [Litres Issued]", "formatString": "#,0;-#,0" }
+        ]
+      },
+      {
+        "name": "Meter Readings",
+        "description": "Grain: one odometer or hour-meter reading.",
+        "columns": [
+          { "name": "DateKey", "dataType": "int64", "sourceColumn": "DateKey", "isHidden": true },
+          { "name": "EquipmentKey", "dataType": "int64", "sourceColumn": "EquipmentKey", "isHidden": true },
+          { "name": "ReadingDiff", "dataType": "double", "sourceColumn": "ReadingDiff", "isHidden": true }
+        ],
+        "partitions": [
+          { "name": "Meter Readings", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT DateKey, EquipmentKey, ReadingDiff FROM dw.FactMeterReading" } }
+        ],
+        "measures": [
+          { "name": "Meter Units Recorded", "expression": "SUM ( 'Meter Readings'[ReadingDiff] )", "formatString": "#,0" },
+          { "name": "Litres per Meter Unit", "description": "Fuel efficiency: litres issued per km or engine hour recorded for the same equipment and period.", "expression": "DIVIDE ( [Litres Issued], [Meter Units Recorded] )", "formatString": "#,0.00" }
+        ]
+      },
+      {
+        "name": "Security User Location",
+        "description": "Which locations each Windows user may see. Drives the dynamic row-level security role.",
+        "isHidden": true,
+        "columns": [
+          { "name": "UserName", "dataType": "string", "sourceColumn": "UserName" },
+          { "name": "LocationKey", "dataType": "int64", "sourceColumn": "LocationKey" }
+        ],
+        "partitions": [
+          { "name": "Security User Location", "source": { "type": "query", "dataSource": "KalahariDW_SSIS", "query": "SELECT UserName, LocationKey FROM sec.UserLocation" } }
+        ]
+      }
+    ],
+    "relationships": [
+      { "name": "Tx_Date", "fromTable": "Fuel Transactions", "fromColumn": "DateKey", "toTable": "Date", "toColumn": "DateKey" },
+      { "name": "Tx_Equipment", "fromTable": "Fuel Transactions", "fromColumn": "EquipmentKey", "toTable": "Equipment", "toColumn": "EquipmentKey" },
+      { "name": "Tx_Location", "fromTable": "Fuel Transactions", "fromColumn": "LocationKey", "toTable": "Location", "toColumn": "LocationKey" },
+      { "name": "Tx_Product", "fromTable": "Fuel Transactions", "fromColumn": "ProductKey", "toTable": "Product", "toColumn": "ProductKey" },
+      { "name": "Tx_CostCentre", "fromTable": "Fuel Transactions", "fromColumn": "CostCentreKey", "toTable": "Cost Centre", "toColumn": "CostCentreKey" },
+      { "name": "Tx_EligibleActivity", "fromTable": "Fuel Transactions", "fromColumn": "EligibleActivityKey", "toTable": "Eligible Activity", "toColumn": "EligibleActivityKey" },
+      { "name": "Del_Date", "fromTable": "Fuel Deliveries", "fromColumn": "DateKey", "toTable": "Date", "toColumn": "DateKey" },
+      { "name": "Del_Location", "fromTable": "Fuel Deliveries", "fromColumn": "LocationKey", "toTable": "Location", "toColumn": "LocationKey" },
+      { "name": "Del_Product", "fromTable": "Fuel Deliveries", "fromColumn": "ProductKey", "toTable": "Product", "toColumn": "ProductKey" },
+      { "name": "Mtr_Date", "fromTable": "Meter Readings", "fromColumn": "DateKey", "toTable": "Date", "toColumn": "DateKey" },
+      { "name": "Mtr_Equipment", "fromTable": "Meter Readings", "fromColumn": "EquipmentKey", "toTable": "Equipment", "toColumn": "EquipmentKey" }
+    ],
+    "roles": [
+      {
+        "name": "Site Managers",
+        "description": "Dynamic RLS: members see only the locations mapped to their Windows login in sec.UserLocation. Location filters flow to transactions and deliveries.",
+        "modelPermission": "read",
+        "tablePermissions": [
+          { "name": "Location", "filterExpression": "CONTAINS ( 'Security User Location', 'Security User Location'[UserName], USERNAME (), 'Security User Location'[LocationKey], Location[LocationKey] )" },
+          { "name": "Security User Location", "filterExpression": "'Security User Location'[UserName] = USERNAME ()" }
+        ]
+      },
+      {
+        "name": "Fleet Finance",
+        "description": "Static role: all locations, for SARS diesel-refund reporting.",
+        "modelPermission": "read"
+      }
+    ]
+  }
+}

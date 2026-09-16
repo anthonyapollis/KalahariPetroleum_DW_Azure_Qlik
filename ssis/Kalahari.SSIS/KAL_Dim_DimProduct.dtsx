@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:49" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{ACDC38FD-68EC-4613-A481-A015F4BADF6E}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Dim_DimProduct" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{1B5B5A48-C818-4E14-A83B-42B008B350A7}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{5FA7A544-03A9-4B39-A785-F2A4FDB8A6AA}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{270113CE-3B11-4539-8B40-5B68946A7481}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{6F4C21EA-DB0E-4A82-8D9F-A696D1BF865A}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{E2455B80-3FC3-4C5B-BB76-270EB558E84E}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{14DAB4E8-E38F-4173-950B-B87240E3356B}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{4479DF8D-6D9E-43EB-8D9A-754E0AE1FEC9}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{B0126221-F4CB-43F5-95B9-1C8194C4698E}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{EACC9CBB-5D78-424B-8B22-A2324A9D8E8B}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeInserted">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{C8BDDD44-F5F2-4817-A3F2-6AAF52ABBD37}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeUpdated">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{C265CC16-FB80-484D-B488-2B2F61A4301D}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{4D762D02-2EF8-456F-9249-A84E48A76D7D}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Truncate stg DimProduct" DTS:refId="Package\SQL Truncate stg DimProduct" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="TRUNCATE TABLE stg.DimProduct;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{063ADB36-1D74-434D-BA52-FCD90AE9A877}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Stage DimProduct" DTS:refId="Package\DFT Stage DimProduct" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC DimProduct" refId="Package\DFT Stage DimProduct\SRC DimProduct" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{270113CE-3B11-4539-8B40-5B68946A7481}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimProduct\SRC DimProduct.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceProductId" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[SourceProductId]" />
+                    <externalMetadataColumn dataType="wstr" length="200" name="ProductName" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[ProductName]" />
+                    <externalMetadataColumn dataType="bool" name="IsFuel" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[IsFuel]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[SourceProductId]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[SourceProductId]" name="SourceProductId" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[SourceProductId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="wstr" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[ProductName]" length="200" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[ProductName]" name="ProductName" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[ProductName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[IsFuel]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsFuel]" name="IsFuel" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsFuel]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsActive]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[SourceProductId]" name="SourceProductId" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[SourceProductId]" />
+                    <outputColumn dataType="wstr" length="200" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ProductName]" name="ProductName" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ProductName]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[IsFuel]" name="IsFuel" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[IsFuel]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[IsActive]" name="IsActive" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[IsActive]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Id AS SourceProductId, CAST(Name AS nvarchar(200)) AS ProductName, CAST(CASE WHEN UPPER(Name) LIKE '%DIESEL%' OR UPPER(Name) LIKE '%FUEL%' THEN 1 ELSE 0 END AS bit) AS IsFuel, IsActive FROM dbo.lstProduct</property>
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">2</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Stage DimProduct\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC DimProduct_Output_RC Read" refId="Package\DFT Stage DimProduct\RC Read.Inputs[SRC DimProduct_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimProduct\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Stage DimProduct\RC Read.Inputs[SRC DimProduct_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST stg DimProduct" refId="Package\DFT Stage DimProduct\DST stg DimProduct" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{5FA7A544-03A9-4B39-A785-F2A4FDB8A6AA}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Read_Output_DST stg DimProduct" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceProductId" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[SourceProductId]" />
+                    <externalMetadataColumn dataType="wstr" length="200" name="ProductName" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[ProductName]" />
+                    <externalMetadataColumn dataType="bool" name="IsFuel" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[IsFuel]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="SourceProductId" externalMetadataColumnId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[SourceProductId]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[SourceProductId]" name="" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].Columns[SourceProductId]" />
+                    <inputColumn cachedDataType="wstr" cachedLength="200" cachedName="ProductName" externalMetadataColumnId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[ProductName]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[ProductName]" name="" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].Columns[ProductName]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsFuel" externalMetadataColumnId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[IsFuel]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsFuel]" name="" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].Columns[IsFuel]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsActive" externalMetadataColumnId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].ExternalColumns[IsActive]" lineageId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output].Columns[IsActive]" name="" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct].Columns[IsActive]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Outputs[Error]" synchronousInputId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimProduct\DST stg DimProduct.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimProduct\DST stg DimProduct.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimProduct\DST stg DimProduct.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[stg].[DimProduct]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Stage DimProduct\RC Read.Inputs[SRC DimProduct_Output_RC Read]" name="SRC DimProduct_Output_RC Read" refId="Package\DFT Stage DimProduct.Paths[SRC DimProduct_Output_RC Read]" startId="Package\DFT Stage DimProduct\SRC DimProduct.Outputs[Output]" />
+            <path endId="Package\DFT Stage DimProduct\DST stg DimProduct.Inputs[RC Read_Output_DST stg DimProduct]" name="RC Read_Output_DST stg DimProduct" refId="Package\DFT Stage DimProduct.Paths[RC Read_Output_DST stg DimProduct]" startId="Package\DFT Stage DimProduct\RC Read.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{4CCBB8B6-462C-4F17-8B47-5C3A19676970}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Merge into dw DimProduct" DTS:refId="Package\SQL Merge into dw DimProduct" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="&#xA;SET NOCOUNT ON;&#xA;DECLARE @actions TABLE (act nvarchar(10));&#xA;MERGE dw.DimProduct AS t&#xA;USING stg.DimProduct AS s&#xA;   ON t.SourceProductId = s.SourceProductId&#xA;WHEN MATCHED AND EXISTS (SELECT s.ProductName, s.IsFuel, s.IsActive&#xA;                         EXCEPT&#xA;                         SELECT t.ProductName, t.IsFuel, t.IsActive) THEN&#xA;    UPDATE SET ProductName = s.ProductName, IsFuel = s.IsFuel, IsActive = s.IsActive&#xA;WHEN NOT MATCHED BY TARGET THEN&#xA;    INSERT (SourceProductId, ProductName, IsFuel, IsActive)&#xA;    VALUES (s.SourceProductId, s.ProductName, s.IsFuel, s.IsActive)&#xA;OUTPUT $action INTO @actions;&#xA;SELECT SUM(CASE WHEN act = 'INSERT' THEN 1 ELSE 0 END) AS Inserted,&#xA;       SUM(CASE WHEN act = 'UPDATE' THEN 1 ELSE 0 END) AS Updated&#xA;FROM (SELECT act FROM @actions UNION ALL SELECT NULL) x;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeInserted" SQLTask:ResultName="0" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeUpdated" SQLTask:ResultName="1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExpressionTask" DTS:DTSID="{2A237BAF-EB27-48D9-A2A3-0784C9BA4A46}" DTS:ExecutableType="Microsoft.ExpressionTask" DTS:LocaleID="-1" DTS:ObjectName="EXP Rows written _ inserted + updated" DTS:refId="Package\EXP Rows written _ inserted + updated" DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExpressionTask Expression="@[User::RowsWritten] = @[User::MergeInserted] + @[User::MergeUpdated]" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{A467FBAB-401F-418E-B6C7-C8F3778AAB1E}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{3103CB4D-59D5-4070-BCF5-D93DDBEBFEDF}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Truncate stg DimProduct" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Truncate stg DimProduct]" DTS:To="Package\SQL Truncate stg DimProduct" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{BD65AEE9-6FA4-4129-9606-1329FC598319}" DTS:From="Package\SQL Truncate stg DimProduct" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Truncate stg DimProduct_To_DFT Stage DimProduct" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Truncate stg DimProduct_To_DFT Stage DimProduct]" DTS:To="Package\DFT Stage DimProduct" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{90CAE7AC-FFE2-42D4-B251-392BBA8B5E38}" DTS:From="Package\DFT Stage DimProduct" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Stage DimProduct_To_SQL Merge into dw DimProduct" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Stage DimProduct_To_SQL Merge into dw DimProduct]" DTS:To="Package\SQL Merge into dw DimProduct" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{7694973A-C669-45CF-AFAF-F05224312E6B}" DTS:From="Package\SQL Merge into dw DimProduct" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Merge into dw DimProduct_To_EXP Rows written _ inserted + updated" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Merge into dw DimProduct_To_EXP Rows written _ inserted + updated]" DTS:To="Package\EXP Rows written _ inserted + updated" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{D6D82209-11E1-4B06-BD71-5DBBFCCCDF4A}" DTS:From="Package\EXP Rows written _ inserted + updated" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{24B474E2-2F14-49D0-8CE3-338AEF1B38A1}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{21FB8B33-0272-4C2B-8209-6C8AD66411B4}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{04226B47-6932-42AA-A647-81DE87ECFB0C}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

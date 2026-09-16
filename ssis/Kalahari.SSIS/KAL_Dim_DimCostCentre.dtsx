@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:50" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{113A0F2C-CE60-4CF7-B423-AE48F93F4017}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Dim_DimCostCentre" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{76D0A498-0680-4691-A002-B0292CF6C2CF}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{514CB27B-7DD8-475B-A40E-FEC1C8FCC89C}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{89938EAB-B52F-4D75-8BFC-0459D25822C7}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{B59A989F-AA2D-4EEE-8859-C0E259AE5124}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{9E2F172D-3015-4C4C-8C32-0DBFDA6E750C}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{C569D8DB-9721-48F1-8713-E8F1D69725DF}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{6C6099EF-6FFC-482A-9346-CAD215759EBE}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{6143021B-C920-4328-B81C-4E823F861911}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{8804D32D-BD2B-4339-8E52-99CBAE2D0808}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeInserted">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{D6088D57-82E3-47B0-BFFB-344580B0E530}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="MergeUpdated">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{F7A33488-0F69-47A2-96A4-A40A890AFE9D}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{D891CA43-2F83-49F3-A57C-A8B2DCB93B9A}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Truncate stg DimCostCentre" DTS:refId="Package\SQL Truncate stg DimCostCentre" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="TRUNCATE TABLE stg.DimCostCentre;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{B1011766-51CB-4F7E-BC4F-7D43F6B0D0EB}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Stage DimCostCentre" DTS:refId="Package\DFT Stage DimCostCentre" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC DimCostCentre" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{89938EAB-B52F-4D75-8BFC-0459D25822C7}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="bytes" length="20" name="CostCentreHash" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[CostCentreHash]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="CostCentreName" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[CostCentreName]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="ResponsibilityCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[ResponsibilityCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="BusinessRevenueCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[BusinessRevenueCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="TaxRebateCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[TaxRebateCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="GlAccount" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[GlAccount]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="bytes" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[CostCentreHash]" length="20" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreHash]" name="CostCentreHash" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreHash]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[CostCentreName]" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreName]" name="CostCentreName" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreName]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[ResponsibilityCode]" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[ResponsibilityCode]" name="ResponsibilityCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[ResponsibilityCode]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[BusinessRevenueCode]" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[BusinessRevenueCode]" name="BusinessRevenueCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[BusinessRevenueCode]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[TaxRebateCode]" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[TaxRebateCode]" name="TaxRebateCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[TaxRebateCode]" truncationRowDisposition="FailComponent" />
+                    <outputColumn codePage="1252" dataType="str" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].ExternalColumns[GlAccount]" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[GlAccount]" name="GlAccount" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[GlAccount]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="bytes" length="20" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[CostCentreHash]" name="CostCentreHash" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[CostCentreHash]" />
+                    <outputColumn codePage="1252" dataType="str" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[CostCentreName]" name="CostCentreName" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[CostCentreName]" />
+                    <outputColumn codePage="1252" dataType="str" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ResponsibilityCode]" name="ResponsibilityCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ResponsibilityCode]" />
+                    <outputColumn codePage="1252" dataType="str" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[BusinessRevenueCode]" name="BusinessRevenueCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[BusinessRevenueCode]" />
+                    <outputColumn codePage="1252" dataType="str" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[TaxRebateCode]" name="TaxRebateCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[TaxRebateCode]" />
+                    <outputColumn codePage="1252" dataType="str" length="200" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[GlAccount]" name="GlAccount" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[GlAccount]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(HASHBYTES('SHA1', CONCAT(IIF(n IS NULL,'~',''),UPPER(RTRIM(n)),'|',IIF(r IS NULL,'~',''),UPPER(RTRIM(r)),'|',IIF(b IS NULL,'~',''),UPPER(RTRIM(b)),'|',IIF(t IS NULL,'~',''),UPPER(RTRIM(t)),'|',IIF(g IS NULL,'~',''),UPPER(RTRIM(g)))) AS binary(20)) AS CostCentreHash,
+       n AS CostCentreName, r AS ResponsibilityCode, b AS BusinessRevenueCode, t AS TaxRebateCode, g AS GlAccount
+FROM (SELECT DISTINCT CAST(LEFT(CostCentreName,200) AS varchar(200)) AS n, CAST(LEFT(ResponsibilityCode,200) AS varchar(200)) AS r,
+                      CAST(LEFT(BusinessRevenueCode,200) AS varchar(200)) AS b, CAST(LEFT(TaxRebateCode,200) AS varchar(200)) AS t,
+                      CAST(LEFT(GlAccount,200) AS varchar(200)) AS g
+      FROM dbo.CostCentre WITH (NOLOCK)) c</property>
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">2</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Stage DimCostCentre\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC DimCostCentre_Output_RC Read" refId="Package\DFT Stage DimCostCentre\RC Read.Inputs[SRC DimCostCentre_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Stage DimCostCentre\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Stage DimCostCentre\RC Read.Inputs[SRC DimCostCentre_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST stg DimCostCentre" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{514CB27B-7DD8-475B-A40E-FEC1C8FCC89C}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Read_Output_DST stg DimCostCentre" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="bytes" length="20" name="CostCentreHash" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[CostCentreHash]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="CostCentreName" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[CostCentreName]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="ResponsibilityCode" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[ResponsibilityCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="BusinessRevenueCode" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[BusinessRevenueCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="TaxRebateCode" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[TaxRebateCode]" />
+                    <externalMetadataColumn codePage="1252" dataType="str" length="200" name="GlAccount" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[GlAccount]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="bytes" cachedLength="20" cachedName="CostCentreHash" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[CostCentreHash]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreHash]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[CostCentreHash]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="200" cachedName="CostCentreName" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[CostCentreName]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[CostCentreName]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[CostCentreName]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="200" cachedName="ResponsibilityCode" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[ResponsibilityCode]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[ResponsibilityCode]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[ResponsibilityCode]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="200" cachedName="BusinessRevenueCode" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[BusinessRevenueCode]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[BusinessRevenueCode]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[BusinessRevenueCode]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="200" cachedName="TaxRebateCode" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[TaxRebateCode]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[TaxRebateCode]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[TaxRebateCode]" />
+                    <inputColumn cachedCodepage="1252" cachedDataType="str" cachedLength="200" cachedName="GlAccount" externalMetadataColumnId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].ExternalColumns[GlAccount]" lineageId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output].Columns[GlAccount]" name="" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre].Columns[GlAccount]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Outputs[Error]" synchronousInputId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[stg].[DimCostCentre]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Stage DimCostCentre\RC Read.Inputs[SRC DimCostCentre_Output_RC Read]" name="SRC DimCostCentre_Output_RC Read" refId="Package\DFT Stage DimCostCentre.Paths[SRC DimCostCentre_Output_RC Read]" startId="Package\DFT Stage DimCostCentre\SRC DimCostCentre.Outputs[Output]" />
+            <path endId="Package\DFT Stage DimCostCentre\DST stg DimCostCentre.Inputs[RC Read_Output_DST stg DimCostCentre]" name="RC Read_Output_DST stg DimCostCentre" refId="Package\DFT Stage DimCostCentre.Paths[RC Read_Output_DST stg DimCostCentre]" startId="Package\DFT Stage DimCostCentre\RC Read.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{9E2AB176-D2BC-402F-BE3B-4F8DADF652BB}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Merge into dw DimCostCentre" DTS:refId="Package\SQL Merge into dw DimCostCentre" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="&#xA;SET NOCOUNT ON;&#xA;DECLARE @actions TABLE (act nvarchar(10));&#xA;MERGE dw.DimCostCentre AS t&#xA;USING stg.DimCostCentre AS s&#xA;   ON t.CostCentreHash = s.CostCentreHash&#xA;WHEN MATCHED AND EXISTS (SELECT s.CostCentreName, s.ResponsibilityCode, s.BusinessRevenueCode, s.TaxRebateCode, s.GlAccount&#xA;                         EXCEPT&#xA;                         SELECT t.CostCentreName, t.ResponsibilityCode, t.BusinessRevenueCode, t.TaxRebateCode, t.GlAccount) THEN&#xA;    UPDATE SET CostCentreName = s.CostCentreName, ResponsibilityCode = s.ResponsibilityCode, BusinessRevenueCode = s.BusinessRevenueCode, TaxRebateCode = s.TaxRebateCode, GlAccount = s.GlAccount&#xA;WHEN NOT MATCHED BY TARGET THEN&#xA;    INSERT (CostCentreHash, CostCentreName, ResponsibilityCode, BusinessRevenueCode, TaxRebateCode, GlAccount)&#xA;    VALUES (s.CostCentreHash, s.CostCentreName, s.ResponsibilityCode, s.BusinessRevenueCode, s.TaxRebateCode, s.GlAccount)&#xA;OUTPUT $action INTO @actions;&#xA;SELECT SUM(CASE WHEN act = 'INSERT' THEN 1 ELSE 0 END) AS Inserted,&#xA;       SUM(CASE WHEN act = 'UPDATE' THEN 1 ELSE 0 END) AS Updated&#xA;FROM (SELECT act FROM @actions UNION ALL SELECT NULL) x;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeInserted" SQLTask:ResultName="0" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::MergeUpdated" SQLTask:ResultName="1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExpressionTask" DTS:DTSID="{ABADCE4A-05C0-4C17-88FE-512C39EC56C0}" DTS:ExecutableType="Microsoft.ExpressionTask" DTS:LocaleID="-1" DTS:ObjectName="EXP Rows written _ inserted + updated" DTS:refId="Package\EXP Rows written _ inserted + updated" DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <ExpressionTask Expression="@[User::RowsWritten] = @[User::MergeInserted] + @[User::MergeUpdated]" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{11338496-B416-406F-8D02-FD1420D3ED5A}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{31935B69-D39C-48DC-86DE-C9BEAB99424C}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Truncate stg DimCostCentre" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Truncate stg DimCostCentre]" DTS:To="Package\SQL Truncate stg DimCostCentre" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{B366BC3D-C496-4901-A0C2-D9061D0C5057}" DTS:From="Package\SQL Truncate stg DimCostCentre" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Truncate stg DimCostCentre_To_DFT Stage DimCostCentre" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Truncate stg DimCostCentre_To_DFT Stage DimCostCentre]" DTS:To="Package\DFT Stage DimCostCentre" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{E2403386-D791-4BEA-8786-9C392F0A3EF9}" DTS:From="Package\DFT Stage DimCostCentre" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Stage DimCostCentre_To_SQL Merge into dw DimCostCentre" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Stage DimCostCentre_To_SQL Merge into dw DimCostCentre]" DTS:To="Package\SQL Merge into dw DimCostCentre" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{67B221B3-9A49-4037-93B9-8E0846352037}" DTS:From="Package\SQL Merge into dw DimCostCentre" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Merge into dw DimCostCentre_To_EXP Rows written _ inserted + updated" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Merge into dw DimCostCentre_To_EXP Rows written _ inserted + updated]" DTS:To="Package\EXP Rows written _ inserted + updated" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{A14F7709-6156-4F75-BFFE-72F1E3399FEC}" DTS:From="Package\EXP Rows written _ inserted + updated" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_EXP Rows written _ inserted + updated_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{B60A9A1B-1342-4F3A-A857-44DFE25468DB}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{D88E4E8D-3A88-4645-B43B-527A5EDF95F3}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{114F7863-8F97-4F5C-BDB9-90D5F661F1B7}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable DTS:CreationDate="09/16/2026 19:18:51" DTS:CreationName="Microsoft.Package" DTS:CreatorComputerName="DESKTOP-ES5HL78" DTS:CreatorName="Anthony" DTS:DTSID="{99636DAA-5193-43F7-AFD3-242E2456AF22}" DTS:ExecutableType="Microsoft.Package" DTS:LastModifiedProductVersion="" DTS:LocaleID="7177" DTS:ObjectName="KAL_Fact_FactMeterReading" DTS:ProtectionLevel="0" DTS:refId="Package" DTS:VersionBuild="0" DTS:VersionGUID="{EB7A2F07-D7B5-4B12-9BA0-0621437F076B}" DTS:VersionMajor="0" xmlns:DTS="www.microsoft.com/SqlServer/Dts">
+  <DTS:Property DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{69973A0A-CA5C-4D69-B47A-79CCA352BD3A}" DTS:ObjectName="KalahariDW_SSIS" DTS:refId="Package.ConnectionManagers[KalahariDW_SSIS]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=KalahariDW_SSIS;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager DTS:CreationName="OLEDB" DTS:DTSID="{C6ACC5B2-15B1-4C73-86BA-A7320593FEC2}" DTS:ObjectName="KalahariSource" DTS:refId="Package.ConnectionManagers[KalahariSource]">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager DTS:ConnectionString="data source=localhost;initial catalog=AngloData_QA_20220825_1820;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False" />
+      </DTS:ObjectData>
+      <DTS:PropertyExpression DTS:Name="ServerName">@[$Package::ServerName]</DTS:PropertyExpression>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter DTS:CreationName="" DTS:DataType="8" DTS:Description="" DTS:DTSID="{00087CF6-038A-40F9-BB18-E890CF14FFF6}" DTS:ObjectName="ServerName" DTS:Required="0" DTS:Sensitive="0">
+      <DTS:Property DTS:DataType="8" DTS:Name="ParameterValue">localhost</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{DF521FEC-5FFC-49CA-B6E1-B7D4F8D5A14D}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RunId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{F0C1831C-1EAD-4F7E-B804-5F2AAF79F70A}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRead">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{58CAEF98-CD13-40DA-BB1A-388F43597DB5}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsWritten">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{DD0768B6-A767-451F-9A93-E21A88187E4A}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{96A4B9A6-66F5-4C1E-B233-85987D9FAF44}" DTS:IncludeInDebugDump="6789" DTS:Namespace="User" DTS:ObjectName="LastSourceId">
+      <DTS:VariableValue DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable DTS:CreationName="" DTS:DTSID="{58111D77-FE8E-4491-8A10-07870EFFFAAC}" DTS:EvaluateAsExpression="True" DTS:Expression="&quot;SELECT m.Id AS SourceMeterReadingId, YEAR(m.ReadingDate)*10000 + MONTH(m.ReadingDate)*100 + DAY(m.ReadingDate) AS DateKey, m.ReadingDate, m.PreviousReadingDate, m.EquipmentId, m.MeasuringPoint, m.ReadingDiff, m.CounterReading, m.PreviousReading, m.ConsumptionTypeId, m.ReadingTypeId, m.IsActive FROM dbo.datMeterReading m WITH (NOLOCK) WHERE m.Id &gt; &quot; + (DT_WSTR, 12) @[User::LastSourceId]" DTS:IncludeInDebugDump="2345" DTS:Namespace="User" DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue DTS:DataType="8">SELECT m.Id AS SourceMeterReadingId, YEAR(m.ReadingDate)*10000 + MONTH(m.ReadingDate)*100 + DAY(m.ReadingDate) AS DateKey, m.ReadingDate, m.PreviousReadingDate, m.EquipmentId, m.MeasuringPoint, m.ReadingDiff, m.CounterReading, m.PreviousReading, m.ConsumptionTypeId, m.ReadingTypeId, m.IsActive FROM dbo.datMeterReading m WITH (NOLOCK) WHERE m.Id &gt; 0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{86435865-722D-401E-8714-D73770F6AD12}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run start" DTS:refId="Package\SQL Log run start" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SET NOCOUNT ON; INSERT INTO etl.PackageRun (PackageName, ExecutionGuid) OUTPUT inserted.RunId VALUES (?, ?);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::PackageName" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="200" />
+          <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ExecutionInstanceGUID" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="50" />
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::RunId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{744F6D7F-C604-496B-BAED-A109C77F3E47}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Get watermark" DTS:refId="Package\SQL Get watermark" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:ResultType="ResultSetType_SingleRow" SQLTask:SqlStatementSource="SELECT LastSourceId FROM etl.Watermark WHERE TableName = 'dw.FactMeterReading';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding SQLTask:DtsVariableName="User::LastSourceId" SQLTask:ResultName="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.Pipeline" DTS:DTSID="{8CF3AF5D-B2AC-4D35-93D4-81DC08696235}" DTS:ExecutableType="Microsoft.Pipeline" DTS:LocaleID="-1" DTS:ObjectName="DFT Load new FactMeterReading rows" DTS:refId="Package\DFT Load new FactMeterReading rows" DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <pipeline BLOBTempStoragePath="" bufferTempStoragePath="" name="pipelineXml" version="1">
+          <components>
+            <component componentClassID="Microsoft.OLEDBSource" contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7" name="SRC new source rows" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows" usesDispositions="true" version="7">
+              <connections>
+                <connection connectionManagerID="{C6ACC5B2-15B1-4C73-86BA-A7320593FEC2}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariSource]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Connections[OleDbConnection]" />
+              </connections>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i4" name="SourceMeterReadingId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[SourceMeterReadingId]" />
+                    <externalMetadataColumn dataType="i4" name="DateKey" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[DateKey]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="ReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingDate]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="PreviousReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[PreviousReadingDate]" />
+                    <externalMetadataColumn dataType="i4" name="EquipmentId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[EquipmentId]" />
+                    <externalMetadataColumn dataType="i4" name="MeasuringPoint" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[MeasuringPoint]" />
+                    <externalMetadataColumn dataType="r8" name="ReadingDiff" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingDiff]" />
+                    <externalMetadataColumn dataType="r8" name="CounterReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[CounterReading]" />
+                    <externalMetadataColumn dataType="r8" name="PreviousReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[PreviousReading]" />
+                    <externalMetadataColumn dataType="i4" name="ConsumptionTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ConsumptionTypeId]" />
+                    <externalMetadataColumn dataType="i4" name="ReadingTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingTypeId]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[SourceMeterReadingId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[SourceMeterReadingId]" name="SourceMeterReadingId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[SourceMeterReadingId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[DateKey]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[DateKey]" name="DateKey" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[DateKey]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="dbTimeStamp" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingDate]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDate]" name="ReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDate]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="dbTimeStamp" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[PreviousReadingDate]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReadingDate]" name="PreviousReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReadingDate]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[EquipmentId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[EquipmentId]" name="EquipmentId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[EquipmentId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[MeasuringPoint]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[MeasuringPoint]" name="MeasuringPoint" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[MeasuringPoint]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingDiff]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDiff]" name="ReadingDiff" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDiff]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[CounterReading]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[CounterReading]" name="CounterReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[CounterReading]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="r8" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[PreviousReading]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReading]" name="PreviousReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReading]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ConsumptionTypeId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ConsumptionTypeId]" name="ConsumptionTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ConsumptionTypeId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="i4" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[ReadingTypeId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingTypeId]" name="ReadingTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingTypeId]" truncationRowDisposition="FailComponent" />
+                    <outputColumn dataType="bool" errorOrTruncationOperation="Conversion" errorRowDisposition="FailComponent" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].ExternalColumns[IsActive]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[IsActive]" name="IsActive" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[IsActive]" truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                </output>
+                <output isErrorOut="true" name="Error" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[SourceMeterReadingId]" name="SourceMeterReadingId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[SourceMeterReadingId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[DateKey]" name="DateKey" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[DateKey]" />
+                    <outputColumn dataType="dbTimeStamp" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingDate]" name="ReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingDate]" />
+                    <outputColumn dataType="dbTimeStamp" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[PreviousReadingDate]" name="PreviousReadingDate" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[PreviousReadingDate]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[EquipmentId]" name="EquipmentId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[EquipmentId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[MeasuringPoint]" name="MeasuringPoint" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[MeasuringPoint]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingDiff]" name="ReadingDiff" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingDiff]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[CounterReading]" name="CounterReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[CounterReading]" />
+                    <outputColumn dataType="r8" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[PreviousReading]" name="PreviousReading" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[PreviousReading]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ConsumptionTypeId]" name="ConsumptionTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ConsumptionTypeId]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingTypeId]" name="ReadingTypeId" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ReadingTypeId]" />
+                    <outputColumn dataType="bool" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[IsActive]" name="IsActive" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[IsActive]" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset" />
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.String" description="The variable that contains the SQL command to be executed." name="SqlCommandVariable">User::SourceQuery</property>
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode" typeConverter="AccessMode">3</property>
+                <property dataType="System.String" description="The mappings between the parameters in the SQL command and variables." name="ParameterMapping" />
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Read" refId="Package\DFT Load new FactMeterReading rows\RC Read">
+              <inputs>
+                <input hasSideEffects="true" name="SRC new source rows_Output_RC Read" refId="Package\DFT Load new FactMeterReading rows\RC Read.Inputs[SRC new source rows_Output_RC Read]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactMeterReading rows\RC Read.Outputs[Output]" synchronousInputId="Package\DFT Load new FactMeterReading rows\RC Read.Inputs[SRC new source rows_Output_RC Read]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsRead</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.Lookup" contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6" name="LKP DimEquipment" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment" usesDispositions="true" version="6">
+              <connections>
+                <connection connectionManagerID="{69973A0A-CA5C-4D69-B47A-79CCA352BD3A}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="Connection manager used to access lookup data." name="OleDbConnection" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input name="RC Read_Output_LKP DimEquipment" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment]">
+                  <externalMetadataColumns />
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="EquipmentId" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[EquipmentId]" name="" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment].Columns[EquipmentId]">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table that a column joins." name="JoinToReferenceColumn">SourceEquipmentId</property>
+                        <property dataType="System.Null" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output errorOrTruncationOperation="Lookup" errorRowDisposition="IgnoreFailure" exclusionGroup="1" name="Match" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Match]" synchronousInputId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" errorOrTruncationOperation="CopyColumn" lineageId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Match].Columns[EquipmentKey]" name="EquipmentKey" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Match].Columns[EquipmentKey]" truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property dataType="System.String" description="Specifies the column in the reference table from which a column is copied." name="CopyFromReferenceColumn">EquipmentKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                </output>
+                <output description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;" exclusionGroup="1" name="NoMatch" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[NoMatch]" synchronousInputId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment]">
+                  <externalMetadataColumns />
+                </output>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Error]" synchronousInputId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the SQL statement that generates the lookup table." expressionType="Notify" name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT SourceEquipmentId, EquipmentKey FROM dw.DimEquipment;</property>
+                <property dataType="System.String" description="Specifies a SQL statement that uses parameters to generate the lookup table." expressionType="Notify" name="SqlCommandParam" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT SourceEquipmentId, EquipmentKey FROM dw.DimEquipment;) [refTable] where [refTable].[SourceEquipmentId] = ?</property>
+                <property dataType="System.Int32" description="Specifies the type of connection used to access the reference dataset." name="ConnectionType" typeConverter="LookupConnectionType">0</property>
+                <property dataType="System.Int32" description="Specifies the cache type of the lookup table." name="CacheType" typeConverter="CacheType">0</property>
+                <property dataType="System.Int32" description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set." name="NoMatchBehavior" typeConverter="LookupNoMatchBehavior">0</property>
+                <property dataType="System.Int32" description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset." name="NoMatchCachePercentage">0</property>
+                <property dataType="System.Int32" description="Maximum Memory Usage for Reference Cache on a 32 bit platform." name="MaxMemoryUsage">25</property>
+                <property dataType="System.Int64" description="Maximum Memory Usage for Reference Cache on a 64 bit platform." name="MaxMemoryUsage64">25</property>
+                <property dataType="System.String" description="Indicates whether to reference metadata in an XML format." name="ReferenceMetadataXml">&lt;referenceMetadata&gt;
+  &lt;referenceColumns&gt;
+    &lt;referenceColumn name="SourceEquipmentId" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+    &lt;referenceColumn name="EquipmentKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0" /&gt;
+  &lt;/referenceColumns&gt;
+&lt;/referenceMetadata&gt;</property>
+                <property containsID="true" dataType="System.String" description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons." name="ParameterMap">#{Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[EquipmentId]};</property>
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used." name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.RowCount" contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0" name="RC Written" refId="Package\DFT Load new FactMeterReading rows\RC Written">
+              <inputs>
+                <input hasSideEffects="true" name="LKP DimEquipment_Match_RC Written" refId="Package\DFT Load new FactMeterReading rows\RC Written.Inputs[LKP DimEquipment_Match_RC Written]">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output name="Output" refId="Package\DFT Load new FactMeterReading rows\RC Written.Outputs[Output]" synchronousInputId="Package\DFT Load new FactMeterReading rows\RC Written.Inputs[LKP DimEquipment_Match_RC Written]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.String" description="Specifies the variable to hold the row count." name="VariableName">User::RowsWritten</property>
+              </properties>
+            </component>
+            <component componentClassID="Microsoft.OLEDBDestination" contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4" name="DST dw FactMeterReading" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading" usesDispositions="true" version="4">
+              <connections>
+                <connection connectionManagerID="{69973A0A-CA5C-4D69-B47A-79CCA352BD3A}:external" connectionManagerRefId="Package.ConnectionManagers[KalahariDW_SSIS]" description="The OLE DB runtime connection used to access the database." name="OleDbConnection" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Connections[OleDbConnection]" />
+              </connections>
+              <inputs>
+                <input errorOrTruncationOperation="Insert" errorRowDisposition="FailComponent" hasSideEffects="true" name="RC Written_Output_DST dw FactMeterReading" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading]">
+                  <externalMetadataColumns isUsed="True">
+                    <externalMetadataColumn dataType="i8" name="MeterReadingKey" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[MeterReadingKey]" />
+                    <externalMetadataColumn dataType="i4" name="SourceMeterReadingId" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[SourceMeterReadingId]" />
+                    <externalMetadataColumn dataType="i4" name="DateKey" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[DateKey]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="ReadingDate" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingDate]" />
+                    <externalMetadataColumn dataType="dbTimeStamp" name="PreviousReadingDate" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[PreviousReadingDate]" />
+                    <externalMetadataColumn dataType="i4" name="EquipmentKey" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[EquipmentKey]" />
+                    <externalMetadataColumn dataType="i4" name="MeasuringPoint" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[MeasuringPoint]" />
+                    <externalMetadataColumn dataType="r8" name="ReadingDiff" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingDiff]" />
+                    <externalMetadataColumn dataType="r8" name="CounterReading" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[CounterReading]" />
+                    <externalMetadataColumn dataType="r8" name="PreviousReading" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[PreviousReading]" />
+                    <externalMetadataColumn dataType="i4" name="ConsumptionTypeId" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ConsumptionTypeId]" />
+                    <externalMetadataColumn dataType="i4" name="ReadingTypeId" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingTypeId]" />
+                    <externalMetadataColumn dataType="bool" name="IsActive" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[IsActive]" />
+                  </externalMetadataColumns>
+                  <inputColumns>
+                    <inputColumn cachedDataType="i4" cachedName="EquipmentKey" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[EquipmentKey]" lineageId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Match].Columns[EquipmentKey]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[EquipmentKey]" />
+                    <inputColumn cachedDataType="i4" cachedName="SourceMeterReadingId" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[SourceMeterReadingId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[SourceMeterReadingId]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[SourceMeterReadingId]" />
+                    <inputColumn cachedDataType="i4" cachedName="DateKey" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[DateKey]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[DateKey]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[DateKey]" />
+                    <inputColumn cachedDataType="dbTimeStamp" cachedName="ReadingDate" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingDate]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDate]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[ReadingDate]" />
+                    <inputColumn cachedDataType="dbTimeStamp" cachedName="PreviousReadingDate" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[PreviousReadingDate]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReadingDate]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[PreviousReadingDate]" />
+                    <inputColumn cachedDataType="i4" cachedName="MeasuringPoint" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[MeasuringPoint]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[MeasuringPoint]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[MeasuringPoint]" />
+                    <inputColumn cachedDataType="r8" cachedName="ReadingDiff" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingDiff]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingDiff]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[ReadingDiff]" />
+                    <inputColumn cachedDataType="r8" cachedName="CounterReading" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[CounterReading]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[CounterReading]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[CounterReading]" />
+                    <inputColumn cachedDataType="r8" cachedName="PreviousReading" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[PreviousReading]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[PreviousReading]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[PreviousReading]" />
+                    <inputColumn cachedDataType="i4" cachedName="ConsumptionTypeId" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ConsumptionTypeId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ConsumptionTypeId]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[ConsumptionTypeId]" />
+                    <inputColumn cachedDataType="i4" cachedName="ReadingTypeId" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[ReadingTypeId]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[ReadingTypeId]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[ReadingTypeId]" />
+                    <inputColumn cachedDataType="bool" cachedName="IsActive" externalMetadataColumnId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].ExternalColumns[IsActive]" lineageId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output].Columns[IsActive]" name="" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading].Columns[IsActive]" />
+                  </inputColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output exclusionGroup="1" isErrorOut="true" name="Error" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Outputs[Error]" synchronousInputId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading]">
+                  <externalMetadataColumns />
+                  <outputColumns>
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Outputs[Error].Columns[ErrorCode]" name="ErrorCode" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Outputs[Error].Columns[ErrorCode]" specialFlags="1" />
+                    <outputColumn dataType="i4" lineageId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Outputs[Error].Columns[ErrorColumn]" name="ErrorColumn" refId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Outputs[Error].Columns[ErrorColumn]" specialFlags="2" />
+                  </outputColumns>
+                </output>
+              </outputs>
+              <properties>
+                <property dataType="System.Int32" description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out." name="CommandTimeout">0</property>
+                <property dataType="System.String" description="Specifies the name of the database object used to open a rowset." name="OpenRowset">[dw].[FactMeterReading]</property>
+                <property dataType="System.String" description="Specifies the variable that contains the name of the database object used to open a rowset." name="OpenRowsetVariable" />
+                <property dataType="System.String" description="The SQL command to be executed." name="SqlCommand" UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor" />
+                <property dataType="System.Int32" description="Specifies the column code page to use when code page information is unavailable from the data source." name="DefaultCodePage">1252</property>
+                <property dataType="System.Boolean" description="Forces the use of the DefaultCodePage property value when describing character data." name="AlwaysUseDefaultCodePage">false</property>
+                <property dataType="System.Int32" description="Specifies the mode used to access the database." name="AccessMode">3</property>
+                <property dataType="System.Boolean" description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on." name="FastLoadKeepIdentity">false</property>
+                <property dataType="System.Boolean" description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on." name="FastLoadKeepNulls">false</property>
+                <property dataType="System.String" description="Specifies options to be used with fast load.  Applies only if fast load is turned on." name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property dataType="System.Int32" description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on." name="FastLoadMaxInsertCommitSize">100000</property>
+              </properties>
+            </component>
+          </components>
+          <paths>
+            <path endId="Package\DFT Load new FactMeterReading rows\RC Read.Inputs[SRC new source rows_Output_RC Read]" name="SRC new source rows_Output_RC Read" refId="Package\DFT Load new FactMeterReading rows.Paths[SRC new source rows_Output_RC Read]" startId="Package\DFT Load new FactMeterReading rows\SRC new source rows.Outputs[Output]" />
+            <path endId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Inputs[RC Read_Output_LKP DimEquipment]" name="RC Read_Output_LKP DimEquipment" refId="Package\DFT Load new FactMeterReading rows.Paths[RC Read_Output_LKP DimEquipment]" startId="Package\DFT Load new FactMeterReading rows\RC Read.Outputs[Output]" />
+            <path endId="Package\DFT Load new FactMeterReading rows\RC Written.Inputs[LKP DimEquipment_Match_RC Written]" name="LKP DimEquipment_Match_RC Written" refId="Package\DFT Load new FactMeterReading rows.Paths[LKP DimEquipment_Match_RC Written]" startId="Package\DFT Load new FactMeterReading rows\LKP DimEquipment.Outputs[Match]" />
+            <path endId="Package\DFT Load new FactMeterReading rows\DST dw FactMeterReading.Inputs[RC Written_Output_DST dw FactMeterReading]" name="RC Written_Output_DST dw FactMeterReading" refId="Package\DFT Load new FactMeterReading rows.Paths[RC Written_Output_DST dw FactMeterReading]" startId="Package\DFT Load new FactMeterReading rows\RC Written.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{D3EBF5C8-A621-49C0-8BDD-23DA8B376F81}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Move watermark" DTS:refId="Package\SQL Move watermark" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.Watermark SET LastSourceId = ISNULL((SELECT MAX(SourceMeterReadingId) FROM dw.FactMeterReading), 0), UpdatedAt = SYSDATETIME() WHERE TableName = 'dw.FactMeterReading';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{DBB02ADC-9CCB-4F3A-9DB2-2BDE904C8D70}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run success" DTS:refId="Package\SQL Log run success" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Succeeded', RowsRead = ?, RowsWritten = ?, RowsRejected = ? WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRead" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsWritten" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RowsRejected" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="2" SQLTask:ParameterSize="0" />
+          <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="3" SQLTask:ParameterSize="0" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{6D039961-FBD1-4AF6-91F6-A51F6A71D7EF}" DTS:From="Package\SQL Log run start" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Log run start_To_SQL Get watermark" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Log run start_To_SQL Get watermark]" DTS:To="Package\SQL Get watermark" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{D1434B3B-0316-4904-B971-DC8257601D9B}" DTS:From="Package\SQL Get watermark" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Get watermark_To_DFT Load new FactMeterReading rows" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Get watermark_To_DFT Load new FactMeterReading rows]" DTS:To="Package\DFT Load new FactMeterReading rows" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{714FA439-E7FC-4EB3-89C8-FABABDFD1E47}" DTS:From="Package\DFT Load new FactMeterReading rows" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_DFT Load new FactMeterReading rows_To_SQL Move watermark" DTS:refId="Package.PrecedenceConstraints[Constraint_DFT Load new FactMeterReading rows_To_SQL Move watermark]" DTS:To="Package\SQL Move watermark" />
+    <DTS:PrecedenceConstraint DTS:CreationName="" DTS:DTSID="{558B1D1E-97F5-4EB7-99A4-34312F152C22}" DTS:From="Package\SQL Move watermark" DTS:LogicalAnd="True" DTS:ObjectName="Constraint_SQL Move watermark_To_SQL Log run success" DTS:refId="Package.PrecedenceConstraints[Constraint_SQL Move watermark_To_SQL Log run success]" DTS:To="Package\SQL Log run success" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler DTS:CreationName="OnError" DTS:DTSID="{8B201797-F362-4544-B3CA-83BAE12337C3}" DTS:EventID="0" DTS:EventName="OnError" DTS:LocaleID="-1" DTS:refId="Package.EventHandlers[OnError]">
+      <DTS:Variables>
+        <DTS:Variable DTS:CreationName="" DTS:Description="The propagate property of the event" DTS:DTSID="{D4E14184-DFA9-44A3-A363-5C9D4C6610D9}" DTS:IncludeInDebugDump="6789" DTS:Namespace="System" DTS:ObjectName="Propagate">
+          <DTS:VariableValue DTS:DataType="11">True</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable DTS:CreationName="Microsoft.ExecuteSQLTask" DTS:DTSID="{896A0FCD-9345-4198-A5E6-4BD5FDC3712C}" DTS:ExecutableType="Microsoft.ExecuteSQLTask" DTS:LocaleID="-1" DTS:ObjectName="SQL Log run failure" DTS:refId="Package.EventHandlers[OnError]\SQL Log run failure" DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData SQLTask:Connection="KalahariDW_SSIS" SQLTask:SqlStatementSource="UPDATE etl.PackageRun SET EndTime = SYSDATETIME(), Status = 'Failed', Message = LEFT(CONCAT(Message, CASE WHEN Message IS NULL THEN '' ELSE ' | ' END, ?), 4000) WHERE RunId = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding SQLTask:DataType="130" SQLTask:DtsVariableName="System::ErrorDescription" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="0" SQLTask:ParameterSize="4000" />
+              <SQLTask:ParameterBinding SQLTask:DataType="3" SQLTask:DtsVariableName="User::RunId" SQLTask:ParameterDirection="Input" SQLTask:ParameterName="1" SQLTask:ParameterSize="0" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>
