@@ -46,12 +46,12 @@ h1{color:#002F6C;}</style></head><body>
   var eligibilityLegend = [{"color": "#00A3A1", "label": "Ore/material transport on-site \u2014 eligible"}, {"color": "#5B5F66", "label": "Waste disposal \u2014 eligible"}, {"color": "#E4002B", "label": "Unclassified \u2014 needs review"}];
 
   var map = L.map('haulmap').setView([-23.960595, 28.889300], 14);
-  // Label-free basemap (CartoDB Voyager, no-labels variant): keeps real terrain/road
+  // Label-free basemap (Esri World Light Gray Canvas, no label layer): keeps real terrain/road
   // colour and contrast for genuine ops usefulness, without the place-name text overlay
   // that would otherwise identify the real site on a standard OSM/Positron tile.
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO', maxZoom: 19, subdomains: 'abcd'
-  }).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  attribution:'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxNativeZoom:16, maxZoom:19
+}).addTo(map);
 
   var markers = [];
   var routeLines = [];
